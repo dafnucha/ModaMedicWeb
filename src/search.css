@@ -1,0 +1,24 @@
+.date {
+    margin: 0;
+    
+    margin-top: 2vmin;
+    display:inline-block
+}
+
+.dates{
+    width: 100%;
+    align-items: middle;
+    display: inline-block;
+    text-align:center
+}
+
+.matrix{
+    float: left;
+}
+
+.mdd{
+    width: 100%;
+    margin: 0;
+    margin-top: 2vmin;
+}
+
