@@ -2,8 +2,10 @@ import React from 'react';
 import './App.css';
 import "./Logo";
 import "./Search"
+import "./DisplayButton"
 import Logo from './Logo';
 import Search from './Search';
+import DisplayButton from './DisplayButton';
 
 function App() {
   return (
@@ -11,17 +13,9 @@ function App() {
       <header className="App-header">
         <Logo />
         <Search />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <br />
+        <DisplayButton />
+        
       </header>
     </div>
   );
