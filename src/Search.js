@@ -16,7 +16,8 @@ class Search extends Component {
             calories: false,
             sleeping_hours: false,
             light_sleep: false,
-            dataArr: []
+            dataArr: [],
+            periodicAnswers: []
         }
         this.styleLabel = {
             fontSize: "calc(10px)",
@@ -66,6 +67,12 @@ class Search extends Component {
                 name : "קלוריות"
             })
         }
+        const response = await fetch("http://localhost:3000/answers/getPeriodicAnswers/"+this.state.searchValue+"/1")
+        // We get the API response and receive data in JSON format...
+        const json = await response.json();
+        // ...then we update the users state
+        this.setState({periodicAnswers : json.data})
+        console.log(this.state.periodicAnswers)
         this.setState({dataArr : arr})
     }
 
@@ -197,6 +204,7 @@ class Search extends Component {
                     steps={this.state.steps}
                     distance={this.state.distance}
                     calories={this.state.calories}
+                    periodicAnswers={this.state.periodicAnswers}
                 />
             </div>
         )

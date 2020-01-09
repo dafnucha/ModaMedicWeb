@@ -1,7 +1,9 @@
 import React, {Component} from "react"
 import "./DisplayButton.css"
 import Table from "./Table"
+import TableAns from "./TableAns"
 import Graph from "./Graph"
+import GraphAns from "./GraphAns"
 
 
 class DisplayButton extends Component {
@@ -75,14 +77,19 @@ class DisplayButton extends Component {
                 </div>
                 <br />
                 <br />
+                { this.state.table ? <h3>מדדים</h3> : null }
                 { this.state.table ? <Table dataArr={this.props.dataArr}
                     steps={this.props.steps}
                     distance={this.props.distance}
                     calories={this.props.calories}
                 /> : null }
+                <br />
+                { this.state.table ? <h3>Oswerty Disability Index</h3> : null }
+                { this.state.table ? <TableAns periodicAnswers={this.props.periodicAnswers}/> : null }
                 { (this.state.graph && this.props.steps) ? <Graph data={arrSteps} name="צעדים"/> : null }
                 { (this.state.graph && this.props.distance) ? <Graph data={arrDis} name="מרחק"/> : null }
                 { (this.state.graph && this.props.calories) ? <Graph data={arrCal} name="קלוריות"/> : null }
+                { (this.state.graph) ? <GraphAns data={this.props.periodicAnswers} name="Oswerty Disability Index"/> : null }
             </div>
         )
     }
