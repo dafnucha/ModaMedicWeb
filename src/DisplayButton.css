@@ -1,34 +1,46 @@
-.switch {
-    position: relative;
+.checkButton{
+    background-color:rgb(255, 255, 255);
+    border:1px solid rgb(148, 148, 148);
+    overflow:auto;
+    width: 25%;
+    display:inline-block;
+    height: 40px;
+}
+
+#cbRight{
+    border-radius: 15px 0px 0px 15px;
+}
+
+#cbLeft{
+    border-radius: 0px 15px 15px 0px;
+}
+
+.checkButton label {
+    float:center;
+    width:4.0em;
+}
+
+.checkButton label span {
+    text-align:center;
+    padding:8px;
+    font-size: 15px;
+    display:block;
+}
+
+.checkButton label input {
+    position:absolute;
+    top:-20px;
+}
+
+.checkButton input:checked + span {
+    background-color:rgb(168, 168, 168);
+    height: 24px;
+    color:rgb(0, 0, 0);
+}
+
+.display{
+    width: 100%;
+    align-items: middle;
     display: inline-block;
-    width: 60px;
-    height: 34px;
-}
-
-.switch input { 
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-input:checked + .slider {
-    background-color: #2196F3;
-}
-
-input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked + .slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
-}
-
-.slider.round {
-    border-radius: 34px;
-}
-
-.slider.round:before {
-    border-radius: 50%;
+    text-align:center
 }

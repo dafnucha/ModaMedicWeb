@@ -2,10 +2,10 @@ import React from 'react';
 import './App.css';
 import "./Logo";
 import "./Search"
-import "./DisplayButton"
+
 import Logo from './Logo';
 import Search from './Search';
-import DisplayButton from './DisplayButton';
+
 
 function App() {
   return (
@@ -14,9 +14,8 @@ function App() {
         <Logo />
         <Search />
         <br />
-        <DisplayButton />
-        
       </header>
+      
     </div>
   );
 }
