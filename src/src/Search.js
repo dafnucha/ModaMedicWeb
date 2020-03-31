@@ -1,7 +1,7 @@
 import React, {Component} from "react"
 import "./search.css"
 import DisplayButton from './DisplayButton';
-import axios from 'axios'
+//import axios from 'axios'
 
 class Search extends Component {
     constructor() {
@@ -16,7 +16,8 @@ class Search extends Component {
             calories: false,
             sleeping_hours: false,
             light_sleep: false,
-            arrSteps: []
+            dataArr: [],
+            periodicAnswers: []
         }
         this.styleLabel = {
             fontSize: "calc(10px)",
@@ -32,31 +33,63 @@ class Search extends Component {
         type === "checkbox" ? this.setState({ [name]: checked }) : this.setState({ [name]: value })
     }
 
-    handleSubmit(event) {
+    async handleSubmit(event) {
         event.preventDefault()
-        if (this.state.steps){
-            var x = [
-                {
-                    "_id": "5e1215f8fdad5e1dec8f15c4",
-                    "UserID": "111111111",
-                    "Timestamp": 1578243576403,
-                    "Steps": 4000,
-                    "__v": 0
-                },
-                {
-                    "_id": "5e1215f8fdad5e1dec8f15c4",
-                    "UserID": "111111111",
-                    "Timestamp": 1580940000000,
-                    "Steps": 5000,
-                    "__v": 0
-                },
-
-            ]
-            var d = new Date(2020,1,6)
-            console.log(d.getTime())
-            //x = x.map((item,i) => <li key={i}>{item.Steps}</li>)
-            this.setState({arrSteps : x})
+        var arr = []
+        
+        if(this.state.steps){
+            const response = await fetch("http://icc.ise.bgu.ac.il/njsw03metrics/getSteps?UserID=111111111"/*+this.state.searchValue*/)
+            // We get the API response and receive data in JSON format...
+            const json = await response.json();
+            // ...then we update the users state
+            arr.push({
+                values: json.data,
+                name : "צעדים"
+            })
         }
+        if(this.state.distance){
+            const response = await fetch("http://icc.ise.bgu.ac.il/njsw03metrics/getDistance?UserID=111111111"/*+this.state.searchValue*/)
+            // We get the API response and receive data in JSON format...
+            const json = await response.json();
+            // ...then we update the users state
+            arr.push({
+                values: json.data,
+                name : "מרחק"
+            })
+        }
+        if(this.state.calories){
+            const response = await fetch("http://icc.ise.bgu.ac.il/njsw03metrics/getCalories?UserID=111111111"/*+this.state.searchValue*/)
+            // We get the API response and receive data in JSON format...
+            const json = await response.json();
+            // ...then we update the users state
+            arr.push({
+                values: json.data,
+                name : "קלוריות"
+            })
+        }
+        if(this.state.weather){
+            const response = await fetch("http://icc.ise.bgu.ac.il/njsw03metrics/getWeather?UserID=111111111"/*+this.state.searchValue*/)
+            // We get the API response and receive data in JSON format...
+            const json = await response.json();
+            // ...then we update the users state
+            for( var j = 0; j <json.data.length; j++){
+                json.data[j].Data = json.data[j].Data.High;
+            }
+            arr.push({
+                values: json.data,
+                name : "מזג האוויר"
+            })
+            
+        }
+        /*
+        const response = await fetch("http://localhost:3000/answers/getPeriodicAnswers/"+this.state.searchValue+"/1")
+        // We get the API response and receive data in JSON format...
+        const json = await response.json();
+        // ...then we update the users state
+        
+        this.setState({periodicAnswers : json.data})
+        */
+        this.setState({dataArr : arr})
     }
 
     render() {
@@ -71,9 +104,10 @@ class Search extends Component {
                             type="text" 
                             name="searchValue"
                             value={this.state.searchValue} 
-                            placeholder="שם המטופל" 
+                            placeholder="תעודת זהות מטופל" 
                             style={{textAlign:"right"}} 
                             onChange={this.handleChange} 
+                            required
                         />
                         <label style={this.styleLabel}>
                                 :חפש מטופל
@@ -181,7 +215,13 @@ class Search extends Component {
 
                 </form>
                 <br />
-                <DisplayButton steps={this.state.arrSteps}/>
+                <DisplayButton 
+                    dataArr={this.state.dataArr} 
+                    steps={this.state.steps}
+                    distance={this.state.distance}
+                    calories={this.state.calories}
+                    periodicAnswers={this.state.periodicAnswers}
+                />
             </div>
         )
     }
