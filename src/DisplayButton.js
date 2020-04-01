@@ -20,6 +20,20 @@ class DisplayButton extends Component {
             margin: "2vmin 2vmin 2vmin 2vmin"
         }
         this.handleChange = this.handleChange.bind(this)
+
+        this.clean = function(arr){
+            var tempDic = {};
+            var temp = [];
+            for(var i = 0; i < arr.length; i++){
+                var date = new Date(arr[i].ValidTime)
+                var dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'}).replace(/ /g, '-')
+                if(tempDic[dateStr] === undefined){
+                    tempDic[dateStr] = arr[i];
+                    temp.push(arr[i])
+                }
+            }
+            return temp;
+        }
         
     }
 
@@ -31,7 +45,7 @@ class DisplayButton extends Component {
 
 
     render() {
-        var arrSteps, arrDis, arrCal
+        var arrSteps, arrDis, arrCal, arrWeat;
         for(var i = 0; i < this.props.dataArr.length; i++){
             if(this.props.dataArr[i].name === "צעדים"){
                 arrSteps = this.props.dataArr[i].values
@@ -40,7 +54,11 @@ class DisplayButton extends Component {
                 arrDis = this.props.dataArr[i].values
             }
             else if(this.props.dataArr[i].name === "קלוריות"){
-                arrCal = this.props.dataArr[i].values
+                arrCal = this.props.dataArr[i].values;
+            }
+            else if(this.props.dataArr[i].name === "מזג האוויר"){
+                arrWeat = this.props.dataArr[i].values
+                console.log(arrWeat);
             }
         }
         return(

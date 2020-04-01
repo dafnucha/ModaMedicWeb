@@ -7,12 +7,11 @@ class Table extends Component {
         super()
         var i
         var arr = []
-        
         for(i = 0; i < props.dataArr[0].values.length; i++){
             var date = new Date(props.dataArr[0].values[i].Timestamp)
             var dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'}).replace(/ /g, '-')
             arr.push(
-                <tr key={i}>
+                <tr key={dateStr}>
                     <th>{dateStr}</th>
                     { props.dataArr.length > 0 ? <th>{props.dataArr[0].values[i].Data}</th> : null }
                     { props.dataArr.length > 1 ? <th>{props.dataArr[1].values[i].Data}</th> : null }

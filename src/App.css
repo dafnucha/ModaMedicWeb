@@ -2,7 +2,31 @@
   text-align: center;
 }
 
+#labels #helo{
+  float: right;
+  font-size: medium;
+  margin-top: 10px;
+  margin-right: 10px;
+  width: 49%;
+}
 
+#labels {
+  overflow: hidden;/* Makes this div contain its floats */
+}
+
+#labels #logout{
+  float: left;
+  text-align: left;
+  font-size: medium;
+  margin-top: 10px;
+  margin-left: 10px;
+  width: 49%;
+}
+
+#logout:hover{
+  color: blue;
+  text-decoration: underline;
+}
 .App-header {
   background-color: white;
   min-height: 20vh;
