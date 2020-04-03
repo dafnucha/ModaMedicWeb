@@ -4,10 +4,8 @@ import {
     Switch,
     Route
 } from "react-router-dom";
-import "./Home.css"
-import Login from "./Login"
-import Logo from "./Logo"
 import App from './App';
+import HomeLogin from './HomeLogin';
 
 
 class Home extends Component{
@@ -22,12 +20,7 @@ class Home extends Component{
             <Router>
                 <Switch>
                     <Route exact path="/">
-                        <div className="Home">
-                            <header className="Home-header">
-                                <Logo />
-                                <Login />
-                            </header>
-                        </div>
+                        <HomeLogin />
                     </Route>
                     <Route path="/search">
                         <App />

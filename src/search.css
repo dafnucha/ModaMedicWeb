@@ -1,24 +1,79 @@
+
 .date {
     margin: 0;
     
     margin-top: 2vmin;
     display:inline-block
 }
+.search {
+    overflow: hidden;/* Makes this div contain its floats */
+}
+#bSearch{
+    width: 10%;
+    float: right;
+    margin-right: 10px;
+}
+
+#iSearch{
+    width: 50%;
+    float: right;
+}
+
+#lSearch{
+    width: 20%;
+    margin-top: 15px;
+    float: right;
+    font-size: small;
+    text-align: left;
+    margin-left: 10px;
+}
+
+#cSearch{
+    width: 20%;
+    margin-top: 15px;
+    float: right;
+    font-size: small;
+    text-align: left;
+}
+
+#dSearch{
+    width: 30%;
+    float: right;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#aSearch{
+    width: 5%;
+    margin-top: 15px;
+    font-size: small;
+    float: right;
+    text-align: center;
+}
 
 .dates{
     width: 100%;
     align-items: middle;
     display: inline-block;
-    text-align:center
+    overflow: hidden;
 }
 
-.matrix{
-    float: left;
+#mLabel{
+    font-size: small;
+    color: black;
+    float: right;
+    margin-left: 9px;
 }
+
+#cInput{
+    float: right;
+}
+
 
 .mdd{
     width: 100%;
     margin: 0;
-    margin-top: 2vmin;
+    margin-top: 15px;
+    overflow: hidden
 }
-
