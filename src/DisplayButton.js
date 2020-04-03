@@ -64,7 +64,7 @@ class DisplayButton extends Component {
         return(
             <div>
                 <div className="display">
-                    { this.props.dataArr.length >= 0 ? <div><div className="checkButton" id="cbRight">
+                    { this.props.dataArr.length > 0 ? <div><div className="checkButton" id="cbRight">
                     <label>
                         <input 
                             type="checkbox" 
