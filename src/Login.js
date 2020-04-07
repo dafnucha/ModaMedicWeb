@@ -14,7 +14,8 @@ class Login extends Component{
             password: '',
             wrong: false,
             showPopup: false,
-            name: ""
+            name: "",
+            doctor: false
         };
 
         this.change = this.change.bind(this);
@@ -40,23 +41,27 @@ class Login extends Component{
             UserID: this.state.ID,
             Password: this.state.password
         }).then(res => {
-            if(res.data.data.type[0] === "patient"){
+            if(res.data.data == null){
+                this.setState({wrong: true})
+            }
+            else if(res.data.data.type[0] === "patient"){
                 this.setState({name: res.data.data.name,
                     ID: "",
-                    password: ""
+                    password: "",
+                    wrong: false
                 });
                 this.togglePopup();
-            }
-            else if(res.data.data == null){
-                this.setState({wrong: true})
             }
             else{
                 sessionStorage.setItem("token", res.data.data.token);
                 sessionStorage.setItem("name", res.data.data.name);
                 sessionStorage.setItem("type", res.data.data.type);
+                this.setState({
+                    doctor: sessionStorage.getItem("type").includes("doctor")
+                })
+                sessionStorage.setItem("doctor", this.state.doctor);
                 window.location.reload(false);
             }
-            console.log(sessionStorage.getItem("token"))
         });
 
     }
@@ -68,11 +73,11 @@ class Login extends Component{
                     <label>תעודת זהות:</label>
                     <input type="text" name="ID" onChange={e => this.change(e)} value={this.state.ID} required/>
                     <label>סיסמה:</label>
-                    <input type="password" name="password" onChange={e => this.change(e)} value={this.state.password} required/>
+                    <input type="password" name="password"  onChange={e => this.change(e)} value={this.state.password} required/>
                     {this.state.wrong ? <label id="wrong">תעודת זהות או סיסמה לא נכונים</label> :  <label></label> }
                     <button type="submit">התחבר</button>
                     <label>שכחת סיסמה?</label>
-                    {sessionStorage.getItem("type")==="doctor" ?  <Redirect to="/search" /> : null  }
+                    {this.state.doctor ?  <Redirect to="/search" /> : null  }
                 </form>
                 {this.state.showPopup ? 
                     <Popup
@@ -91,10 +96,10 @@ class Popup extends React.Component {
     render() {
       return (
         <div className='popup'>
-            <div className='popup_inner'>
-                <h3>שלום {this.props.text},</h3>
-                <p>נראה כי אין לך את ההרשאות המתאימות על מנת להיכנס לאתר</p>
-                <button onClick={this.props.closePopup}>close me</button>
+            <div className='popup_inner' >
+                <button onClick={this.props.closePopup} id="x">x</button>
+                <h3>,שלום {this.props.text}</h3>
+                <p> אין לך את ההרשאות המתאימות על מנת להיכנס לאתר</p>
             </div>
         </div>
       );

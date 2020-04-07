@@ -11,6 +11,10 @@ input[type=text], input[type=password] {
     box-sizing: border-box;
 } 
 
+p{
+    text-align: center;
+}
+
 label {
     display: block;
     font: .8rem 'Fira Sans', sans-serif;
@@ -21,6 +25,10 @@ label {
 #wrong{
     color: red;
     font: .2rem 
+}
+
+h3{
+    text-align: center;
 }
 
 button {
@@ -37,6 +45,7 @@ button:hover {
 }
 
 .popup {
+
     float: right;
     text-align: right;
     position: fixed;
@@ -49,14 +58,32 @@ button:hover {
     margin: auto;
     background-color: rgba(0,0,0, 0.5);
 }
+
 .popup_inner {
+
     position: absolute;
-    left: 25%;
-    right: 25%;
+    left: 30%;
+    right: 30%;
     top: 25%;
-    bottom: 25%;
+    bottom: 45%;
     margin: auto;
     background: white;
+}
+
+#x {
+    color: rgb(180, 180, 180);
+    font-size: large;
+    font-family: Arial, sans-serif;
+    float: right;
+    text-align: right;
+    background-color: white;
+    font-weight: bolder; 
+    width: fit-content;
+    
+}
+
+#x:hover{
+    color: black;
 }
 
 

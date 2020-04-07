@@ -1,3 +1,28 @@
+.card{
+    border: 1px solid rgba(151, 150, 150, 0.281);
+    margin-bottom: 3%;
+    font-size: medium;
+    text-align: right;
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-top: 0;
+}
+
+.card:hover{
+    border: 1px solid black;
+}
+
+.cardBody{
+    margin-right: 1%;
+    margin-top: 0.5%;
+    margin-bottom: 0.5%;
+}
+
+h4{
+    margin-top: 5%;
+    margin-bottom: 5%;
+    text-align: center;
+}
 
 .date {
     margin: 0;
@@ -8,18 +33,27 @@
 .search {
     overflow: hidden;/* Makes this div contain its floats */
 }
-#bSearch{
+.bSearch{
     width: 10%;
     float: right;
     margin-right: 10px;
 }
 
-#iSearch{
-    width: 50%;
+.iSearch{
+    text-align: right;
     float: right;
 }
 
-#lSearch{
+#pname{
+    
+    width: 25%;
+}
+#fname{
+    width: 25%;
+    margin-right: 10px;
+}
+
+.lSearch{
     width: 20%;
     margin-top: 15px;
     float: right;
@@ -28,7 +62,7 @@
     margin-left: 10px;
 }
 
-#cSearch{
+.cSearch{
     width: 20%;
     margin-top: 15px;
     float: right;
@@ -36,7 +70,7 @@
     text-align: left;
 }
 
-#dSearch{
+.dSearch{
     width: 30%;
     float: right;
     margin-top: 10px;
@@ -44,7 +78,7 @@
     margin-right: 10px;
 }
 
-#aSearch{
+.aSearch{
     width: 5%;
     margin-top: 15px;
     font-size: small;
@@ -59,14 +93,14 @@
     overflow: hidden;
 }
 
-#mLabel{
+.mLabel{
     font-size: small;
     color: black;
     float: right;
     margin-left: 9px;
 }
 
-#cInput{
+.cInput{
     float: right;
 }
 
@@ -76,4 +110,31 @@
     margin: 0;
     margin-top: 15px;
     overflow: hidden
+}
+
+.popup {
+
+    float: right;
+    text-align: right;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    background-color: rgba(0,0,0, 0.5);
+}
+
+.popup_inner {
+
+    position: absolute;
+    left: 30%;
+    right: 30%;
+    top: 25%;
+    bottom: 30%;
+    margin: auto;
+    height: auto;
+    background: white;
 }

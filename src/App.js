@@ -13,7 +13,6 @@ import Search from './Search';
 class App extends Component{
     constructor(props){
       super(props);
-
       this.logout = this.logout.bind(this);
   }
 
@@ -36,7 +35,7 @@ class App extends Component{
             <Logo />
             <Search />
             <br />
-            {sessionStorage.getItem("type") !== "doctor" ?  <Redirect to="/" /> : null  }
+            {sessionStorage.getItem("doctor") !== "true" ?  <Redirect to="/" /> : null  }
           </header>
         </div>
       </div>

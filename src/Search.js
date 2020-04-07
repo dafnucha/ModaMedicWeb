@@ -1,13 +1,15 @@
 import React, {Component} from "react"
+import axios from 'axios';
+import Card from 'react-bootstrap/Card'
 import "./search.css"
 import DisplayButton from './DisplayButton';
-//import axios from 'axios'
 
 class Search extends Component {
     constructor() {
         super()
         this.state = {
-            searchValue: "",
+            pName: "",
+            fName: "",
             end_date: new Date(),
             start_date: new Date(),
             steps: false,
@@ -16,87 +18,120 @@ class Search extends Component {
             calories: false,
             sleeping_hours: false,
             dataArr: [],
-            periodicAnswers: []
+            periodicAnswers: [],
+            showPopup: false,
+            textPopup: []
         }
-        this.styleLabel = {
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.getRequest = this.getRequest.bind(this);
+        this.togglePopup = this.togglePopup.bind(this);
+        this.selectUser = this.selectUser.bind(this);
+    }
 
-        }
-        this.handleChange = this.handleChange.bind(this)
-        this.handleSubmit = this.handleSubmit.bind(this)
+    togglePopup() {
+        this.setState({
+          showPopup: !this.state.showPopup
+        });
     }
 
     handleChange(event) {
         const {name, value, type, checked} = event.target
         type === "checkbox" ? this.setState({ [name]: checked }) : this.setState({ [name]: value })
-        console.log(name);
+    }
+
+    async getRequest(name, url){
+        let getUrl = 'http://icc.ise.bgu.ac.il/njsw03auth/doctors/metrics/' + url + '?FirstName=' + this.state.pName + '&LastName=' + this.state.fName;
+            const response = await axios.get(
+                getUrl,
+                { 
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'x-auth-token': sessionStorage.getItem("token")
+                    } 
+                }
+            );
+            return({
+                values: response.data.data,
+                name : name,
+                numOfUsers: response.data.data.length
+            });
+    }
+
+    selectUser(key){
+        console.log(key);
+        let arr = this.state.dataArr;
+        for(var i = 0; i < arr.length; i++){
+            let values = [];
+            for(var j = 0; j < arr[i].values.length; j++){
+                if(arr[i].values[j].UserID === key){
+                    values = arr[i].values[j]
+                }
+            }
+            arr[i].values = values;
+        }
+        this.setState({
+            dataArr: arr
+        })
+        this.togglePopup();
     }
 
     async handleSubmit(event) {
         event.preventDefault()
+        var numOfUsers = 0;
         var arr = []
-        let config = {
-            method: 'GET',
-            headers: {
-                'x-auth-token': sessionStorage.getItem("token")
-            },
-            body:{
-                "UserID": this.state.searchValue
-            }
-        }
+        var  i = 0;
         if(this.state.steps){
-            const response = await fetch("http://icc.ise.bgu.ac.il/njsw03auth/doctors/metrics/getSteps?UserID=111111111", config)
-            // We get the API response and receive data in JSON format...
-            const json = await response.json();
-            // ...then we update the users state
-            console.log(json.data);
-            arr.push({
-                values: json.data,
-                name : "צעדים"
-            })
+            let response = await this.getRequest("צעדים", "getSteps")
+            arr.push(response);
+            if(response.numOfUsers > numOfUsers){
+                numOfUsers = response.numOfUsers;
+            }
         }
         if(this.state.distance){
-            const response = await fetch("http://icc.ise.bgu.ac.il/njsw03metrics/getDistance?UserID=111111111"/*+this.state.searchValue*/)
-            // We get the API response and receive data in JSON format...
-            const json = await response.json();
-            // ...then we update the users state
-            arr.push({
-                values: json.data,
-                name : "מרחק"
-            })
+            let response = await this.getRequest("מרחק", "getDistance")
+            arr.push(response);
+            if(response.numOfUsers > numOfUsers){
+                numOfUsers = response.numOfUsers;
+            }
         }
         if(this.state.calories){
-            const response = await fetch("http://icc.ise.bgu.ac.il/njsw03metrics/getCalories?UserID=111111111"/*+this.state.searchValue*/)
-            // We get the API response and receive data in JSON format...
-            const json = await response.json();
-            // ...then we update the users state
-            arr.push({
-                values: json.data,
-                name : "קלוריות"
-            })
+            let response = await this.getRequest("קלוריות", "getCalories")
+            arr.push(response);
+            if(response.numOfUsers > numOfUsers){
+                numOfUsers = response.numOfUsers;
+            }
         }
         if(this.state.weather){
-            const response = await fetch("http://icc.ise.bgu.ac.il/njsw03metrics/getWeather?UserID=111111111"/*+this.state.searchValue*/)
-            // We get the API response and receive data in JSON format...
-            const json = await response.json();
-            // ...then we update the users state
-            for( var j = 0; j <json.data.length; j++){
-                json.data[j].Data = json.data[j].Data.High;
+            let response = await this.getRequest("מזג האוויר", "getWeather")
+            arr.push(response);
+            if(response.numOfUsers > numOfUsers){
+                numOfUsers = response.numOfUsers;
             }
-            arr.push({
-                values: json.data,
-                name : "מזג האוויר"
-            })
-            
         }
-        /*
-        const response = await fetch("http://localhost:3000/answers/getPeriodicAnswers/"+this.state.searchValue+"/1")
-        // We get the API response and receive data in JSON format...
-        const json = await response.json();
-        // ...then we update the users state
-        
-        this.setState({periodicAnswers : json.data})
-        */
+        if(numOfUsers === 1){
+            for(i = 0; i < arr.length; i++){
+                arr[i].values = arr[i].values[0];
+            }
+        }
         this.setState({dataArr : arr})
+        if(numOfUsers > 1){
+            var cards = [];
+            for(i = 0; i < numOfUsers; i++){
+                let x = arr[0].values[i].UserID;
+                cards.push(
+                    <Card className="card" key={arr[0].values[i].UserID}  onClick={() => this.selectUser(x)}>
+                        <Card.Body className="cardBody">שם פרטי: {this.state.pName} </Card.Body>
+                        <Card.Body className="cardBody">שם משפחה: {this.state.fName} </Card.Body>
+                        <Card.Body className="cardBody">תז: {arr[0].values[i].UserID}</Card.Body>
+                    </Card>
+                );
+            }
+            this.setState({
+                text: cards
+            })
+            this.togglePopup();
+        }
     }
 
     render() {
@@ -104,37 +139,46 @@ class Search extends Component {
             <div>
                 <form onSubmit={this.handleSubmit}>
                     <div className="search">
-                        <label id="lSearch" >
+                        <label className="lSearch" >
                                 חפש מטופל:
                         </label>
-                        <input id="iSearch"
+                        <input className="iSearch"
+                            id="pname"
                             type="text" 
-                            name="searchValue"
-                            value={this.state.searchValue} 
-                            placeholder="תעודת זהות מטופל" 
-                            style={{textAlign:"right"}} 
+                            name="pName"
+                            value={this.state.pName} 
+                            placeholder="שם פרטי" 
                             onChange={this.handleChange} 
                             required
                         />
-                        <button id="bSearch"> 
+                        <input className="iSearch"
+                            id="fname"
+                            type="text" 
+                            name="fName"
+                            value={this.state.fName} 
+                            placeholder="שם משפחה" 
+                            onChange={this.handleChange} 
+                            required
+                        />
+                        <button className="bSearch"> 
                             חפש
                         </button>
                     </div>
                     <div className="dates">
-                            <label id="cSearch">
+                            <label className="cSearch">
                                 בחר תאריכים מ
                             </label>
-                            <input id="dSearch"
+                            <input className="dSearch"
                                 type="date"
                                 name="start_date"
                                 value={this.state.start_date} 
                                 onChange={this.handleChange}
                                 max="2020-01-09"
                             />
-                            <label id="aSearch">
+                            <label className="aSearch">
                                 עד
                             </label>
-                            <input id="dSearch"
+                            <input className="dSearch"
                                 type="date"
                                 name="end_date"
                                 value={this.state.end_date} 
@@ -144,52 +188,52 @@ class Search extends Component {
                     </div>
                     <br />
                     <div className="mdd">
-                        <label id="mLabel">
+                        <label className="mLabel">
                                 בחר מדדים
                         </label>
-                        <input id="cInput"
+                        <input className="cInput"
                             type="checkbox" 
                             name="steps"
                             checked={this.state.steps}
                             onChange={this.handleChange}
                         />
-                        <label id="mLabel">
+                        <label className="mLabel">
                             צעדים
                         </label>
-                        <input id="cInput"
+                        <input className="cInput"
                             type="checkbox" 
                             name="distance"
                             checked={this.state.distance}
                             onChange={this.handleChange}
                         />
-                        <label id="mLabel">
+                        <label className="mLabel">
                             מרחק
                         </label>
-                        <input id="cInput"
+                        <input className="cInput"
                             type="checkbox" 
                             name="weather"
                             checked={this.state.weather}
                             onChange={this.handleChange}
                         />
-                        <label id="mLabel">
+                        <label className="mLabel">
                             מזג האוויר
                         </label>
-                        <input id="cInput"
+                        <input className="cInput"
                             type="checkbox" 
                             name="calories"
                             checked={this.state.calories}
                             onChange={this.handleChange}
                         />
-                        <label id="mLabel">
+                        <label className="mLabel">
                             קלוריות
                         </label>
-                        <input id="cInput"
+                        <input className="cInput"
                             type="checkbox" 
                             name="sleeping_hours"
                             checked={this.state.sleeping_hours}
                             onChange={this.handleChange}
                         />
-                        <label id="mLabel">
+                        <label className="mLabel">
                             שעות שינה
                         </label>
                     </div>
@@ -202,9 +246,27 @@ class Search extends Component {
                     calories={this.state.calories}
                     periodicAnswers={this.state.periodicAnswers}
                 />
+                {this.state.showPopup ? 
+                    <Popup
+                        text={this.state.text}
+                    /> : null
+                }
             </div>
         )
     }
 }
 
 export default Search
+
+class Popup extends React.Component {
+    render() {
+      return (
+        <div className='popup'>
+            <div className='popup_inner' >
+                <h4>:אנא בחר מבין הרשומות הבאות</h4>
+                {this.props.text}
+            </div>
+        </div>
+      );
+    }
+  }

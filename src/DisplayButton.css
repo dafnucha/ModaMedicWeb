@@ -31,7 +31,6 @@
 
 .checkButton input:checked + span {
     background-color:rgb(168, 168, 168);
-    height: 24px;
     color:rgb(0, 0, 0);
 }
 
