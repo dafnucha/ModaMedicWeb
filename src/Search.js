@@ -65,7 +65,7 @@ class Search extends Component {
             let values = [];
             for(var j = 0; j < arr[i].values.length; j++){
                 if(arr[i].values[j].UserID === key){
-                    values = arr[i].values[j]
+                    values = arr[i].values[j].docs
                 }
             }
             arr[i].values = values;
