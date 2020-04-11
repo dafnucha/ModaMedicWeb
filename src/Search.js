@@ -1,7 +1,7 @@
 import React, {Component} from "react"
 import axios from 'axios';
 import Card from 'react-bootstrap/Card'
-import "./search.css"
+//import "./search.css"
 import DisplayButton from './DisplayButton';
 
 class Search extends Component {
@@ -135,6 +135,7 @@ class Search extends Component {
     }
 
     render() {
+        require("./search.css");
         return (
             <div>
                 <form onSubmit={this.handleSubmit}>
