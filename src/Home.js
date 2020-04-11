@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import App from './App';
 import HomeLogin from './HomeLogin';
+import AddUser from "./AddUser";
 
 
 class Home extends Component{
@@ -24,6 +25,9 @@ class Home extends Component{
                     </Route>
                     <Route path="/search">
                         <App />
+                    </Route>
+                    <Route path="/addUser">
+                        <AddUser />
                     </Route>
                 </Switch>
               </Router>

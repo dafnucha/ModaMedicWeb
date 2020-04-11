@@ -1,0 +1,83 @@
+.labels_in_add_user {
+    /* Other styling... */
+    text-align: right;
+    clear: both;
+    float:right;
+    margin-right:45px;
+    font-size: 16px;
+    width: 140px;
+    padding-top: 10px;
+}
+
+.inputs_in_add_user {
+    width: 300px;
+    padding: 5px 5px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    float:right;
+}
+
+.select_in_add_user {
+    width: 300px;
+    padding: 5px 5px;
+    margin: 8px 0px 0px 15px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    float:right;
+}
+
+.submit_and_reset_buttons {
+    width: 80px;
+    height: 30px;
+    margin: 8px 100px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    float:right;
+
+}
+
+.divs_in_add{
+    overflow: hidden;
+    text-align: center;
+}
+
+h2{
+    text-align: center;
+}
+
+
+.Home-header {
+    background-color: white;
+    min-height: 20vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+}
+
+.input_for_user_type{
+    float: right;
+}
+
+.label_for_user_type{
+    padding: 5px 20px;
+    margin: 8px 0;
+    font-size: small;
+    color: black;
+    float: right;
+}
+
+/*.input {*/
+/*    height: 20px;*/
+/*    width: 300px;*/
+/*    border: 1px solid #000;*/
+/*    margin-top: 10px;*/
+/*    float: right;*/
+/*    margin-right: 15px;*/
+/*}*/
+
