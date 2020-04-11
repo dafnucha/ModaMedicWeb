@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {
-  Redirect
+  Redirect,
 } from "react-router-dom";
 import './App.css';
 import "./Logo";
@@ -10,10 +10,13 @@ import Logo from './Logo';
 import Search from './Search';
 
 
+
+
 class App extends Component{
     constructor(props){
       super(props);
       this.logout = this.logout.bind(this);
+      this.addUserButton = this.addUserButton.bind(this);
   }
 
   logout() {
@@ -23,12 +26,19 @@ class App extends Component{
     window.location.reload(false);
   }
 
+  addUserButton() {
+    window.location.href= "./addUser";
+  }
+
   render(){
     return (
       <div>
         <div id="labels">
+          <label id="hello">שלום ד"ר {sessionStorage.getItem("name")}</label>
           <label id="logout" onClick={() => this.logout()}>התנתק</label>
-          <label id="helo">שלום ד"ר {sessionStorage.getItem("name")}</label>
+        </div>
+        <div>
+          <label id="addUserButton" onClick={() => this.addUserButton()}>הוסף משתמש</label>
         </div>
         <div className="App">
           <header className="App-header">
@@ -44,3 +54,4 @@ class App extends Component{
 }
 
 export default App;
+
