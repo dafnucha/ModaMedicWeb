@@ -11,31 +11,45 @@ class Table extends Component {
         for(i = 0; i < props.dataArr.length; i++){
             for(j = 0; j < props.dataArr[i].values.length; j++){
                 var date = new Date(props.dataArr[i].values[j].Timestamp)
-                var dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'numeric', year: 'numeric'})
+                var dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'}).replace(/ /g, '-')
                 if(table[dateStr] == null){
                     table[dateStr] = {};
-                    dates.push(dateStr);
+                    dates.push(props.dataArr[i].values[j].Timestamp);
                 }
-                table[dateStr][props.dataArr[i].name] = props.dataArr[i].values[j];
+                var name = "";
+                if(props.dataArr[i].name == "צעדים"){
+                    name = "steps";
+                }
+                else if(props.dataArr[i].name == "מרחק"){
+                    name = "distance";
+                }
+                else if(props.dataArr[i].name == "קלוריות"){
+                    name = "calories";
+                }
+                table[dateStr][name] = props.dataArr[i].values[j];
             }
         }
-        dates = dates.sort((a,b) => {
-            return new Date(a).getTime() - new Date(b).getTime();
-        });
+        dates = dates.sort();
+        this.state = {
+            steps: props.steps,
+            distance : props.distance,
+            calories: props.calories,
+            data: table
+        }
 
 
 
 
         var arr = []
-        for(i = 0; i < props.dataArr[0].values.length; i++){
-            date = new Date(props.dataArr[0].values[i].Timestamp)
+        for(i = 0; i < dates.length; i++){
+            date = new Date(dates[i])
             dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'}).replace(/ /g, '-')
             arr.push(
                 <tr key={dateStr}>
                     <th>{dateStr}</th>
-                    { props.dataArr.length > 0 ? <th>{props.dataArr[0].values[i].Data.toFixed(2)}</th> : null }
-                    { props.dataArr.length > 1 ? <th>{props.dataArr[1].values[i].Data.toFixed(2)}</th> : null }
-                    { props.dataArr.length > 2 ? <th>{props.dataArr[2].values[i].Data.toFixed(2)}</th> : null }
+                    { this.state.steps ? (this.state.data[dateStr]["steps"] ? <th>{ this.state.data[dateStr]["steps"]["Data"].toFixed(2)}</th> : <th>-</th> ) : null}
+                    { this.state.distance ? (this.state.data[dateStr]["distance"] ? <th>{ this.state.data[dateStr]["distance"]["Data"].toFixed(2)}</th> : <th>-</th>) : null }
+                    { this.state.calories ? (this.state.data[dateStr]["calories"] ? <th>{ this.state.data[dateStr]["calories"]["Data"].toFixed(2)}</th> : <th>-</th>) : null }
                 </tr>
             )
         }

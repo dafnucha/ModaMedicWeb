@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {
     Redirect
 } from "react-router-dom";
-//import './Login.css';
+import './Login.css';
 import axios from 'axios';
 
 class Login extends Component{
@@ -67,7 +67,6 @@ class Login extends Component{
     }
 
     render(){
-        require("./Login.css");
         return(
             <div>
                 <form onSubmit={e => this.sumbit(e)}>
