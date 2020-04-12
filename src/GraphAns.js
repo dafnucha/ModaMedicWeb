@@ -18,6 +18,7 @@ class GraphAns extends Component {
           return ((x < y) ? -1 : ((x > y) ? 1 : 0));
          });
         }
+
     }
 
     handleChange(event) {
@@ -29,19 +30,37 @@ class GraphAns extends Component {
 
 
     render() {
-        var data = this.sort_by_key(this.props.data, "ValidDate")
-        var points = {}
+        var data = this.sort_by_key(this.props.data, "Timestamp")
+        var points = {};
+        var oDay = new Date(1584526107531);
+        var first = true;
+        var firsStr = "";
+        var line = {};
         for(var i = 0; i < data.length; i++){
-            var date = new Date(data[i].ValidDate)
+            var date = new Date(data[i].Timestamp)
             var dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'}).replace(/ /g, '-')
-            points[dateStr] = data[i].Score
+            if(date <= oDay){
+                points[dateStr] = data[i]["Answers"][0]["AnswerID"][0];
+            }
+            if(date >= oDay){
+                line[dateStr] = data[i]["Answers"][0]["AnswerID"][0];
+                if(first || firsStr === dateStr){
+                    first = false;
+                    firsStr = dateStr;
+                    points[dateStr] = data[i]["Answers"][0]["AnswerID"][0];
+                }
+            }
         }
+        var dataX = [
+            {"name": "לפני הניתוח", "data": points},
+            {"name": "אחרי הניתוח", "data": line}
+        ];
         
 		return (
             <div>
                 <div className="App">
                     <h1>{this.props.name}</h1>
-                    <LineChart data={points} min={0} />
+                    <LineChart data={dataX} min={0} />
                 </div>	
             </div>
         )

@@ -17,14 +17,35 @@ class Table extends Component {
                     dates.push(props.dataArr[i].values[j].Timestamp);
                 }
                 var name = "";
-                if(props.dataArr[i].name == "צעדים"){
+                if(props.dataArr[i].name === "צעדים"){
                     name = "steps";
                 }
-                else if(props.dataArr[i].name == "מרחק"){
+                else if(props.dataArr[i].name === "מרחק"){
                     name = "distance";
                 }
-                else if(props.dataArr[i].name == "קלוריות"){
+                else if(props.dataArr[i].name === "קלוריות"){
                     name = "calories";
+                }
+                else if(props.dataArr[i].name === "מזג האוויר"){
+                    name = "weather";
+                }
+                else if(props.dataArr[i].name === "שעות שינה"){
+                    var deep = 0, light = 0, total = 0;
+                    for(var k = 0; k < props.dataArr[i].values[j]["Data"].length; k++){
+                        var time = props.dataArr[i].values[j]["Data"][k]["EndTime"] - props.dataArr[i].values[j]["Data"][k]["StartTime"];
+                        time = time / 3600000;
+                        if(props.dataArr[i].values[j]["Data"][k]["State"] === "SLEEP_LIGHT"){
+                            light = light + time;
+                        }
+                        else{
+                            deep = deep + time;
+                        }
+                        total = total + time;
+                    }
+                    table[dateStr]["light"] = light;
+                    table[dateStr]["deep"] = deep;
+                    table[dateStr]["total"] = total;
+                    continue;
                 }
                 table[dateStr][name] = props.dataArr[i].values[j];
             }
@@ -34,12 +55,10 @@ class Table extends Component {
             steps: props.steps,
             distance : props.distance,
             calories: props.calories,
+            weather: props.weather,
+            sleep: props.sleep,
             data: table
         }
-
-
-
-
         var arr = []
         for(i = 0; i < dates.length; i++){
             date = new Date(dates[i])
@@ -50,6 +69,10 @@ class Table extends Component {
                     { this.state.steps ? (this.state.data[dateStr]["steps"] ? <th>{ this.state.data[dateStr]["steps"]["Data"].toFixed(2)}</th> : <th>-</th> ) : null}
                     { this.state.distance ? (this.state.data[dateStr]["distance"] ? <th>{ this.state.data[dateStr]["distance"]["Data"].toFixed(2)}</th> : <th>-</th>) : null }
                     { this.state.calories ? (this.state.data[dateStr]["calories"] ? <th>{ this.state.data[dateStr]["calories"]["Data"].toFixed(2)}</th> : <th>-</th>) : null }
+                    { this.state.weather ? (this.state.data[dateStr]["weather"] ? <th>{ this.state.data[dateStr]["weather"]["Data"].toFixed(2)}</th> : <th>-</th>) : null }
+                    { this.state.sleep ? (this.state.data[dateStr]["light"] ? <th>{ this.state.data[dateStr]["light"].toFixed(2)}</th> : <th>-</th>) : null }
+                    { this.state.sleep ? (this.state.data[dateStr]["deep"] ? <th>{ this.state.data[dateStr]["deep"].toFixed(2)}</th> : <th>-</th>) : null }
+                    { this.state.sleep ? (this.state.data[dateStr]["total"] ? <th>{ this.state.data[dateStr]["total"].toFixed(2)}</th> : <th>-</th>) : null }
                 </tr>
             )
         }
@@ -79,10 +102,14 @@ class Table extends Component {
                 <table style={{width: "100%"}}>
                     <tbody>
                         <tr>
-                            <th>תאריך</th>
+                            { this.props.dataArr.length > 0 ? <th>תאריך</th> : null}
                             { this.props.steps ? <th>צעדים</th> : null }
                             { this.props.distance ? <th>מרחק</th> : null }
                             { this.props.calories ? <th>קלוריות</th> : null }
+                            { this.props.weather ? <th>מזג האוויר</th> : null }
+                            { this.props.sleep ? <th>שעות שינה קלה</th> : null }
+                            { this.props.sleep ? <th>שעות שינה עמוקה</th> : null }
+                            { this.props.sleep ? <th>סך כל שעות השינה</th> : null }
                         </tr>
                         {this.state.table}
                     </tbody>

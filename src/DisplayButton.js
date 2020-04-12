@@ -3,6 +3,7 @@ import "./DisplayButton.css"
 import Table from "./Table"
 import TableAns from "./TableAns"
 import Graph from "./Graph"
+import SleepGraph from "./SleepGraph"
 import GraphAns from "./GraphAns"
 
 
@@ -45,7 +46,7 @@ class DisplayButton extends Component {
 
 
     render() {
-        var arrSteps, arrDis, arrCal, arrWeat;
+        var arrSteps, arrDis, arrCal, arrWeat, arrSleep;
         for(var i = 0; i < this.props.dataArr.length; i++){
             if(this.props.dataArr[i].name === "צעדים"){
                 arrSteps = this.props.dataArr[i].values
@@ -57,14 +58,22 @@ class DisplayButton extends Component {
                 arrCal = this.props.dataArr[i].values;
             }
             else if(this.props.dataArr[i].name === "מזג האוויר"){
-                arrWeat = this.props.dataArr[i].values
-                console.log(arrWeat);
+                if(this.props.dataArr[i].values[0].Data && this.props.dataArr[i].values[0].Data.High){
+                    for(var j = 0; j < this.props.dataArr[i].values.length; j++){
+                        this.props.dataArr[i].values[j].Data = this.props.dataArr[i].values[j].Data.High;
+                    }
+                }
+                arrWeat = this.props.dataArr[i].values;
             }
+            else if(this.props.dataArr[i].name === "שעות שינה"){
+                arrSleep = this.props.dataArr[i].values;
+            }
+
         }
         return(
             <div>
                 <div className="display">
-                    { this.props.dataArr.length > 0 ? <div><div className="checkButton" id="cbRight">
+                    { (this.props.dataArr.length > 0 || this.props.dailyA.length > 0) ? <div><div className="checkButton" id="cbRight">
                     <label>
                         <input 
                             type="checkbox" 
@@ -95,19 +104,23 @@ class DisplayButton extends Component {
                 </div>
                 <br />
                 <br />
-                { this.state.table ? <h3>מדדים</h3> : null }
+                { (this.state.table && this.props.dataArr.length > 0) ? <h3>מדדים</h3> : null }
                 { this.state.table ? <Table dataArr={this.props.dataArr}
                     steps={this.props.steps}
                     distance={this.props.distance}
                     calories={this.props.calories}
+                    weather={this.props.weather}
+                    sleep={this.props.sleep}
                 /> : null }
                 <br />
-                { this.state.table ? <h3>Oswerty Disability Index</h3> : null }
-                { this.state.table ? <TableAns periodicAnswers={this.props.periodicAnswers}/> : null }
+                { this.state.table ? <h3>שאלון יומי</h3> : null }
+                { this.state.table ? <TableAns data={this.props.dailyA}/> : null }
                 { (this.state.graph && this.props.steps) ? <Graph data={arrSteps} name="צעדים"/> : null }
                 { (this.state.graph && this.props.distance) ? <Graph data={arrDis} name="מרחק"/> : null }
                 { (this.state.graph && this.props.calories) ? <Graph data={arrCal} name="קלוריות"/> : null }
-                { (this.state.graph) ? <GraphAns data={this.props.periodicAnswers} name="Oswerty Disability Index"/> : null }
+                { (this.state.graph && this.props.weather) ? <Graph data={arrWeat} name="מזג האוויר"/> : null }
+                { (this.state.graph && this.props.sleep) ? <SleepGraph data={arrSleep} name="שעות שינה"/> : null }
+                { (this.state.graph) ? <GraphAns data={this.props.dailyA} name="שאלון יומי"/> : null }
             </div>
         )
     }

@@ -44,8 +44,6 @@ class Graph extends Component {
                 line[dateStr] = data[i].Data
             }
         }
-        console.log(line);
-        console.log(points);
         var dataX = [
             {"name": "לפני הניתוח", "data": points},
             {"name": "אחרי הניתוח", "data": line}
@@ -55,7 +53,7 @@ class Graph extends Component {
             <div>
                 <div className="App">
                     <h1>{this.props.name}</h1>
-                    <LineChart data={dataX} min={0} />
+                    <LineChart data={dataX} min={0}/>
                 </div>	
             </div>
         )

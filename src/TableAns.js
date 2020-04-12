@@ -7,14 +7,33 @@ class TableAns extends Component {
         super()
         var i
         var arr = []
-        
-        for(i = 0; i < props.periodicAnswers.length; i++){
-            var date = new Date(props.periodicAnswers[i].ValidDate)
-            var dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'}).replace(/ /g, '-')
+        //var dates = []
+        let data = props.data;
+        for(i = 0; i < data.length; i++){
+            //dates.push(data[i].Timestamp)
+            var date = new Date(data[i].Timestamp);
+            var dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'}).replace(/ /g, '-');
+            var text = "";
+            for(var j = 0 ; j < data[i]["Answers"][1]["AnswerID"].length; j++){
+                if(data[i]["Answers"][1]["AnswerID"][j] === 0){
+                    text = text + "לא נטלתי, "
+                }
+                else if(data[i]["Answers"][1]["AnswerID"][j] === 1){
+                    text = text + "בסיסית, "
+                }
+                else if(data[i]["Answers"][1]["AnswerID"][j] === 2){
+                    text = text + "מתקדמת, "
+                }
+                else if(data[i]["Answers"][1]["AnswerID"][j] === 3){
+                    text = text + "נרקוטית, "
+                }
+            }
+            text = text.slice(0, -2);
             arr.push(
                 <tr key={i}>
                     <th>{dateStr}</th>
-                    <th>{props.periodicAnswers[i].Score}</th>
+                    <th>{data[i]["Answers"][0]["AnswerID"][0]}</th>
+                    <th>{text}</th>
                 </tr>
             )
         }
@@ -45,7 +64,8 @@ class TableAns extends Component {
                     <tbody>
                         <tr>
                             <th>תאריך</th>
-                            <th>ציון</th>
+                            <th>רמת כאב</th>
+                            <th>תרופה</th>
                         </tr>
                         {this.state.table}
                     </tbody>

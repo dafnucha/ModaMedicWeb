@@ -20,7 +20,9 @@ class Search extends Component {
             dataArr: [],
             periodicAnswers: [],
             showPopup: false,
-            textPopup: []
+            textPopup: [],
+            dailyA: [],
+            numOfUsers: 0
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -41,7 +43,7 @@ class Search extends Component {
     }
 
     async getRequest(name, url){
-        let getUrl = 'http://icc.ise.bgu.ac.il/njsw03auth/doctors/metrics/' + url + '?FirstName=' + this.state.pName + '&LastName=' + this.state.fName;
+        let getUrl = 'http://icc.ise.bgu.ac.il/njsw03auth/doctors/' + url + '?FirstName=' + this.state.pName + '&LastName=' + this.state.fName;
             const response = await axios.get(
                 getUrl,
                 { 
@@ -61,17 +63,28 @@ class Search extends Component {
     selectUser(key){
         console.log(key);
         let arr = this.state.dataArr;
-        for(var i = 0; i < arr.length; i++){
-            let values = [];
-            for(var j = 0; j < arr[i].values.length; j++){
-                if(arr[i].values[j].UserID === key){
-                    values = arr[i].values[j].docs
-                }
+        let d = this.state.dailyA;
+        var da = [];
+        for(var i = 0; i < this.state.numOfUsers; i++){
+            if(d[i] && d[i].UserID === key){
+                da = d[i].docs;
             }
-            arr[i].values = values;
+        }
+        for(i = 0; i < arr.length; i++){
+            let values = [];
+            if(arr[i]){
+                for(var j = 0; j < arr[i].values.length; j++){
+                    if(arr[i].values[j].UserID === key){
+                        values = arr[i].values[j].docs;
+                    }
+
+                }
+                arr[i].values = values;
+            }
         }
         this.setState({
-            dataArr: arr
+            dataArr: arr,
+            dailyA: da
         })
         this.togglePopup();
     }
@@ -82,48 +95,64 @@ class Search extends Component {
         var arr = []
         var  i = 0;
         if(this.state.steps){
-            let response = await this.getRequest("צעדים", "getSteps")
+            let response = await this.getRequest("צעדים", "metrics/getSteps")
             arr.push(response);
             if(response.numOfUsers > numOfUsers){
                 numOfUsers = response.numOfUsers;
             }
         }
         if(this.state.distance){
-            let response = await this.getRequest("מרחק", "getDistance")
+            let response = await this.getRequest("מרחק", "metrics/getDistance")
             arr.push(response);
             if(response.numOfUsers > numOfUsers){
                 numOfUsers = response.numOfUsers;
             }
         }
         if(this.state.calories){
-            let response = await this.getRequest("קלוריות", "getCalories")
+            let response = await this.getRequest("קלוריות", "metrics/getCalories")
             arr.push(response);
             if(response.numOfUsers > numOfUsers){
                 numOfUsers = response.numOfUsers;
             }
         }
         if(this.state.weather){
-            let response = await this.getRequest("מזג האוויר", "getWeather")
+            let response = await this.getRequest("מזג האוויר", "metrics/getWeather")
             arr.push(response);
             if(response.numOfUsers > numOfUsers){
                 numOfUsers = response.numOfUsers;
             }
         }
+        if(this.state.sleeping_hours){
+            let response = await this.getRequest("שעות שינה", "metrics/getSleep");
+            arr.push(response);
+            if(response.numOfUsers > numOfUsers){
+                numOfUsers = response.numOfUsers;
+            }
+        }
+        let response = await this.getRequest("תשובות יומיות", "answers/getDailyAnswers")
+        if(response.numOfUsers > numOfUsers){
+            numOfUsers = response.numOfUsers;
+        }
         if(numOfUsers === 1){
             for(i = 0; i < arr.length; i++){
                 arr[i].values = arr[i].values[0];
             }
+            response.values = response.values[0]
         }
-        this.setState({dataArr : arr})
+        this.setState({
+            dataArr : arr,
+            dailyA: response.values,
+            numOfUsers: numOfUsers
+        })
         if(numOfUsers > 1){
             var cards = [];
             for(i = 0; i < numOfUsers; i++){
-                let x = arr[0].values[i].UserID;
+                let x = this.state.dailyA[i].UserID;
                 cards.push(
-                    <Card className="card" key={arr[0].values[i].UserID}  onClick={() => this.selectUser(x)}>
+                    <Card className="card" key={this.state.dailyA[i].UserID}  onClick={() => this.selectUser(x)}>
                         <Card.Body className="cardBody">שם פרטי: {this.state.pName} </Card.Body>
                         <Card.Body className="cardBody">שם משפחה: {this.state.fName} </Card.Body>
-                        <Card.Body className="cardBody">תז: {arr[0].values[i].UserID}</Card.Body>
+                        <Card.Body className="cardBody">תז: {this.state.dailyA[i].UserID}</Card.Body>
                     </Card>
                 );
             }
@@ -244,6 +273,9 @@ class Search extends Component {
                     steps={this.state.steps}
                     distance={this.state.distance}
                     calories={this.state.calories}
+                    weather={this.state.weather}
+                    sleep={this.state.sleeping_hours}
+                    dailyA={this.state.dailyA}
                     periodicAnswers={this.state.periodicAnswers}
                 />
                 {this.state.showPopup ? 
