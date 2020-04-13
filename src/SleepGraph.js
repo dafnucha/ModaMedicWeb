@@ -30,12 +30,12 @@ class SleepGraph extends Component {
 
 
     render() {
-        var data = this.sort_by_key(this.props.data, "Timestamp")
+        var data = this.sort_by_key(this.props.data, "ValidTime")
         var pointsD = {}, pointsL = {}, pointsT = {};
         var oDay = new Date(1584526107531);
         var lineD = {}, lineL = {}, lineT = {};
         for(var i = 0; i < data.length; i++){
-            var date = new Date(data[i].Timestamp)
+            var date = new Date(data[i].ValidTime)
             var dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'}).replace(/ /g, '-');
             var deep = 0, light = 0, total = 0;
             for(var k = 0; k < data[i]["Data"].length; k++){

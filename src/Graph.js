@@ -30,12 +30,12 @@ class Graph extends Component {
 
 
     render() {
-        var data = this.sort_by_key(this.props.data, "Timestamp")
+        var data = this.sort_by_key(this.props.data, "ValidTime")
         var points = {};
         var oDay = new Date(1584526107531);
         var line = {};
         for(var i = 0; i < data.length; i++){
-            var date = new Date(data[i].Timestamp)
+            var date = new Date(data[i].ValidTime)
             var dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'}).replace(/ /g, '-')
             if(date <= oDay){
                 points[dateStr] = data[i].Data

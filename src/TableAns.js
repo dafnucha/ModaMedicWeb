@@ -10,8 +10,8 @@ class TableAns extends Component {
         //var dates = []
         let data = props.data;
         for(i = 0; i < data.length; i++){
-            //dates.push(data[i].Timestamp)
-            var date = new Date(data[i].Timestamp);
+            //dates.push(data[i].ValidTime)
+            var date = new Date(data[i].ValidTime);
             var dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'}).replace(/ /g, '-');
             var text = "";
             for(var j = 0 ; j < data[i]["Answers"][1]["AnswerID"].length; j++){

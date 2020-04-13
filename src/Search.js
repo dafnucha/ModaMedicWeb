@@ -10,8 +10,8 @@ class Search extends Component {
         this.state = {
             pName: "",
             fName: "",
-            end_date: new Date(),
-            start_date: new Date(),
+            end_date: "",
+            start_date: "",
             steps: false,
             distance : false,
             weather: false,
@@ -44,6 +44,17 @@ class Search extends Component {
 
     async getRequest(name, url){
         let getUrl = 'http://icc.ise.bgu.ac.il/njsw03auth/doctors/' + url + '?FirstName=' + this.state.pName + '&LastName=' + this.state.fName;
+        if(this.state.start_date !== ""){
+            var date = new Date(this.state.start_date)
+            let start_time = date.getTime();
+            getUrl += ("&start_time=" + start_time); 
+        }
+        if(this.state.end_date !== ""){
+            date = new Date(this.state.end_date)
+            let end_time = date.getTime();
+            console.log(end_time);
+            getUrl += ("&end_time=" + end_time); 
+        }
             const response = await axios.get(
                 getUrl,
                 { 
@@ -61,13 +72,17 @@ class Search extends Component {
     }
 
     selectUser(key){
-        console.log(key);
         let arr = this.state.dataArr;
         let d = this.state.dailyA;
         var da = [];
         for(var i = 0; i < this.state.numOfUsers; i++){
             if(d[i] && d[i].UserID === key){
                 da = d[i].docs;
+            }
+        }
+        for(i = 0; i < this.state.questionnaire.values.length; i++){
+            if(this.state.questionnaire.values[i].UserID === key){
+                this.state.periodicAnswers.push(this.state.questionnaire.values[i]["docs"]);
             }
         }
         for(i = 0; i < arr.length; i++){
@@ -133,6 +148,18 @@ class Search extends Component {
         if(response.numOfUsers > numOfUsers){
             numOfUsers = response.numOfUsers;
         }
+        let responseQ = await this.getRequest("שאלון תקופתי", "answers/getPeriodicAnswers")
+        var num = 0; 
+        var id = {};
+        for(i = 0; i < responseQ.values.length; i++){
+            if(!id[responseQ.values[i].UserID]){
+                id[responseQ.values[i].UserID] = true;
+                num++;
+            }
+        }
+        if(num > numOfUsers){
+            numOfUsers = num;
+        }
         if(numOfUsers === 1){
             for(i = 0; i < arr.length; i++){
                 arr[i].values = arr[i].values[0];
@@ -142,7 +169,8 @@ class Search extends Component {
         this.setState({
             dataArr : arr,
             dailyA: response.values,
-            numOfUsers: numOfUsers
+            numOfUsers: numOfUsers,
+            questionnaire: responseQ
         })
         if(numOfUsers > 1){
             var cards = [];
@@ -202,7 +230,6 @@ class Search extends Component {
                                 name="start_date"
                                 value={this.state.start_date} 
                                 onChange={this.handleChange}
-                                max="2020-01-09"
                             />
                             <label className="aSearch">
                                 עד
@@ -212,7 +239,6 @@ class Search extends Component {
                                 name="end_date"
                                 value={this.state.end_date} 
                                 onChange={this.handleChange}
-                                max="2020-01-09"
                             />
                     </div>
                     <br />

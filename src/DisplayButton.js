@@ -3,6 +3,7 @@ import "./DisplayButton.css"
 import Table from "./Table"
 import TableAns from "./TableAns"
 import Graph from "./Graph"
+import TablePer from "./TablePer"
 import SleepGraph from "./SleepGraph"
 import GraphAns from "./GraphAns"
 
@@ -47,6 +48,7 @@ class DisplayButton extends Component {
 
     render() {
         var arrSteps, arrDis, arrCal, arrWeat, arrSleep;
+        var  arr1 = [], arr2 = [], arr3 = [], arr4 = [];
         for(var i = 0; i < this.props.dataArr.length; i++){
             if(this.props.dataArr[i].name === "צעדים"){
                 arrSteps = this.props.dataArr[i].values
@@ -69,6 +71,32 @@ class DisplayButton extends Component {
                 arrSleep = this.props.dataArr[i].values;
             }
 
+        }
+        for(i = 0; i < this.props.periodicAnswers.length; i++){
+            if(this.props.periodicAnswers[i].QuestionnaireID === 1){
+                arr1 = this.props.periodicAnswers[i].data;
+                for(j = 0; j < arr1.length; j++){
+                    arr1[j]["Data"] = arr1[j]["Score"];
+                }
+            }
+            if(this.props.periodicAnswers[i].QuestionnaireID === 2){
+                arr2 = this.props.periodicAnswers[i].data;
+                for(j = 0; j < arr2.length; j++){
+                    arr2[j]["Data"] = arr2[j]["Score"];
+                }
+            }
+            if(this.props.periodicAnswers[i].QuestionnaireID === 3){
+                arr3 = this.props.periodicAnswers[i].data;
+                for(j = 0; j < arr3.length; j++){
+                    arr3[j]["Data"] = arr3[j]["Score"];
+                }
+            }
+            if(this.props.periodicAnswers[i].QuestionnaireID === 4){
+                arr4 = this.props.periodicAnswers[i].data;
+                for(j = 0; j < arr4.length; j++){
+                    arr4[j]["Data"] = arr4[j]["Score"];
+                }
+            }
         }
         return(
             <div>
@@ -115,12 +143,18 @@ class DisplayButton extends Component {
                 <br />
                 { this.state.table ? <h3>שאלון יומי</h3> : null }
                 { this.state.table ? <TableAns data={this.props.dailyA}/> : null }
+                { this.state.table ? <h3>שאלונים תקופתיים</h3> : null }
+                { this.state.table ? <TablePer data={this.props.periodicAnswers}/> : null }
                 { (this.state.graph && this.props.steps) ? <Graph data={arrSteps} name="צעדים"/> : null }
                 { (this.state.graph && this.props.distance) ? <Graph data={arrDis} name="מרחק"/> : null }
                 { (this.state.graph && this.props.calories) ? <Graph data={arrCal} name="קלוריות"/> : null }
                 { (this.state.graph && this.props.weather) ? <Graph data={arrWeat} name="מזג האוויר"/> : null }
                 { (this.state.graph && this.props.sleep) ? <SleepGraph data={arrSleep} name="שעות שינה"/> : null }
                 { (this.state.graph) ? <GraphAns data={this.props.dailyA} name="שאלון יומי"/> : null }
+                { (this.state.graph && arr1.length > 0) ? <Graph data={arr1} name="Oswestry Disability Index"/> : null }
+                { (this.state.graph && arr2.length > 0) ? <Graph data={arr2} name="Neck Disability Index"/> : null }
+                { (this.state.graph && arr3.length > 0) ? <Graph data={arr3} name="Lower Extremity Functional Scale"/> : null }
+                { (this.state.graph && arr4.length > 0) ? <Graph data={arr4} name="Oswestry low back pain"/> : null }
             </div>
         )
     }

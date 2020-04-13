@@ -10,11 +10,11 @@ class Table extends Component {
         var dates = []
         for(i = 0; i < props.dataArr.length; i++){
             for(j = 0; j < props.dataArr[i].values.length; j++){
-                var date = new Date(props.dataArr[i].values[j].Timestamp)
+                var date = new Date(props.dataArr[i].values[j].ValidTime)
                 var dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'}).replace(/ /g, '-')
                 if(table[dateStr] == null){
                     table[dateStr] = {};
-                    dates.push(props.dataArr[i].values[j].Timestamp);
+                    dates.push(props.dataArr[i].values[j].ValidTime);
                 }
                 var name = "";
                 if(props.dataArr[i].name === "צעדים"){
