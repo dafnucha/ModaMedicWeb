@@ -2,12 +2,11 @@
   text-align: center;
 }
 
-#labels #helo{
+#labels #hello{
   float: right;
   font-size: medium;
   margin-top: 10px;
-  margin-right: 10px;
-  width: 49%;
+  margin-right: 30px;
 }
 
 #labels {
@@ -19,8 +18,7 @@
   text-align: left;
   font-size: medium;
   margin-top: 10px;
-  margin-left: 10px;
-  width: 49%;
+  margin-left: 80px;
 }
 
 #logout:hover{
@@ -35,9 +33,23 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
+  width: 100%;
 }
 
 .App-link {
   color: #61dafb;
+}
+
+#addUserButton{
+  float: left;
+  text-align: left;
+  font-size: medium;
+  padding-top: 30px;
+  padding-left: 50px;
+}
+
+#addUserButton:hover{
+  color: blue;
+  text-decoration: underline;
 }
 
