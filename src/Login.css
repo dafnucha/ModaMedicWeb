@@ -86,6 +86,15 @@ button:hover {
     color: black;
 }
 
+#forget:hover{
+    color: blue;
+    text-decoration: underline;
+}
+
+#h3{
+    text-align: center;
+  }
+
 
 /*
 

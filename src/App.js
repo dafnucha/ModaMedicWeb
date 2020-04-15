@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
-import {
-  Redirect,
-} from "react-router-dom";
+import axios from 'axios';
+import {Redirect} from "react-router-dom";
 import './App.css';
 import "./Logo";
 import "./Search";
@@ -10,35 +9,94 @@ import Logo from './Logo';
 import Search from './Search';
 
 
-
-
 class App extends Component{
     constructor(props){
       super(props);
+      this.state = {
+        showPopup: false,
+        pass: "",
+        pass2: "",
+        diff: false
+    };
       this.logout = this.logout.bind(this);
-      this.addUserButton = this.addUserButton.bind(this);
+      this.change = this.change.bind(this);
+      this.togglePopup = this.togglePopup.bind(this);
+      this.handleChange = this.handleChange.bind(this);
+      this.handleSubmit = this.handleSubmit.bind(this)
+  }
+
+  togglePopup() {
+    this.setState({
+      showPopup: !this.state.showPopup
+    });
+  }
+
+  async handleSubmit(event){
+    event.preventDefault();
+    if(this.state.pass !== this.state.pass2){
+      this.setState({
+        diff: true
+      });
+    }
+    else{
+      let url = 'http://icc.ise.bgu.ac.il/njsw03auth/usersAll/askChangePassword';
+      var token;
+      const response = await axios.post(
+        url,
+        {},
+        { 
+            headers: { 
+                'Content-Type': 'application/json',
+                'x-auth-token': sessionStorage.getItem("token")
+            } 
+        }
+      );
+      token = response.data.data;
+      url = 'http://icc.ise.bgu.ac.il/njsw03users/passwordChangeCheck/changePassword';
+      const responsec = await axios.post(
+        url,
+        {
+          "NewPassword":this.state.pass
+        }, 
+        { 
+            headers: { 
+                'Content-Type': 'application/json',
+                'x-auth-token': token
+            }
+        }
+      );
+      if(responsec.data.message){
+        window.alert("הסיסמא שונתה בהצלחה");
+        this.togglePopup();
+      }
+    }
+
+  }
+
+  handleChange(event) {
+    const {name, value, type, checked} = event.target
+    type === "checkbox" ? this.setState({ [name]: checked }) : this.setState({ [name]: value })
   }
 
   logout() {
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("type");
     sessionStorage.removeItem("name");
+    sessionStorage.removeItem("doctor");
     window.location.reload(false);
   }
 
-  addUserButton() {
-    window.location.href= "./addUser";
+  change(){
+    this.togglePopup();
   }
 
   render(){
     return (
       <div>
         <div id="labels">
-          <label id="hello">שלום ד"ר {sessionStorage.getItem("name")}</label>
           <label id="logout" onClick={() => this.logout()}>התנתק</label>
-        </div>
-        <div>
-          <label id="addUserButton" onClick={() => this.addUserButton()}>הוסף משתמש</label>
+          <label id="helo">שלום ד"ר {sessionStorage.getItem("name")} |</label>
+          <label id="change" onClick={() => this.change()}>שנה סיסמא</label>
         </div>
         <div className="App">
           <header className="App-header">
@@ -48,6 +106,14 @@ class App extends Component{
             {sessionStorage.getItem("doctor") !== "true" ?  <Redirect to="/" /> : null  }
           </header>
         </div>
+        {this.state.showPopup ? 
+          <Popup
+              change={this.handleChange.bind(this)}
+              closePopup={this.togglePopup.bind(this)}
+              handleSubmit={this.handleSubmit.bind(this)}
+              diff={this.state.diff}
+          /> : null
+        }
       </div>
     )
   }
@@ -55,3 +121,27 @@ class App extends Component{
 
 export default App;
 
+class Popup extends React.Component {
+  render() {
+    return (
+      <div className='popup'>
+          <div className='popup_inner' >
+              <button onClick={this.props.closePopup} id="x">x</button>
+              <h3 id="h3">החלפת סיסמא</h3>
+              <form onSubmit={this.props.handleSubmit}>
+                <label  id="lpass">
+                    סיסמא חדשה:
+                  <input type="password" name="pass" id="pass" onChange={this.props.change} required/>
+                </label>
+                <label id="lpass2">
+                    הקלד את הסיסמא מחדש:
+                  <input type="password" name="pass2" id="pass2" onChange={this.props.change} required/>
+                </label>
+                {this.props.diff ? <label>הסיסמאות שונות</label> : null}
+                <input type="submit" value="שלח" id="send"/>
+              </form>
+          </div>
+      </div>
+    );
+  }
+}

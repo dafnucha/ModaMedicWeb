@@ -30,13 +30,13 @@ class Graph extends Component {
 
 
     render() {
-        var data = this.sort_by_key(this.props.data, "ValidTime")
+        var data = this.sort_by_key(this.props.data, "Timestamp")
         var points = {};
         var oDay = new Date(1584526107531);
         var line = {};
         for(var i = 0; i < data.length; i++){
-            var date = new Date(data[i].ValidTime)
-            var dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'}).replace(/ /g, '-')
+            var date = new Date(data[i].Timestamp)
+            var dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year:"numeric"}).replace(/ /g, '-')
             if(date <= oDay){
                 points[dateStr] = data[i].Data
             }
@@ -53,7 +53,7 @@ class Graph extends Component {
             <div>
                 <div className="App">
                     <h1>{this.props.name}</h1>
-                    <LineChart data={dataX} min={0}/>
+                    <LineChart data={dataX} min={0} />
                 </div>	
             </div>
         )

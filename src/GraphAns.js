@@ -38,7 +38,7 @@ class GraphAns extends Component {
         var line = {};
         for(var i = 0; i < data.length; i++){
             var date = new Date(data[i].ValidTime)
-            var dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'}).replace(/ /g, '-')
+            var dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year:"numeric"}).replace(/ /g, '-')
             if(date <= oDay){
                 points[dateStr] = data[i]["Answers"][0]["AnswerID"][0];
             }
