@@ -141,20 +141,20 @@ class DisplayButton extends Component {
                     sleep={this.props.sleep}
                 /> : null }
                 <br />
-                { this.state.table ? <h3>שאלון יומי</h3> : null }
-                { this.state.table ? <TableAns data={this.props.dailyA}/> : null }
-                { this.state.table ? <h3>שאלונים תקופתיים</h3> : null }
-                { this.state.table ? <TablePer data={this.props.periodicAnswers}/> : null }
+                { (this.state.table && this.props.dailyQ) ? <h3>שאלון יומי</h3> : null }
+                { (this.state.table && this.props.dailyQ) ? <TableAns data={this.props.dailyA}/> : null }
+                { (this.state.table && this.props.perQ) ? <h3>שאלונים תקופתיים</h3> : null }
+                { (this.state.table && this.props.perQ) ? <TablePer data={this.props.periodicAnswers}/> : null }
                 { (this.state.graph && this.props.steps) ? <Graph data={arrSteps} name="צעדים"/> : null }
                 { (this.state.graph && this.props.distance) ? <Graph data={arrDis} name="מרחק"/> : null }
                 { (this.state.graph && this.props.calories) ? <Graph data={arrCal} name="קלוריות"/> : null }
                 { (this.state.graph && this.props.weather) ? <Graph data={arrWeat} name="מזג האוויר"/> : null }
                 { (this.state.graph && this.props.sleep) ? <SleepGraph data={arrSleep} name="שעות שינה"/> : null }
-                { (this.state.graph) ? <GraphAns data={this.props.dailyA} name="שאלון יומי"/> : null }
-                { (this.state.graph && arr1.length > 0) ? <Graph data={arr1} name="Oswestry Disability Index"/> : null }
-                { (this.state.graph && arr2.length > 0) ? <Graph data={arr2} name="Neck Disability Index"/> : null }
-                { (this.state.graph && arr3.length > 0) ? <Graph data={arr3} name="Lower Extremity Functional Scale"/> : null }
-                { (this.state.graph && arr4.length > 0) ? <Graph data={arr4} name="Oswestry low back pain"/> : null }
+                { (this.state.graph && this.props.dailyQ) ? <GraphAns data={this.props.dailyA} name="שאלון יומי"/> : null }
+                { (this.state.graph && arr1.length > 0 && this.props.perQ) ? <Graph data={arr1} name="Oswestry Disability Index"/> : null }
+                { (this.state.graph && arr2.length > 0 && this.props.perQ) ? <Graph data={arr2} name="Neck Disability Index"/> : null }
+                { (this.state.graph && arr3.length > 0 && this.props.perQ) ? <Graph data={arr3} name="Lower Extremity Functional Scale"/> : null }
+                { (this.state.graph && arr4.length > 0 && this.props.perQ) ? <Graph data={arr4} name="Oswestry low back pain"/> : null }
             </div>
         )
     }
