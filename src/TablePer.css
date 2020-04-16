@@ -1,0 +1,29 @@
+th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    float: right;
+    width: 10%;
+    font-size: 15px;
+    font-weight:normal;
+    margin: 0;
+    padding: 1%;
+    text-align: center;
+}
+
+th{
+    height: 70px;
+}
+
+.before{
+    color: rgb(33, 66, 128);
+}
+
+.after{
+    color: rgb(189, 44, 44)
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+}

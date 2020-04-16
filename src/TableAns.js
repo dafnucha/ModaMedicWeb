@@ -31,9 +31,9 @@ class TableAns extends Component {
             text = text.slice(0, -2);
             arr.push(
                 <tr key={i}>
-                    <th>{dateStr}</th>
-                    <th>{data[i]["Answers"][0]["AnswerID"][0]}</th>
-                    <th>{text}</th>
+                    {(data[i].ValidTime < props.date) ? <td className="before">{dateStr}</td> : <td className="after">{dateStr}</td>}
+                    {(data[i].ValidTime < props.date) ? <td className="before">{data[i]["Answers"][0]["AnswerID"][0]}</td> : <td className="after">{data[i]["Answers"][0]["AnswerID"][0]}</td>}
+                    {(data[i].ValidTime < props.date) ? <td className="before">{text}</td> : <td className="after">{text}</td>}
                 </tr>
             )
         }
@@ -60,7 +60,7 @@ class TableAns extends Component {
     render() {
         return(
             <div>
-                <table style={{width: "100%"}}>
+                <table style={{width: "100%"}} id="daily">
                     <tbody>
                         <tr>
                             <th>תאריך</th>

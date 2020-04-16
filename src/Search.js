@@ -25,7 +25,8 @@ class Search extends Component {
             numOfUsers: 0,
             dailyQ: false,
             perQ: false,
-            x: []
+            x: [],
+            date: 0
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -73,7 +74,17 @@ class Search extends Component {
             });
     }
 
-    selectUser(key){
+    async selectUser(key){
+        const response = await axios.get(
+            "http://icc.ise.bgu.ac.il/njsw03auth/usersAll/getDateOfSurgery?UserID=" + key,
+            { 
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'x-auth-token': sessionStorage.getItem("token")
+                } 
+            }
+        );
+
         let arr = this.state.dataArr;
         let d = this.state.dailyA;
         var da = [];
@@ -112,7 +123,8 @@ class Search extends Component {
         else{
             this.setState({
                 dataArr: arr,
-                dailyA: da
+                dailyA: da,
+                date: response.data.data
             })
             this.togglePopup();
         }
@@ -347,6 +359,7 @@ class Search extends Component {
                     periodicAnswers={this.state.periodicAnswers}
                     dailyQ={this.state.dailyQ}
                     perQ={this.state.perQ}
+                    date={this.state.date}
                 />
                 {this.state.showPopup ? 
                     <Popup

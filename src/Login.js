@@ -236,10 +236,10 @@ class Popup extends React.Component {
                 <button onClick={this.props.closePopup} id="x">x</button>
                 <h3 id="h3">שכחתי סיסמא</h3>
                 <form onSubmit={this.props.handleSubmit}>
-                    <label  id="lpass">
+                    <label  id="lid">
                          אנא הזן תעודת זהות:
-                        <input type="text" name="id" id="id" onChange={this.props.change} required/>
                     </label>
+                    <input type="text" name="id" id="id" onChange={this.props.change} required/>
                     <input type="submit" value="המשך" id="con"/>
                 </form>
                 </div>
@@ -251,14 +251,14 @@ class Popup extends React.Component {
                 <button onClick={this.props.closePopup} id="x">x</button>
                 <h3 id="h3">שכחתי סיסמא</h3>
                 <form onSubmit={this.props.handle}>
-                    <label  id="lpass">
+                    <label  id="lq">
                          {this.props.question}
-                        <input type="text" name="answer" id="answer" onChange={this.props.change} required/>
                     </label>
+                    <input type="text" name="answer" id="answer" onChange={this.props.change} required/>
                     <label  id="ldate">
-                         הכנס את תאריך יום הולדתך:
-                        <input type="date" name="date" id="date" onChange={this.props.change} required/>
+                         הכנס את תאריך יום הולדת שלך:
                     </label>
+                    <input type="date" name="date" id="date" onChange={this.props.change} required/>
                     {this.props.wrongA ? <label>שאלת אימות לא נכונה או תאריך לידה שגוי</label> : null}
                     <input type="submit" value="המשך" id="con"/>
                 </form>
@@ -273,12 +273,12 @@ class Popup extends React.Component {
                     <form onSubmit={this.props.changePass}>
                         <label  id="lpass">
                             סיסמא חדשה:
-                        <input type="password" name="pass" id="pass" onChange={this.props.change} required/>
                         </label>
+                        <input type="password" name="pass" id="pass" onChange={this.props.change} required/>
                         <label id="lpass2">
                             הקלד את הסיסמא מחדש:
-                        <input type="password" name="pass2" id="pass2" onChange={this.props.change} required/>
                         </label>
+                        <input type="password" name="pass2" id="pass2" onChange={this.props.change} required/>
                         {this.props.diff ? <label>הסיסמאות שונות</label> : null}
                         <input type="submit" value="שלח" id="send"/>
                     </form>

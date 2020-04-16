@@ -32,22 +32,21 @@ class GraphAns extends Component {
     render() {
         var data = this.sort_by_key(this.props.data, "ValidTime")
         var points = {};
-        var oDay = new Date(1584526107531);
-        var first = true;
-        var firsStr = "";
+        var oDay = new Date(this.props.date);
         var line = {};
+        var last, lData;
         for(var i = 0; i < data.length; i++){
             var date = new Date(data[i].ValidTime)
             var dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year:"numeric"}).replace(/ /g, '-')
             if(date <= oDay){
-                points[dateStr] = data[i]["Answers"][0]["AnswerID"][0];
+                points[dateStr] = data[i]["Answers"][0]["AnswerID"][0].toFixed(2);
+                last = dateStr;
+                lData = data[i]["Answers"][0]["AnswerID"][0].toFixed(2);
             }
             if(date >= oDay){
-                line[dateStr] = data[i]["Answers"][0]["AnswerID"][0];
-                if(first || firsStr === dateStr){
-                    first = false;
-                    firsStr = dateStr;
-                    points[dateStr] = data[i]["Answers"][0]["AnswerID"][0];
+                line[dateStr] = data[i]["Answers"][0]["AnswerID"][0].toFixed(2);
+                if(lData){
+                    line[last] = lData;
                 }
             }
         }

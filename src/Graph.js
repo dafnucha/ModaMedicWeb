@@ -18,8 +18,8 @@ class Graph extends Component {
           return ((x < y) ? -1 : ((x > y) ? 1 : 0));
          });
         }
-
     }
+
 
     handleChange(event) {
         const {name, value, type, checked} = event.target
@@ -32,16 +32,22 @@ class Graph extends Component {
     render() {
         var data = this.sort_by_key(this.props.data, "Timestamp")
         var points = {};
-        var oDay = new Date(1584526107531);
+        var oDay = new Date(this.props.date);
         var line = {};
+        var last, lData;
         for(var i = 0; i < data.length; i++){
             var date = new Date(data[i].Timestamp)
             var dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year:"numeric"}).replace(/ /g, '-')
             if(date <= oDay){
-                points[dateStr] = data[i].Data
+                points[dateStr] = data[i].Data.toFixed(2);
+                last = dateStr;
+                lData = data[i].Data.toFixed(2);
             }
             if(date >= oDay){
-                line[dateStr] = data[i].Data
+                line[dateStr] = data[i].Data.toFixed(2)
+                if(last){
+                    line[last] = lData
+                }
             }
         }
         var dataX = [

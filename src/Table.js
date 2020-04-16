@@ -1,5 +1,5 @@
 import React, {Component} from "react"
-import "./Table.css"
+//import "./Table.css"
 
 
 class Table extends Component {
@@ -57,7 +57,8 @@ class Table extends Component {
             calories: props.calories,
             weather: props.weather,
             sleep: props.sleep,
-            data: table
+            data: table,
+            dates: dates
         }
         var arr = []
         for(i = 0; i < dates.length; i++){
@@ -65,14 +66,14 @@ class Table extends Component {
             dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'}).replace(/ /g, '-')
             arr.push(
                 <tr key={dateStr}>
-                    <th>{dateStr}</th>
-                    { this.state.steps ? (this.state.data[dateStr]["steps"] ? <th>{ this.state.data[dateStr]["steps"]["Data"].toFixed(2)}</th> : <th>-</th> ) : null}
-                    { this.state.distance ? (this.state.data[dateStr]["distance"] ? <th>{ this.state.data[dateStr]["distance"]["Data"].toFixed(2)}</th> : <th>-</th>) : null }
-                    { this.state.calories ? (this.state.data[dateStr]["calories"] ? <th>{ this.state.data[dateStr]["calories"]["Data"].toFixed(2)}</th> : <th>-</th>) : null }
-                    { this.state.weather ? (this.state.data[dateStr]["weather"] ? <th>{ this.state.data[dateStr]["weather"]["Data"].toFixed(2)}</th> : <th>-</th>) : null }
-                    { this.state.sleep ? (this.state.data[dateStr]["light"] ? <th>{ this.state.data[dateStr]["light"].toFixed(2)}</th> : <th>-</th>) : null }
-                    { this.state.sleep ? (this.state.data[dateStr]["deep"] ? <th>{ this.state.data[dateStr]["deep"].toFixed(2)}</th> : <th>-</th>) : null }
-                    { this.state.sleep ? (this.state.data[dateStr]["total"] ? <th>{ this.state.data[dateStr]["total"].toFixed(2)}</th> : <th>-</th>) : null }
+                    {(this.state.dates[i] < props.date) ? <td className="before">{dateStr}</td> : <td className="after">{dateStr}</td>}
+                    { this.state.steps ? (this.state.data[dateStr]["steps"] ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["steps"]["Data"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["steps"]["Data"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                    { this.state.distance ? (this.state.data[dateStr]["distance"] ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["distance"]["Data"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["distance"]["Data"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                    { this.state.calories ? (this.state.data[dateStr]["calories"] ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["calories"]["Data"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["calories"]["Data"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                    { this.state.weather ? (this.state.data[dateStr]["weather"] ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["weather"]["Data"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["weather"]["Data"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                    { this.state.sleep ? (this.state.data[dateStr]["light"] ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["light"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["light"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                    { this.state.sleep ? (this.state.data[dateStr]["deep"] ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["deep"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["deep"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                    { this.state.sleep ? (this.state.data[dateStr]["total"] ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["total"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["total"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
                 </tr>
             )
         }
@@ -97,9 +98,10 @@ class Table extends Component {
 
 
     render() {
+        require("./Table.css");
         return(
             <div>
-                <table style={{width: "100%"}}>
+                <table style={{width: "100%"}} id="mdd">
                     <tbody>
                         <tr>
                             { this.props.dataArr.length > 0 ? <th>תאריך</th> : null}

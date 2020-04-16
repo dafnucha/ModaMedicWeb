@@ -1,5 +1,6 @@
-.App {
+.App, App-header{
   text-align: center;
+  width:100%;
 }
 
 #labels #hello {
@@ -7,6 +8,10 @@
   font-size: medium;
   margin-top: 10px;
   margin-right: 10px;
+}
+
+div.App, div.App-header {
+  width:100%;
 }
 
 #change{
