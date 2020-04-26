@@ -39,6 +39,12 @@ label {
     text-align: right;
 }
 
+#remember{
+    float: right;
+    margin-top: 2%;
+    margin-right: 0;
+}
+
 #con, #send{
     width: 10%;
     margin-left: 40%;

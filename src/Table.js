@@ -10,44 +10,130 @@ class Table extends Component {
         var dates = []
         for(i = 0; i < props.dataArr.length; i++){
             for(j = 0; j < props.dataArr[i].values.length; j++){
-                var date = new Date(props.dataArr[i].values[j].ValidTime)
-                var dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'}).replace(/ /g, '-')
-                if(table[dateStr] == null){
-                    table[dateStr] = {};
-                    dates.push(props.dataArr[i].values[j].ValidTime);
-                }
-                var name = "";
-                if(props.dataArr[i].name === "צעדים"){
-                    name = "steps";
-                }
-                else if(props.dataArr[i].name === "מרחק"){
-                    name = "distance";
-                }
-                else if(props.dataArr[i].name === "קלוריות"){
-                    name = "calories";
-                }
-                else if(props.dataArr[i].name === "מזג האוויר"){
-                    name = "weather";
-                }
-                else if(props.dataArr[i].name === "שעות שינה"){
-                    var deep = 0, light = 0, total = 0;
-                    for(var k = 0; k < props.dataArr[i].values[j]["Data"].length; k++){
-                        var time = props.dataArr[i].values[j]["Data"][k]["EndTime"] - props.dataArr[i].values[j]["Data"][k]["StartTime"];
-                        time = time / 3600000;
-                        if(props.dataArr[i].values[j]["Data"][k]["State"] === "SLEEP_LIGHT"){
-                            light = light + time;
-                        }
-                        else{
-                            deep = deep + time;
-                        }
-                        total = total + time;
+                if(props.showDaily){
+                    var date = new Date(props.dataArr[i].values[j].ValidTime)
+                    var dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'}).replace(/ /g, '-');
+                    if(table[dateStr] == null){
+                        table[dateStr] = {};
+                        dates.push(props.dataArr[i].values[j].ValidTime);
                     }
-                    table[dateStr]["light"] = light;
-                    table[dateStr]["deep"] = deep;
-                    table[dateStr]["total"] = total;
-                    continue;
+                    if(props.dataArr[i].name === "שעות שינה"){
+                        var deep = 0, light = 0, total = 0;
+                        for(var k = 0; k < props.dataArr[i].values[j]["Data"].length; k++){
+                            var time = props.dataArr[i].values[j]["Data"][k]["EndTime"] - props.dataArr[i].values[j]["Data"][k]["StartTime"];
+                            time = time / 3600000;
+                            if(props.dataArr[i].values[j]["Data"][k]["State"] === "SLEEP_LIGHT"){
+                                light = light + time;
+                            }
+                            else{
+                                deep = deep + time;
+                            }
+                            total = total + time;
+                        }
+                        table[dateStr]["light"] = light;
+                        table[dateStr]["deep"] = deep;
+                        table[dateStr]["total"] = total;
+                        continue;
+                    }
+                    table[dateStr][props.dataArr[i].name] = props.dataArr[i].values[j];
                 }
-                table[dateStr][name] = props.dataArr[i].values[j];
+                else if(props.weekly){
+                    date = new Date(props.dataArr[i].values[j].ValidTime);
+                    var dayOfWeek = date.getDay();
+                    var sunday = new Date(props.dataArr[i].values[j].ValidTime - dayOfWeek * 86400000);
+                    var saturday = new Date(sunday.getTime() + 518400000);
+                    dateStr = sunday.toLocaleDateString('en-GB', {day: 'numeric'}) + "-" + saturday.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'});
+                    if(table[dateStr] == null){
+                        table[dateStr] = {};
+                        dates.push(props.dataArr[i].values[j].ValidTime);
+                    }
+                    if(table[dateStr][props.dataArr[i].name] == null){
+                        table[dateStr][props.dataArr[i].name] = {};
+                        table[dateStr][props.dataArr[i].name]["counter"] = 0;
+                        table[dateStr][props.dataArr[i].name]["sum"] = 0;
+                    }
+                    if(props.dataArr[i].name === "שעות שינה"){
+                        let deep = 0, light = 0, total = 0;
+                        for(k = 0; k < props.dataArr[i].values[j]["Data"].length; k++){
+                            time = props.dataArr[i].values[j]["Data"][k]["EndTime"] - props.dataArr[i].values[j]["Data"][k]["StartTime"];
+                            time = time / 3600000;
+                            if(props.dataArr[i].values[j]["Data"][k]["State"] === "SLEEP_LIGHT"){
+                                light = light + time;
+                            }
+                            else{
+                                deep = deep + time;
+                            }
+                            total = total + time;
+                        }
+                        if(!table[dateStr]["total"]){
+                            table[dateStr]["light"] = {};
+                            table[dateStr]["deep"] = {};
+                            table[dateStr]["total"] = {};
+                            table[dateStr]["light"]["counter"] = 0;
+                            table[dateStr]["deep"]["counter"] = 0;
+                            table[dateStr]["total"]["counter"] = 0;
+                            table[dateStr]["light"]["sum"] = 0;
+                            table[dateStr]["deep"]["sum"] = 0;
+                            table[dateStr]["total"]["sum"] = 0;
+                        }
+                        table[dateStr]["light"]["sum"] += light;
+                        table[dateStr]["deep"]["sum"] += deep;
+                        table[dateStr]["total"]["sum"] += total;
+                        table[dateStr]["light"]["counter"]++;
+                        table[dateStr]["deep"]["counter"]++;
+                        table[dateStr]["total"]["counter"]++;
+                        continue;
+                    }
+                    table[dateStr][props.dataArr[i].name]["sum"] += props.dataArr[i].values[j]["Data"];
+                    table[dateStr][props.dataArr[i].name]["counter"]++;
+                }
+                else if(props.monthly){
+                    date = new Date(props.dataArr[i].values[j].ValidTime);;
+                    dateStr = date.toLocaleDateString('en-GB', {month: 'short'});
+                    if(table[dateStr] == null){
+                        table[dateStr] = {};
+                        dates.push(props.dataArr[i].values[j].ValidTime);
+                    }
+                    if(table[dateStr][props.dataArr[i].name] == null){
+                        table[dateStr][props.dataArr[i].name] = {};
+                        table[dateStr][props.dataArr[i].name]["counter"] = 0;
+                        table[dateStr][props.dataArr[i].name]["sum"] = 0;
+                    }
+                    if(props.dataArr[i].name === "שעות שינה"){
+                        let deep = 0, light = 0, total = 0;
+                        for(k = 0; k < props.dataArr[i].values[j]["Data"].length; k++){
+                            time = props.dataArr[i].values[j]["Data"][k]["EndTime"] - props.dataArr[i].values[j]["Data"][k]["StartTime"];
+                            time = time / 3600000;
+                            if(props.dataArr[i].values[j]["Data"][k]["State"] === "SLEEP_LIGHT"){
+                                light = light + time;
+                            }
+                            else{
+                                deep = deep + time;
+                            }
+                            total = total + time;
+                        }
+                        if(!table[dateStr]["total"]){
+                            table[dateStr]["light"] = {};
+                            table[dateStr]["deep"] = {};
+                            table[dateStr]["total"] = {};
+                            table[dateStr]["light"]["counter"] = 0;
+                            table[dateStr]["deep"]["counter"] = 0;
+                            table[dateStr]["total"]["counter"] = 0;
+                            table[dateStr]["light"]["sum"] = 0;
+                            table[dateStr]["deep"]["sum"] = 0;
+                            table[dateStr]["total"]["sum"] = 0;
+                        }
+                        table[dateStr]["light"]["sum"] += light;
+                        table[dateStr]["deep"]["sum"] += deep;
+                        table[dateStr]["total"]["sum"] += total;
+                        table[dateStr]["light"]["counter"]++;
+                        table[dateStr]["deep"]["counter"]++;
+                        table[dateStr]["total"]["counter"]++;
+                        continue;
+                    }
+                    table[dateStr][props.dataArr[i].name]["sum"] += props.dataArr[i].values[j]["Data"];
+                    table[dateStr][props.dataArr[i].name]["counter"]++;
+                }
             }
         }
         dates = dates.sort();
@@ -61,21 +147,53 @@ class Table extends Component {
             dates: dates
         }
         var arr = []
+        if(props.weekly || props.monthly){
+            for (let [key,] of Object.entries(this.state.data)) {
+                for (let [key1,] of Object.entries(this.state.data[key])) {
+                    this.state.data[key][key1]["Data"] = this.state.data[key][key1]["sum"] / this.state.data[key][key1]["counter"];
+                }
+            }
+        }
         for(i = 0; i < dates.length; i++){
             date = new Date(dates[i])
             dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'}).replace(/ /g, '-')
-            arr.push(
-                <tr key={dateStr}>
-                    {(this.state.dates[i] < props.date) ? <td className="before">{dateStr}</td> : <td className="after">{dateStr}</td>}
-                    { this.state.steps ? (this.state.data[dateStr]["steps"] ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["steps"]["Data"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["steps"]["Data"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
-                    { this.state.distance ? (this.state.data[dateStr]["distance"] ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["distance"]["Data"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["distance"]["Data"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
-                    { this.state.calories ? (this.state.data[dateStr]["calories"] ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["calories"]["Data"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["calories"]["Data"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
-                    { this.state.weather ? (this.state.data[dateStr]["weather"] ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["weather"]["Data"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["weather"]["Data"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
-                    { this.state.sleep ? (this.state.data[dateStr]["light"] ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["light"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["light"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
-                    { this.state.sleep ? (this.state.data[dateStr]["deep"] ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["deep"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["deep"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
-                    { this.state.sleep ? (this.state.data[dateStr]["total"] ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["total"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["total"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
-                </tr>
-            )
+            if(props.showDaily){
+                arr.push(
+                    <tr key={dateStr}>
+                        {(this.state.dates[i] < props.date) ? <td className="before">{dateStr}</td> : <td className="after">{dateStr}</td>}
+                        { this.state.steps ? (this.state.data[dateStr]["צעדים"] ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["צעדים"]["Data"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["צעדים"]["Data"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                        { this.state.distance ? (this.state.data[dateStr]["מרחק"] ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["מרחק"]["Data"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["מרחק"]["Data"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                        { this.state.calories ? (this.state.data[dateStr]["קלוריות"] ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["קלוריות"]["Data"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["קלוריות"]["Data"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                        { this.state.weather ? (this.state.data[dateStr]["מזג האוויר"] ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["מזג האוויר"]["Data"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["מזג האוויר"]["Data"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                        { this.state.sleep ? (this.state.data[dateStr]["light"] >= 0 ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["light"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["light"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                        { this.state.sleep ? (this.state.data[dateStr]["deep"] >= 0 ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["deep"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["deep"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                        { this.state.sleep ? (this.state.data[dateStr]["total"] >= 0 ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["total"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["total"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                    </tr>
+                )
+            }
+            else if(props.weekly || props.monthly){
+                if(props.weekly){
+                    dayOfWeek = date.getDay();
+                    sunday = new Date(date.getTime() - dayOfWeek * 86400000);
+                    saturday = new Date(sunday.getTime() + 518400000);
+                    dateStr = sunday.toLocaleDateString('en-GB', {day: 'numeric'}) + "-" + saturday.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'});
+                }
+                else{
+                    dateStr = date.toLocaleDateString('en-GB', {month: 'short'});
+                }
+                arr.push(
+                    <tr key={dateStr}>
+                        {(this.state.dates[i] < props.date) ? <td className="before">{dateStr}</td> : <td className="after">{dateStr}</td>}
+                        { this.state.steps ? (this.state.data[dateStr]["צעדים"] ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["צעדים"]["Data"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["צעדים"]["Data"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                        { this.state.distance ? (this.state.data[dateStr]["מרחק"] ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["מרחק"]["Data"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["מרחק"]["Data"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                        { this.state.calories ? (this.state.data[dateStr]["קלוריות"] ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["קלוריות"]["Data"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["קלוריות"]["Data"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                        { this.state.weather ? (this.state.data[dateStr]["מזג האוויר"] ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["מזג האוויר"]["Data"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["מזג האוויר"]["Data"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                        { this.state.sleep ? (this.state.data[dateStr]["light"] ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["light"]["Data"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["light"]["Data"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                        { this.state.sleep ? (this.state.data[dateStr]["deep"] ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["deep"]["Data"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["deep"]["Data"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                        { this.state.sleep ? (this.state.data[dateStr]["total"] ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["total"]["Data"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["total"]["Data"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                    </tr>
+                )
+            }
         }
         this.state = {
             table: arr

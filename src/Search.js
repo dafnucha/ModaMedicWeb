@@ -26,7 +26,10 @@ class Search extends Component {
             dailyQ: false,
             perQ: false,
             x: [],
-            date: 0
+            date: 0,
+            showDaily: true,
+            weekly: false,
+            monthly: false
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -44,6 +47,27 @@ class Search extends Component {
     handleChange(event) {
         const {name, value, type, checked} = event.target
         type === "checkbox" ? this.setState({ [name]: checked }) : this.setState({ [name]: value })
+        if(name === "showDaily"){
+            this.setState({
+                showDaily: true,
+                weekly: false,
+                monthly: false
+            })
+        }
+        else if(name === "weekly"){
+            this.setState({
+                showDaily: false,
+                weekly: true,
+                monthly: false
+            })
+        }
+        else if(name === "monthly"){
+            this.setState({
+                showDaily: false,
+                weekly: false,
+                monthly: true
+            })
+        }
     }
 
     async getRequest(name, url){
@@ -75,27 +99,20 @@ class Search extends Component {
     }
 
     async selectUser(key){
-        const response = await axios.get(
-            "http://icc.ise.bgu.ac.il/njsw03auth/usersAll/getDateOfSurgery?UserID=" + key,
-            { 
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'x-auth-token': sessionStorage.getItem("token")
-                } 
-            }
-        );
-
         let arr = this.state.dataArr;
         let d = this.state.dailyA;
         var da = [];
+        var id = "";
         for(var i = 0; i < this.state.numOfUsers; i++){
             if(d[i] && d[i].UserID === key){
                 da = d[i].docs;
+                id = d[i].docs[0].UserID;
             }
         }
         for(i = 0; i < this.state.questionnaire.values.length; i++){
-            if(this.state.questionnaire.values[i].UserID === key && this.state.questionnaire.values[i]["docs"] !== "No Permission"){
+            if(this.state.questionnaire.values[i].UserID === key){
                 this.state.periodicAnswers.push(this.state.questionnaire.values[i]["docs"]);
+                id = this.state.questionnaire.values[i].docs.data[0].UserID;
             }
         }
         for(i = 0; i < arr.length; i++){
@@ -104,36 +121,41 @@ class Search extends Component {
                 for(var j = 0; j < arr[i].values.length; j++){
                     if(arr[i].values[j].UserID === key){
                         values = arr[i].values[j].docs;
+                        id = arr[i].values[j].docs[0].UserID;
                     }
-
                 }
                 arr[i].values = values;
             }
         }
-        if(((arr[0] && arr[0]["values"] === "No Permission") || da === "No Permission" ) && !this.state.periodicAnswers[0] ){
-            window.alert("אין לך הרשאות לצפייה במטופל אנא בקש הרשאה");
-            this.setState({
-                dataArr: [],
-                periodicAnswers: [],
-                dailyA: [],
-                showPopup: false
-            })
-            this.handleSubmit();
-        }
-        else{
-            this.setState({
-                dataArr: arr,
-                dailyA: da,
-                date: response.data.data
-            })
-            this.togglePopup();
-        }
+        const response = await axios.get(
+            "http://icc.ise.bgu.ac.il/njsw03auth/usersAll/getDateOfSurgery?UserID=" + id,
+            { 
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'x-auth-token': sessionStorage.getItem("token")
+                } 
+            }
+        );
+        this.setState({
+            dataArr: arr,
+            dailyA: da,
+            date: response.data.data
+        })
+        this.togglePopup();
     }
 
     async handleSubmit(event) {
         if(event){
             event.preventDefault()
         }
+        /*
+        const birthday = new Date('August 22, 2019 23:15:30');
+        const day1 = birthday.getDay();
+        var sun = birthday.getTime();
+        var why = sun - day1 * 86400000;
+        const s = new Date(why);
+        console.log(s.getDate());
+        */
         var numOfUsers = 0;
         var arr = []
         var  i = 0;
@@ -190,9 +212,12 @@ class Search extends Component {
         }
         if(numOfUsers === 1){
             for(i = 0; i < arr.length; i++){
-                arr[i].values = arr[i].values[0];
+                arr[i].values = arr[i].values[0].docs;
             }
-            response.values = response.values[0]
+            response.values = response.values[0].docs;
+            for(i = 0; i < responseQ.values.length; i++){
+                this.state.periodicAnswers.push(responseQ.values[i]["docs"]);
+            }
         }
         this.setState({
             dataArr : arr,
@@ -208,15 +233,13 @@ class Search extends Component {
                     x = this.state.periodicAnswers[i].UserID;
                 if(!x)
                     x = this.state.dataArr[0][i].UserID;
-                this.state.x.push(x)
+                let dateC = new Date(x);
+                this.state.x.push(dateC.toLocaleDateString('en-GB', {day: 'numeric', month: 'numeric', year:"numeric"}))
                 cards.push(
                     <Card className="card" key={this.state.x[i]}  onClick={() => this.selectUser(x)}>
                         <Card.Body className="cardBody">שם פרטי: {this.state.pName} </Card.Body>
                         <Card.Body className="cardBody">שם משפחה: {this.state.fName} </Card.Body>
-                        <Card.Body className="cardBody">תז: {this.state.x[i]}</Card.Body>
-                        {(((this.state.dataArr[0] && this.state.dataArr[0]["values"] === "No Permission") || this.state.dailyA === "No Permission" )) ?
-                            <label>בקש הרשאה</label> : null
-                        }
+                        <Card.Body className="cardBody">תאריך יום הולדת: {this.state.x[i]}</Card.Body>
                     </Card>
                 );
             }
@@ -346,6 +369,38 @@ class Search extends Component {
                             שאלונים תקופתיים
                         </label>
                     </div>
+                    <div className="mdd">
+                        <label className="mLabel">
+                                בחר אופן הצגה
+                        </label>
+                        <input className="cInput"
+                            type="checkbox" 
+                            name="showDaily"
+                            checked={this.state.showDaily}
+                            onChange={this.handleChange}
+                        />
+                        <label className="mLabel">
+                            יומי
+                        </label>
+                        <input className="cInput"
+                            type="checkbox" 
+                            name="weekly"
+                            checked={this.state.weekly}
+                            onChange={this.handleChange}
+                        />
+                        <label className="mLabel">
+                            שבועי
+                        </label>
+                        <input className="cInput"
+                            type="checkbox" 
+                            name="monthly"
+                            checked={this.state.monthly}
+                            onChange={this.handleChange}
+                        />
+                        <label className="mLabel">
+                             חודשי
+                        </label>
+                    </div>
                 </form>
                 <br />
                 <DisplayButton 
@@ -360,6 +415,9 @@ class Search extends Component {
                     dailyQ={this.state.dailyQ}
                     perQ={this.state.perQ}
                     date={this.state.date}
+                    showDaily={this.state.showDaily}
+                    weekly={this.state.weekly}
+                    monthly={this.state.monthly}
                 />
                 {this.state.showPopup ? 
                     <Popup

@@ -140,14 +140,24 @@ class DisplayButton extends Component {
                     weather={this.props.weather}
                     sleep={this.props.sleep}
                     date={this.props.date}
+                    showDaily={this.props.showDaily}
+                    weekly={this.props.weekly}
+                    monthly={this.props.monthly}
                 /> </div>: null }
                 <br />
                 { (this.state.table && this.props.dailyQ) ? <h3>שאלון יומי</h3> : null }
                 { (this.state.table && this.props.dailyQ) ? <TableAns data={this.props.dailyA} 
-                    date={this.props.date}/> : null }
+                    date={this.props.date}
+                    showDaily={this.props.showDaily}
+                    weekly={this.props.weekly}
+                    monthly={this.props.monthly}
+                    /> : null }
                 { (this.state.table && this.props.perQ) ? <h3>שאלונים תקופתיים</h3> : null }
                 { (this.state.table && this.props.perQ) ? <TablePer data={this.props.periodicAnswers} 
-                    date={this.props.date}/> : null }
+                    date={this.props.date}
+                    showDaily={this.props.showDaily}
+                    weekly={this.props.weekly}
+                    monthly={this.props.monthly}/> : null }
                 { (this.state.graph && this.props.steps) ? <Graph data={arrSteps} date={this.props.date} name="צעדים"/> : null }
                 { (this.state.graph && this.props.distance) ? <Graph data={arrDis} date={this.props.date} name="מרחק"/> : null }
                 { (this.state.graph && this.props.calories) ? <Graph data={arrCal} date={this.props.date} name="קלוריות"/> : null }

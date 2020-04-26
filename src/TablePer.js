@@ -12,14 +12,51 @@ class TablePer extends Component {
         var dic = {};
         for(i = 0; i < data.length; i++){
             for(j = 0; j < data[i].data.length; j++){
-                var date = new Date(data[i].data[j].ValidTime)
-                var dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'}).replace(/ /g, '-')
-                if(table[dateStr] == null){
-                    table[dateStr] = {};
-                    dates.push(data[i].data[j].ValidTime);
+                if(props.showDaily){
+                    var date = new Date(data[i].data[j].ValidTime)
+                    var dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'}).replace(/ /g, '-')
+                    if(table[dateStr] == null){
+                        table[dateStr] = {};
+                        dates.push(data[i].data[j].ValidTime);
+                    }
+                    table[dateStr][data[i].data[j].QuestionnaireID] = data[i].data[j].Score;
+                    dic[data[i].data[j].QuestionnaireID] = true;
                 }
-                table[dateStr][data[i].data[j].QuestionnaireID] = data[i].data[j].Score;
-                dic[data[i].data[j].QuestionnaireID] = true;
+                else if(props.weekly){
+                    date = new Date(data[i].data[j].ValidTime)
+                    var dayOfWeek = date.getDay();
+                    var sunday = new Date(data[i].data[j].ValidTime - dayOfWeek * 86400000);
+                    var saturday = new Date(sunday.getTime() + 518400000);
+                    dateStr = sunday.toLocaleDateString('en-GB', {day: 'numeric'}) + "-" + saturday.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'});
+                    if(table[dateStr] == null){
+                        table[dateStr] = {};
+                        dates.push(data[i].data[j].ValidTime);
+                    }
+                    if(table[dateStr][data[i].data[j].QuestionnaireID] == null){
+                        table[dateStr][data[i].data[j].QuestionnaireID] = {};
+                        table[dateStr][data[i].data[j].QuestionnaireID]["sum"] = 0;
+                        table[dateStr][data[i].data[j].QuestionnaireID]["counter"] = 0;
+                    }
+                    table[dateStr][data[i].data[j].QuestionnaireID]["sum"] += data[i].data[j].Score;
+                    table[dateStr][data[i].data[j].QuestionnaireID]["counter"]++;
+                    dic[data[i].data[j].QuestionnaireID] = true;
+                }
+                else if(props.monthly){
+                    date = new Date(data[i].data[j].ValidTime)
+                    dateStr = date.toLocaleDateString('en-GB', {month: 'short'});
+                    if(table[dateStr] == null){
+                        table[dateStr] = {};
+                        dates.push(data[i].data[j].ValidTime);
+                    }
+                    if(table[dateStr][data[i].data[j].QuestionnaireID] == null){
+                        table[dateStr][data[i].data[j].QuestionnaireID] = {};
+                        table[dateStr][data[i].data[j].QuestionnaireID]["sum"] = 0;
+                        table[dateStr][data[i].data[j].QuestionnaireID]["counter"] = 0;
+                    }
+                    table[dateStr][data[i].data[j].QuestionnaireID]["sum"] += data[i].data[j].Score;
+                    table[dateStr][data[i].data[j].QuestionnaireID]["counter"]++;
+                    dic[data[i].data[j].QuestionnaireID] = true;
+                }
             }
         }
         dates = dates.sort();
@@ -29,20 +66,51 @@ class TablePer extends Component {
             table: [],
             dates: dates
         }
+        if(props.weekly || props.monthly){
+            for (let [key,] of Object.entries(this.state.data)) {
+                for (let [key1,] of Object.entries(this.state.data[key])) {
+                    this.state.data[key][key1]["Data"] = this.state.data[key][key1]["sum"] / this.state.data[key][key1]["counter"];
+                }
+            }
+        }
         for(i = 0; i < dates.length; i++){
             date = new Date(dates[i])
             dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'}).replace(/ /g, '-');
-            this.state.table.push(
-                <tr key={dateStr}>
-                    {(this.state.dates[i] < props.date) ? <td className="before">{dateStr}</td> : <td className="after">{dateStr}</td>}
-                    { this.state.arr["1"] ? ((this.state.data[dateStr]["1"] >= 0 || this.state.data[dateStr]["1"] < 0) ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["1"]}</td> : <td className="after">{ this.state.data[dateStr]["1"]}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
-                    { this.state.arr["2"] ? ((this.state.data[dateStr]["2"] >= 0 || this.state.data[dateStr]["2"] < 0) ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["2"]}</td> : <td className="after">{ this.state.data[dateStr]["2"]}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
-                    { this.state.arr["3"] ? ((this.state.data[dateStr]["3"] >= 0 || this.state.data[dateStr]["3"] < 0) ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["3"]}</td> : <td className="after">{ this.state.data[dateStr]["3"]}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
-                    { this.state.arr["4"] ? ((this.state.data[dateStr]["4"] >= 0 || this.state.data[dateStr]["4"] < 0) ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["4"]}</td> : <td className="after">{ this.state.data[dateStr]["4"]}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
-                    { this.state.arr["5"] ? ((this.state.data[dateStr]["5"] >= 0 || this.state.data[dateStr]["5"] < 0) ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["5"]}</td> : <td className="after">{ this.state.data[dateStr]["5"]}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
-                    { this.state.arr["6"] ? ((this.state.data[dateStr]["6"] >= 0 || this.state.data[dateStr]["6"] < 0) ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["6"]}</td> : <td className="after">{ this.state.data[dateStr]["6"]}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
-                </tr>
-            )
+            if(props.showDaily){
+                this.state.table.push(
+                    <tr key={dateStr}>
+                        {(this.state.dates[i] < props.date) ? <td className="before">{dateStr}</td> : <td className="after">{dateStr}</td>}
+                        { this.state.arr["1"] ? ((this.state.data[dateStr]["1"] >= 0 || this.state.data[dateStr]["1"] < 0) ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["1"]}</td> : <td className="after">{ this.state.data[dateStr]["1"]}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
+                        { this.state.arr["2"] ? ((this.state.data[dateStr]["2"] >= 0 || this.state.data[dateStr]["2"] < 0) ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["2"]}</td> : <td className="after">{ this.state.data[dateStr]["2"]}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
+                        { this.state.arr["3"] ? ((this.state.data[dateStr]["3"] >= 0 || this.state.data[dateStr]["3"] < 0) ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["3"]}</td> : <td className="after">{ this.state.data[dateStr]["3"]}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
+                        { this.state.arr["4"] ? ((this.state.data[dateStr]["4"] >= 0 || this.state.data[dateStr]["4"] < 0) ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["4"]}</td> : <td className="after">{ this.state.data[dateStr]["4"]}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
+                        { this.state.arr["5"] ? ((this.state.data[dateStr]["5"] >= 0 || this.state.data[dateStr]["5"] < 0) ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["5"]}</td> : <td className="after">{ this.state.data[dateStr]["5"]}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
+                        { this.state.arr["6"] ? ((this.state.data[dateStr]["6"] >= 0 || this.state.data[dateStr]["6"] < 0) ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["6"]}</td> : <td className="after">{ this.state.data[dateStr]["6"]}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
+                    </tr>
+                )
+            }
+            else if(props.weekly || props.monthly){
+                if(props.weekly){
+                    dayOfWeek = date.getDay();
+                    sunday = new Date(date.getTime() - dayOfWeek * 86400000);
+                    saturday = new Date(sunday.getTime() + 518400000);
+                    dateStr = sunday.toLocaleDateString('en-GB', {day: 'numeric'}) + "-" + saturday.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'});
+                }
+                else{
+                    dateStr = date.toLocaleDateString('en-GB', {month: 'short'});
+                }
+                this.state.table.push(
+                    <tr key={dateStr}>
+                        {(this.state.dates[i] < props.date) ? <td className="before">{dateStr}</td> : <td className="after">{dateStr}</td>}
+                        { this.state.arr["1"] ? ((this.state.data[dateStr]["1"] && (this.state.data[dateStr]["1"]["Data"] >= 0 || this.state.data[dateStr]["1"]["Data"] < 0)) ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["1"]["Data"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["1"]["Data"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
+                        { this.state.arr["2"] ? ((this.state.data[dateStr]["2"] && (this.state.data[dateStr]["2"]["Data"] >= 0 || this.state.data[dateStr]["2"]["Data"] < 0)) ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["2"]["Data"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["2"]["Data"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
+                        { this.state.arr["3"] ? ((this.state.data[dateStr]["3"] && (this.state.data[dateStr]["3"]["Data"] >= 0 || this.state.data[dateStr]["3"]["Data"] < 0)) ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["3"]["Data"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["3"]["Data"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
+                        { this.state.arr["4"] ? ((this.state.data[dateStr]["4"] && (this.state.data[dateStr]["4"]["Data"] >= 0 || this.state.data[dateStr]["4"]["Data"] < 0)) ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["4"]["Data"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["4"]["Data"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
+                        { this.state.arr["5"] ? ((this.state.data[dateStr]["5"] && (this.state.data[dateStr]["5"]["Data"] >= 0 || this.state.data[dateStr]["5"]["Data"] < 0)) ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["5"]["Data"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["5"]["Data"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
+                        { this.state.arr["6"] ? ((this.state.data[dateStr]["6"] && (this.state.data[dateStr]["6"]["Data"] >= 0 || this.state.data[dateStr]["6"]["Data"] < 0)) ? ((this.state.dates[i] < props.date) ? <td className="before">{ this.state.data[dateStr]["6"]["Data"].toFixed(2)}</td> : <td className="after">{ this.state.data[dateStr]["6"]["Data"].toFixed(2)}</td>) : ((this.state.dates[i] < props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
+                    </tr>
+                )
+            }
         }
 
 

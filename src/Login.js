@@ -163,6 +163,7 @@ class Login extends Component{
                     showWrongUser: true,
                     showQ: false,
                     showChange: false,
+                    remember: false
                 });
                 this.togglePopup();
             }
@@ -184,15 +185,17 @@ class Login extends Component{
         return(
             <div>
                 <form onSubmit={e => this.sumbit(e)}>
-                    <label>תעודת זהות:</label>
+                    <label>כתובת דוא"ל:</label>
                     <input type="text" name="ID" onChange={e => this.change(e)} value={this.state.ID} required/>
                     <label>סיסמה:</label>
                     <input type="password" name="password"  onChange={e => this.change(e)} value={this.state.password} required/>
-                    {this.state.wrong ? <label id="wrong">תעודת זהות או סיסמה לא נכונים</label> :  <label></label> }
+                    {this.state.wrong ? <label id="wrong">כתובת הדוא"ל או הסיסמה לא נכונים</label> :  <label></label> }
+                    <input type="checkbox" id="remember" name="remember" onChange={e => this.change(e)} value={this.state.remember}/>
+                    <label>זכור סיסמה</label>
                     <button type="submit">התחבר</button>
                     <label id="forget"  onClick={(e) => this.forget(e)}>שכחת סיסמה?</label>
-                    {this.state.doctor ?  <Redirect to="/search" /> : null  }
                 </form>
+                {sessionStorage.doctor ?  <Redirect to="/search" /> : null  }
                 {this.state.showPopup ? 
                     <Popup
                         text={this.state.name}
@@ -237,7 +240,7 @@ class Popup extends React.Component {
                 <h3 id="h3">שכחתי סיסמא</h3>
                 <form onSubmit={this.props.handleSubmit}>
                     <label  id="lid">
-                         אנא הזן תעודת זהות:
+                         אנא הזן כתובת דוא"ל:
                     </label>
                     <input type="text" name="id" id="id" onChange={this.props.change} required/>
                     <input type="submit" value="המשך" id="con"/>
