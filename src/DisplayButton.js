@@ -158,16 +158,16 @@ class DisplayButton extends Component {
                     showDaily={this.props.showDaily}
                     weekly={this.props.weekly}
                     monthly={this.props.monthly}/> : null }
-                { (this.state.graph && this.props.steps) ? <Graph data={arrSteps} date={this.props.date} name="צעדים"/> : null }
-                { (this.state.graph && this.props.distance) ? <Graph data={arrDis} date={this.props.date} name="מרחק"/> : null }
-                { (this.state.graph && this.props.calories) ? <Graph data={arrCal} date={this.props.date} name="קלוריות"/> : null }
-                { (this.state.graph && this.props.weather) ? <Graph data={arrWeat} date={this.props.date} name="מזג האוויר"/> : null }
-                { (this.state.graph && this.props.sleep) ? <SleepGraph data={arrSleep} date={this.props.date} name="שעות שינה"/> : null }
-                { (this.state.graph && this.props.dailyQ) ? <GraphAns data={this.props.dailyA} date={this.props.date} name="שאלון יומי"/> : null }
-                { (this.state.graph && arr1.length > 0 && this.props.perQ) ? <Graph data={arr1} date={this.props.date} name="Oswestry Disability Index"/> : null }
-                { (this.state.graph && arr2.length > 0 && this.props.perQ) ? <Graph data={arr2} date={this.props.date} name="Neck Disability Index"/> : null }
-                { (this.state.graph && arr3.length > 0 && this.props.perQ) ? <Graph data={arr3} date={this.props.date} name="Lower Extremity Functional Scale"/> : null }
-                { (this.state.graph && arr4.length > 0 && this.props.perQ) ? <Graph data={arr4} date={this.props.date} name="Oswestry low back pain"/> : null }
+                { (this.state.graph && this.props.steps) ? <Graph data={arrSteps} date={this.props.date} name="צעדים" showDaily={this.props.showDaily} weekly={this.props.weekly} monthly={this.props.monthly}/> : null }
+                { (this.state.graph && this.props.distance) ? <Graph data={arrDis} date={this.props.date} name="מרחק" showDaily={this.props.showDaily} weekly={this.props.weekly} monthly={this.props.monthly}/> : null }
+                { (this.state.graph && this.props.calories) ? <Graph data={arrCal} date={this.props.date} name="קלוריות" showDaily={this.props.showDaily} weekly={this.props.weekly} monthly={this.props.monthly}/> : null }
+                { (this.state.graph && this.props.weather) ? <Graph data={arrWeat} date={this.props.date} name="מזג האוויר" showDaily={this.props.showDaily} weekly={this.props.weekly} monthly={this.props.monthly}/> : null }
+                { (this.state.graph && this.props.sleep) ? <SleepGraph data={arrSleep} date={this.props.date} name="שעות שינה" showDaily={this.props.showDaily} weekly={this.props.weekly} monthly={this.props.monthly}/> : null }
+                { (this.state.graph && this.props.dailyQ) ? <GraphAns data={this.props.dailyA} date={this.props.date} name="שאלון יומי" showDaily={this.props.showDaily} weekly={this.props.weekly} monthly={this.props.monthly}/> : null }
+                { (this.state.graph && arr1.length > 0 && this.props.perQ) ? <Graph data={arr1} date={this.props.date} name="Oswestry Disability Index" showDaily={this.props.showDaily} weekly={this.props.weekly} monthly={this.props.monthly}/> : null }
+                { (this.state.graph && arr2.length > 0 && this.props.perQ) ? <Graph data={arr2} date={this.props.date} name="Neck Disability Index" showDaily={this.props.showDaily} weekly={this.props.weekly} monthly={this.props.monthly}/> : null }
+                { (this.state.graph && arr3.length > 0 && this.props.perQ) ? <Graph data={arr3} date={this.props.date} name="Lower Extremity Functional Scale" showDaily={this.props.showDaily} weekly={this.props.weekly} monthly={this.props.monthly}/> : null }
+                { (this.state.graph && arr4.length > 0 && this.props.perQ) ? <Graph data={arr4} date={this.props.date} name="Oswestry low back pain" showDaily={this.props.showDaily} weekly={this.props.weekly} monthly={this.props.monthly}/> : null }
             </div>
         )
     }
