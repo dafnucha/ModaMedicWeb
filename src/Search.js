@@ -29,7 +29,8 @@ class Search extends Component {
             date: 0,
             showDaily: true,
             weekly: false,
-            monthly: false
+            monthly: false,
+            user: {}
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -102,31 +103,36 @@ class Search extends Component {
         let arr = this.state.dataArr;
         let d = this.state.dailyA;
         var da = [];
-        var id = "";
+        var user;
+        var sDate;
         for(var i = 0; i < this.state.numOfUsers; i++){
-            if(d[i] && d[i].UserID === key){
+            if(d[i] && d[i].UserID["BirthDate"] === key){
                 da = d[i].docs;
-                id = d[i].docs[0].UserID;
+                sDate = d[i].UserID["DateOfSurgery"];
+                user = d[i].UserID;
             }
         }
         for(i = 0; i < this.state.questionnaire.values.length; i++){
-            if(this.state.questionnaire.values[i].UserID === key){
+            if(this.state.questionnaire.values[i].UserID["BirthDate"] === key){
                 this.state.periodicAnswers.push(this.state.questionnaire.values[i]["docs"]);
-                id = this.state.questionnaire.values[i].docs.data[0].UserID;
+                sDate = this.state.questionnaire.values[i].UserID["DateOfSurgery"];
+                user = this.state.questionnaire.values[i].UserID;
             }
         }
         for(i = 0; i < arr.length; i++){
             let values = [];
             if(arr[i]){
                 for(var j = 0; j < arr[i].values.length; j++){
-                    if(arr[i].values[j].UserID === key){
+                    if(arr[i].values[j].UserID["BirthDate"] === key){
                         values = arr[i].values[j].docs;
-                        id = arr[i].values[j].docs[0].UserID;
+                        sDate = arr[i].values[j].UserID["DateOfSurgery"];
+                        user = arr[i].values[j].UserID;
                     }
                 }
                 arr[i].values = values;
             }
         }
+        /*
         const response = await axios.get(
             "http://icc.ise.bgu.ac.il/njsw03auth/usersAll/getDateOfSurgery?UserID=" + id,
             { 
@@ -136,60 +142,66 @@ class Search extends Component {
                 } 
             }
         );
+        */
         this.setState({
             dataArr: arr,
             dailyA: da,
-            date: response.data.data
+            date: sDate,
+            user: user
         })
-        this.togglePopup();
+        if(this.state.showPopup){
+            this.togglePopup();
+        }
     }
 
     async handleSubmit(event) {
         if(event){
             event.preventDefault()
         }
-        /*
-        const birthday = new Date('August 22, 2019 23:15:30');
-        const day1 = birthday.getDay();
-        var sun = birthday.getTime();
-        var why = sun - day1 * 86400000;
-        const s = new Date(why);
-        console.log(s.getDate());
-        */
         var numOfUsers = 0;
         var arr = []
         var  i = 0;
         if(this.state.steps){
-            let response = await this.getRequest("צעדים", "metrics/getSteps")
-            arr.push(response);
+            let response = await this.getRequest("צעדים", "metrics/getSteps");
+            if(response.values[0]["docs"].length > 0){
+                arr.push(response);
+            }
             if(response.numOfUsers > numOfUsers){
                 numOfUsers = response.numOfUsers;
             }
         }
         if(this.state.distance){
             let response = await this.getRequest("מרחק", "metrics/getDistance")
-            arr.push(response);
+            if(response.values[0]["docs"].length > 0){
+                arr.push(response);
+            }
             if(response.numOfUsers > numOfUsers){
                 numOfUsers = response.numOfUsers;
             }
         }
         if(this.state.calories){
             let response = await this.getRequest("קלוריות", "metrics/getCalories")
-            arr.push(response);
+            if(response.values[0]["docs"].length > 0){
+                arr.push(response);
+            }
             if(response.numOfUsers > numOfUsers){
                 numOfUsers = response.numOfUsers;
             }
         }
         if(this.state.weather){
             let response = await this.getRequest("מזג האוויר", "metrics/getWeather")
-            arr.push(response);
+            if(response.values[0]["docs"].length > 0){
+                arr.push(response);
+            }
             if(response.numOfUsers > numOfUsers){
                 numOfUsers = response.numOfUsers;
             }
         }
         if(this.state.sleeping_hours){
             let response = await this.getRequest("שעות שינה", "metrics/getSleep");
-            arr.push(response);
+            if(response.values[0]["docs"].length > 0){
+                arr.push(response);
+            }
             if(response.numOfUsers > numOfUsers){
                 numOfUsers = response.numOfUsers;
             }
@@ -210,29 +222,28 @@ class Search extends Component {
         if(num > numOfUsers){
             numOfUsers = num;
         }
-        if(numOfUsers === 1){
-            for(i = 0; i < arr.length; i++){
-                arr[i].values = arr[i].values[0].docs;
-            }
-            response.values = response.values[0].docs;
-            for(i = 0; i < responseQ.values.length; i++){
-                this.state.periodicAnswers.push(responseQ.values[i]["docs"]);
-            }
-        }
         this.setState({
             dataArr : arr,
             dailyA: response.values,
             numOfUsers: numOfUsers,
             questionnaire: responseQ
         })
+        if(numOfUsers === 1){
+            let x = this.state.dailyA[0].UserID["BirthDate"];
+            if(!x)
+                x = this.state.periodicAnswers[0].UserID["BirthDate"];
+            if(!x)
+                x = this.state.dataArr[0][0].UserID["BirthDate"];
+            this.selectUser(x)
+        }
         if(numOfUsers > 1){
             var cards = [];
             for(i = 0; i < numOfUsers; i++){
-                let x = this.state.dailyA[i].UserID;
+                let x = this.state.dailyA[i].UserID["BirthDate"];
                 if(!x)
-                    x = this.state.periodicAnswers[i].UserID;
+                    x = this.state.periodicAnswers[i].UserID["BirthDate"];
                 if(!x)
-                    x = this.state.dataArr[0][i].UserID;
+                    x = this.state.dataArr[0][i].UserID["BirthDate"];
                 let dateC = new Date(x);
                 this.state.x.push(dateC.toLocaleDateString('en-GB', {day: 'numeric', month: 'numeric', year:"numeric"}))
                 cards.push(
@@ -418,6 +429,7 @@ class Search extends Component {
                     showDaily={this.state.showDaily}
                     weekly={this.state.weekly}
                     monthly={this.state.monthly}
+                    user={this.state.user}
                 />
                 {this.state.showPopup ? 
                     <Popup

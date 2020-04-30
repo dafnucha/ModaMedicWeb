@@ -95,8 +95,8 @@ button:hover {
     position: absolute;
     left: 30%;
     right: 30%;
-    top: 25%;
-    bottom: 45%;
+    top: 0;
+    bottom: 0;
     margin: auto;
     background: white;
 }
@@ -118,6 +118,11 @@ button:hover {
 }
 
 #forget:hover{
+    color: blue;
+    text-decoration: underline;
+}
+
+#register:hover{
     color: blue;
     text-decoration: underline;
 }

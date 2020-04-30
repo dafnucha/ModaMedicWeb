@@ -83,6 +83,10 @@ class App extends Component{
     sessionStorage.removeItem("type");
     sessionStorage.removeItem("name");
     sessionStorage.removeItem("doctor");
+    localStorage.removeItem("token");
+    localStorage.removeItem("type");
+    localStorage.removeItem("name");
+    localStorage.removeItem("doctor");
     window.location.reload(false);
   }
 
@@ -103,7 +107,7 @@ class App extends Component{
             <Logo />
             <Search />
             <br />
-            {sessionStorage.getItem("doctor") !== "true" ?  <Redirect to="/" /> : null  }
+            {sessionStorage.getItem("doctor") !== "true"?  <Redirect to="/" /> : null  }
           </header>
         </div>
         {this.state.showPopup ? 

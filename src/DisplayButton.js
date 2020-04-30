@@ -6,6 +6,7 @@ import Graph from "./Graph"
 import TablePer from "./TablePer"
 import SleepGraph from "./SleepGraph"
 import GraphAns from "./GraphAns"
+import PatientData from "./PatientData"
 
 
 class DisplayButton extends Component {
@@ -48,7 +49,7 @@ class DisplayButton extends Component {
 
     render() {
         var arrSteps, arrDis, arrCal, arrWeat, arrSleep;
-        var  arr1 = [], arr2 = [], arr3 = [], arr4 = [];
+        var  arr1 = [], arr2 = [], arr3 = [], arr4 = [], arr5 = [], arr6 = [];
         for(var i = 0; i < this.props.dataArr.length; i++){
             if(this.props.dataArr[i].name === "צעדים"){
                 arrSteps = this.props.dataArr[i].values
@@ -97,6 +98,18 @@ class DisplayButton extends Component {
                     arr4[j]["Data"] = arr4[j]["Score"];
                 }
             }
+            if(this.props.periodicAnswers[i].QuestionnaireID === 5){
+                arr5 = this.props.periodicAnswers[i].data;
+                for(j = 0; j < arr5.length; j++){
+                    arr5[j]["Data"] = arr5[j]["Score"];
+                }
+            }
+            if(this.props.periodicAnswers[i].QuestionnaireID === 6){
+                arr6 = this.props.periodicAnswers[i].data;
+                for(j = 0; j < arr6.length; j++){
+                    arr6[j]["Data"] = arr6[j]["Score"];
+                }
+            }
         }
         return(
             <div>
@@ -132,6 +145,7 @@ class DisplayButton extends Component {
                 </div>
                 <br />
                 <br />
+                { (this.state.graph || this.state.table ) ? <PatientData user={this.props.user}/> : null}
                 { (this.state.table && this.props.dataArr.length > 0) ? <h3>מדדים</h3> : null }
                 { this.state.table ? <div className="ex1"><Table dataArr={this.props.dataArr}
                     steps={this.props.steps}
@@ -168,6 +182,9 @@ class DisplayButton extends Component {
                 { (this.state.graph && arr2.length > 0 && this.props.perQ) ? <Graph data={arr2} date={this.props.date} name="Neck Disability Index" showDaily={this.props.showDaily} weekly={this.props.weekly} monthly={this.props.monthly}/> : null }
                 { (this.state.graph && arr3.length > 0 && this.props.perQ) ? <Graph data={arr3} date={this.props.date} name="Lower Extremity Functional Scale" showDaily={this.props.showDaily} weekly={this.props.weekly} monthly={this.props.monthly}/> : null }
                 { (this.state.graph && arr4.length > 0 && this.props.perQ) ? <Graph data={arr4} date={this.props.date} name="Oswestry low back pain" showDaily={this.props.showDaily} weekly={this.props.weekly} monthly={this.props.monthly}/> : null }
+                { (this.state.graph && arr5.length > 0 && this.props.perQ) ? <Graph data={arr5} date={this.props.date} name="EQ-5D" showDaily={this.props.showDaily} weekly={this.props.weekly} monthly={this.props.monthly}/> : null }
+                { (this.state.graph && arr6.length > 0 && this.props.perQ) ? <Graph data={arr6} date={this.props.date} name="EQ5D Number" showDaily={this.props.showDaily} weekly={this.props.weekly} monthly={this.props.monthly}/> : null }
+                
             </div>
         )
     }

@@ -1,0 +1,64 @@
+.label{
+    float: right;
+    margin-left: 2%;
+    font-size: medium;
+}
+
+.line{
+    overflow: hidden;
+}
+
+#formQ{
+    overflow: hidden;
+}
+
+#sdate, #quest{
+    margin-left: 0.5%;
+}
+
+#changeDate:hover{
+    color: blue;
+    text-decoration: underline;
+}
+
+.mLabel{
+    font-size: small;
+    color: black;
+    float: right;
+    margin-left: 9px;
+}
+
+.cInput{
+    float: right;
+}
+
+#data{
+    margin-bottom: 6%;
+}
+
+.popup {
+
+    float: right;
+    text-align: right;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    background-color: rgba(0,0,0, 0.5);
+}
+
+.popup_inner {
+
+    position: absolute;
+    left: 30%;
+    right: 30%;
+    top: 25%;
+    bottom: 10%;
+    margin: auto;
+    height: auto;
+    background: white;
+}

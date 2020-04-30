@@ -32,6 +32,7 @@ class Graph extends Component {
     render() {
         var data = this.sort_by_key(this.props.data, "Timestamp")
         var points = {};
+        var min  = 0;
         var oDay = new Date(this.props.date);
         var line = {};
         var table = {};
@@ -41,6 +42,9 @@ class Graph extends Component {
             if(this.props.showDaily){
                 var date = new Date(data[i].ValidTime)
                 var dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year:"numeric"}).replace(/ /g, '-')
+                if(data[i].Data < 0){
+                    min = -1;
+                }
                 if(date <= oDay){
                     points[dateStr] = data[i].Data.toFixed(2);
                     last = dateStr;
@@ -94,6 +98,9 @@ class Graph extends Component {
                 else{
                     dateStr = date.toLocaleDateString('en-GB', {month: 'short'});
                 }
+                if((table[dateStr]["sum"] /  table[dateStr]["counter"]) < 0){
+                    min = -1;
+                }
                 if(date <= oDay){
                     points[dateStr] = (table[dateStr]["sum"] /  table[dateStr]["counter"]).toFixed(2);
                     last = dateStr;
@@ -116,7 +123,7 @@ class Graph extends Component {
             <div>
                 <div className="App">
                     <h1>{this.props.name}</h1>
-                    <LineChart data={dataX} min={0} />
+                    <LineChart data={dataX} min={min} />
                 </div>	
             </div>
         )

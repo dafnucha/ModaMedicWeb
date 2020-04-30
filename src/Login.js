@@ -4,11 +4,11 @@ import {
 } from "react-router-dom";
 import './Login.css';
 import axios from 'axios';
+import Adduser from'./AddUser';
 
 class Login extends Component{
     constructor(props){
         super(props);
-
         this.state = {
             ID: '',
             password: '',
@@ -28,9 +28,16 @@ class Login extends Component{
             diff: false,
             token: "",
             pass: "",
-            pass2: ""
+            pass2: "",
+            remember: false,
+            register: false
         };
-
+        if(localStorage.getItem("doctor")){
+            sessionStorage.setItem("token", localStorage.getItem("token"));
+            sessionStorage.setItem("name", localStorage.getItem("name"));
+            sessionStorage.setItem("type", localStorage.getItem("type"));
+            sessionStorage.setItem("doctor", localStorage.getItem("doctor"));
+        }
         this.change = this.change.bind(this);
         this.sumbit = this.sumbit.bind(this);
         this.togglePopup = this.togglePopup.bind(this);
@@ -38,6 +45,7 @@ class Login extends Component{
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handle = this.handle.bind(this);
         this.changePass = this.changePass.bind(this);
+        this.register = this.register.bind(this);
     }
 
     change(e) {
@@ -61,6 +69,7 @@ class Login extends Component{
             showWrongUser: false,
             showQ: false,
             showChange: false,
+            register: false
         })
         this.togglePopup();
     }
@@ -81,6 +90,7 @@ class Login extends Component{
             showWrongUser: false,
             showQ: true,
             showChange: false,
+            register: false,
             question: response1.data.data["QuestionText"]
         });
     }
@@ -110,6 +120,7 @@ class Login extends Component{
                 showWrongUser: false,
                 showQ: false,
                 showChange: true,
+                register: false,
                 token: token
             })
         }
@@ -145,6 +156,17 @@ class Login extends Component{
     
       }
 
+    register(e){
+        this.setState({
+            register: true,
+            showID: false,
+            showWrongUser: false,
+            showQ: false,
+            showChange: false,
+        })
+        this.togglePopup();
+    }
+
     sumbit(e){
         e.preventDefault();
         axios.post('http://icc.ise.bgu.ac.il/njsw03users/login', {
@@ -163,7 +185,7 @@ class Login extends Component{
                     showWrongUser: true,
                     showQ: false,
                     showChange: false,
-                    remember: false
+                    register: false
                 });
                 this.togglePopup();
             }
@@ -176,7 +198,14 @@ class Login extends Component{
                 })
                 sessionStorage.setItem("doctor", this.state.doctor);
                 window.location.reload(false);
+                if(this.state.remember){
+                    localStorage.setItem("token", res.data.data.token);
+                    localStorage.setItem("name", res.data.data.name);
+                    localStorage.setItem("type", res.data.data.type);
+                    localStorage.setItem("doctor", this.state.doctor);
+                }
             }
+            
         });
 
     }
@@ -191,9 +220,10 @@ class Login extends Component{
                     <input type="password" name="password"  onChange={e => this.change(e)} value={this.state.password} required/>
                     {this.state.wrong ? <label id="wrong">כתובת הדוא"ל או הסיסמה לא נכונים</label> :  <label></label> }
                     <input type="checkbox" id="remember" name="remember" onChange={e => this.change(e)} value={this.state.remember}/>
-                    <label>זכור סיסמה</label>
+                    <label>זכור אותי</label>
                     <button type="submit">התחבר</button>
                     <label id="forget"  onClick={(e) => this.forget(e)}>שכחת סיסמה?</label>
+                    <label id="register"  onClick={(e) => this.register(e)}>הירשם</label>
                 </form>
                 {sessionStorage.doctor ?  <Redirect to="/search" /> : null  }
                 {this.state.showPopup ? 
@@ -211,6 +241,7 @@ class Login extends Component{
                         wrongA={this.state.wrongA}
                         diff={this.state.diff}
                         changePass={this.changePass.bind(this)}
+                        register={this.state.register}
                     /> : null
                 }
             </div>
@@ -285,6 +316,15 @@ class Popup extends React.Component {
                         {this.props.diff ? <label>הסיסמאות שונות</label> : null}
                         <input type="submit" value="שלח" id="send"/>
                     </form>
+                </div>
+            </div> : null
+          }
+          { this.props.register ?
+            <div className='popup'>
+                <div className='popup_inner' >
+                    <button onClick={this.props.closePopup} id="x">x</button>
+                    <h3>הרשמה</h3>
+                    <Adduser />
                 </div>
             </div> : null
           }
