@@ -1,7 +1,16 @@
 .label{
     float: right;
-    margin-left: 2%;
+    margin-left: 0.5%;
     font-size: medium;
+    margin-top: 2.1%;
+    margin-right: 0.5%;
+}
+
+.labelData{
+    float: right;
+    font-size: 18px;
+    margin-top: 2%;
+    margin-left: 2%;
 }
 
 .line{
@@ -16,9 +25,11 @@
     margin-left: 0.5%;
 }
 
-#changeDate:hover{
-    color: blue;
-    text-decoration: underline;
+.changeDate{
+    width: auto;
+    margin-right: 0%;
+    float: right;
+    background-color: rgb(255, 255, 255);
 }
 
 .mLabel{
@@ -34,6 +45,8 @@
 
 #data{
     margin-bottom: 6%;
+    background-color: rgba(175, 175, 175, 0.315);
+    border: 1px solid rgb(151, 151, 151);
 }
 
 .popup {

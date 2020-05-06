@@ -92,6 +92,9 @@ class Search extends Component {
                     } 
                 }
             );
+            if(response.data.message === "Not Found"){
+                return null;
+            }
             return({
                 values: response.data.data,
                 name : name,
@@ -161,52 +164,46 @@ class Search extends Component {
         var numOfUsers = 0;
         var arr = []
         var  i = 0;
-        if(this.state.steps){
-            let response = await this.getRequest("צעדים", "metrics/getSteps");
-            if(response.values[0]["docs"].length > 0){
-                arr.push(response);
-            }
-            if(response.numOfUsers > numOfUsers){
-                numOfUsers = response.numOfUsers;
-            }
+        let response = await this.getRequest("צעדים", "metrics/getSteps");
+        if(!response){
+            window.alert("לא קיים מטופל");
+            return;
         }
-        if(this.state.distance){
-            let response = await this.getRequest("מרחק", "metrics/getDistance")
-            if(response.values[0]["docs"].length > 0){
-                arr.push(response);
-            }
-            if(response.numOfUsers > numOfUsers){
-                numOfUsers = response.numOfUsers;
-            }
+        if(response.values[0]["docs"].length > 0){
+            arr.push(response);
         }
-        if(this.state.calories){
-            let response = await this.getRequest("קלוריות", "metrics/getCalories")
-            if(response.values[0]["docs"].length > 0){
-                arr.push(response);
-            }
-            if(response.numOfUsers > numOfUsers){
-                numOfUsers = response.numOfUsers;
-            }
+        if(response.numOfUsers > numOfUsers){
+            numOfUsers = response.numOfUsers;
         }
-        if(this.state.weather){
-            let response = await this.getRequest("מזג האוויר", "metrics/getWeather")
-            if(response.values[0]["docs"].length > 0){
-                arr.push(response);
-            }
-            if(response.numOfUsers > numOfUsers){
-                numOfUsers = response.numOfUsers;
-            }
+        response = await this.getRequest("מרחק", "metrics/getDistance")
+        if(response.values[0]["docs"].length > 0){
+            arr.push(response);
         }
-        if(this.state.sleeping_hours){
-            let response = await this.getRequest("שעות שינה", "metrics/getSleep");
-            if(response.values[0]["docs"].length > 0){
-                arr.push(response);
-            }
-            if(response.numOfUsers > numOfUsers){
-                numOfUsers = response.numOfUsers;
-            }
+        if(response.numOfUsers > numOfUsers){
+            numOfUsers = response.numOfUsers;
         }
-        let response = await this.getRequest("תשובות יומיות", "answers/getDailyAnswers")
+        response = await this.getRequest("קלוריות", "metrics/getCalories")
+        if(response.values[0]["docs"].length > 0){
+            arr.push(response);
+        }
+        if(response.numOfUsers > numOfUsers){
+            numOfUsers = response.numOfUsers;
+        }
+        response = await this.getRequest("מזג האוויר", "metrics/getWeather")
+        if(response.values[0]["docs"].length > 0){
+            arr.push(response);
+        }
+        if(response.numOfUsers > numOfUsers){
+            numOfUsers = response.numOfUsers;
+        }
+        response = await this.getRequest("שעות שינה", "metrics/getSleep");
+        if(response.values[0]["docs"].length > 0){
+            arr.push(response);
+        }
+        if(response.numOfUsers > numOfUsers){
+            numOfUsers = response.numOfUsers;
+        }
+        response = await this.getRequest("תשובות יומיות", "answers/getDailyAnswers")
         if(response.numOfUsers > numOfUsers){
             numOfUsers = response.numOfUsers;
         }
@@ -293,7 +290,7 @@ class Search extends Component {
                     </div>
                     <div className="dates">
                             <label className="cSearch">
-                                בחר תאריכים מ
+                                בחר תאריכים: מ
                             </label>
                             <input className="dSearch"
                                 type="date"
@@ -314,7 +311,7 @@ class Search extends Component {
                     <br />
                     <div className="mdd">
                         <label className="mLabel">
-                                בחר מדדים
+                                בחר מדדים:
                         </label>
                         <input className="cInput"
                             type="checkbox" 
@@ -380,9 +377,9 @@ class Search extends Component {
                             שאלונים תקופתיים
                         </label>
                     </div>
-                    <div className="mdd">
+                    <div className="mddShow">
                         <label className="mLabel">
-                                בחר אופן הצגה
+                                בחר אופן הצגה:
                         </label>
                         <input className="cInput"
                             type="checkbox" 

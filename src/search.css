@@ -112,6 +112,12 @@ h4{
     overflow: hidden
 }
 
+.mddShow{
+    margin-right: 30%;
+    margin-top: 15px;
+    overflow: hidden
+}
+
 .popup {
 
     float: right;

@@ -116,7 +116,7 @@ class GraphAns extends Component {
             <div>
                 <div className="App">
                     <h1>{this.props.name}</h1>
-                    <LineChart data={dataX} min={0} />
+                    <LineChart download={true} data={dataX} min={0} />
                 </div>	
             </div>
         )

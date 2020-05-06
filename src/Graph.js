@@ -123,7 +123,7 @@ class Graph extends Component {
             <div>
                 <div className="App">
                     <h1>{this.props.name}</h1>
-                    <LineChart data={dataX} min={min} />
+                    <LineChart download={true} data={dataX} min={min} />
                 </div>	
             </div>
         )

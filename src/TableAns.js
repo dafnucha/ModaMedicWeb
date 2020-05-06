@@ -1,4 +1,5 @@
 import React, {Component} from "react"
+import {ExportCSV} from "./ExportCSV"
 import "./Table.css"
 
 
@@ -10,6 +11,7 @@ class TableAns extends Component {
         var dates = []
         let data = props.data;
         var table = {};
+        var exportCSV = [];
         for(i = 0; i < data.length; i++){
             if(props.showDaily){
                 var date = new Date(data[i].ValidTime);
@@ -37,6 +39,11 @@ class TableAns extends Component {
                         {(data[i].ValidTime < props.date) ? <td className="before">{text}</td> : <td className="after">{text}</td>}
                     </tr>
                 )
+                var line = {};
+                line["תאריך"] = dateStr;
+                line["רמת כאב"] = data[i]["Answers"][0]["AnswerID"][0];
+                line["תרופה"] = text;
+                exportCSV.push(line);
             }
             else if(props.weekly){
                 date = new Date(data[i].ValidTime)
@@ -65,12 +72,14 @@ class TableAns extends Component {
                 table[dateStr]["sum"] += data[i]["Answers"][0]["AnswerID"][0];
                 table[dateStr]["counter"]++;
             }
+            
         }
         dates = dates.sort();
         this.state = {
             table: arr,
             data: table,
-            dates: dates
+            dates: dates,
+            exportCSV: exportCSV
         }
         if(props.weekly || props.monthly){
             for (let [key,] of Object.entries(this.state.data)) {
@@ -94,6 +103,11 @@ class TableAns extends Component {
                         {(data[i].ValidTime < props.date) ? <td className="before">{/** */}</td> : <td className="after">{/** */}</td>}
                     </tr>
                 )
+                line = {};
+                line["תאריך"] = dateStr;
+                line["רמת כאב"] = this.state.data[dateStr];
+                //line["תרופה"] = text;
+                this.state.exportCSV.push(line);
             }
         }
         this.styleLabel = {
@@ -115,8 +129,8 @@ class TableAns extends Component {
 
     render() {
         return(
-            <div>
-                <table style={{width: "100%"}} id="daily">
+            <div className="center">
+                <table style={{width: "100%"}} id="daily" className="tabels">
                     <tbody>
                         <tr>
                             <th>תאריך</th>
@@ -126,6 +140,7 @@ class TableAns extends Component {
                         {this.state.table}
                     </tbody>
                 </table>
+                <ExportCSV csvData={this.state.exportCSV} fileName="שאלון יומי"/>
             </div>
         )
     }

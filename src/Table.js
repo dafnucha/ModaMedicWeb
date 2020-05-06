@@ -1,4 +1,5 @@
 import React, {Component} from "react"
+import {ExportCSV} from "./ExportCSV"
 //import "./Table.css"
 
 
@@ -144,7 +145,8 @@ class Table extends Component {
             weather: props.weather,
             sleep: props.sleep,
             data: table,
-            dates: dates
+            dates: dates,
+            
         }
         var arr = []
         if(props.weekly || props.monthly){
@@ -154,6 +156,7 @@ class Table extends Component {
                 }
             }
         }
+        var exportCSV = [];
         for(i = 0; i < dates.length; i++){
             date = new Date(dates[i])
             dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'}).replace(/ /g, '-')
@@ -194,9 +197,36 @@ class Table extends Component {
                     </tr>
                 )
             }
+            var line = {};
+            line["תאריך"] = dateStr;
+            if(this.state.steps && this.state.data[dateStr]["צעדים"]){
+                line["צעדים"] = this.state.data[dateStr]["צעדים"]["Data"];
+            }
+            if(this.state.distance && this.state.data[dateStr]["מרחק"]){
+                line["מרחק"] = this.state.data[dateStr]["מרחק"]["Data"];
+            }
+            if(this.state.calories && this.state.data[dateStr]["קלוריות"]){
+                line["קלוריות"] = this.state.data[dateStr]["קלוריות"]["Data"];
+            }
+            if(this.state.weather && this.state.data[dateStr]["מזג האוויר"]){
+                line["מזג האוויר"] = this.state.data[dateStr]["מזג האוויר"]["Data"];
+            }
+            if(this.state.sleep && this.state.data[dateStr]["light"] && props.showDaily){
+                line["שעות שינה קלה"] = this.state.data[dateStr]["light"];
+                line["שעות שינה עמוקה"] = this.state.data[dateStr]["deep"];
+                line["סך כל שעות השינה"] = this.state.data[dateStr]["total"];
+                
+            }
+            if(this.state.sleep && this.state.data[dateStr]["light"] && !props.showDaily){
+                line["שעות שינה קלה"] = this.state.data[dateStr]["light"]["Data"];
+                line["שעות שינה עמוקה"] = this.state.data[dateStr]["deep"]["Data"];
+                line["סך כל שעות השינה"] = this.state.data[dateStr]["total"]["Data"];
+            }
+            exportCSV.push(line);
         }
         this.state = {
-            table: arr
+            table: arr,
+            exportCSV: exportCSV
         }
         this.styleLabel = {
             fontSize: "calc(10px)",
@@ -218,8 +248,8 @@ class Table extends Component {
     render() {
         require("./Table.css");
         return(
-            <div>
-                <table style={{width: "100%"}} id="mdd">
+            <div className="center">
+                <table style={{width: "100%"}} id="mdd" className="tabels" align="center">
                     <tbody>
                         <tr>
                             { this.props.dataArr.length > 0 ? <th>תאריך</th> : null}
@@ -234,6 +264,7 @@ class Table extends Component {
                         {this.state.table}
                     </tbody>
                 </table>
+                <ExportCSV csvData={this.state.exportCSV} fileName="מדדים"/>
             </div>
         )
     }

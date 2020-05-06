@@ -169,7 +169,7 @@ class SleepGraph extends Component {
             <div>
                 <div className="App">
                     <h1>{this.props.name}</h1>
-                    <LineChart data={dataX} colors={["#010C6B", "#7C0000", "#0D4E00", "#77CCEE" ,"#F78989", "#B5FFA2"]} min={0}/>
+                    <LineChart download={true} data={dataX} colors={["#010C6B", "#7C0000", "#0D4E00", "#77CCEE" ,"#F78989", "#B5FFA2"]} min={0}/>
                 </div>	
             </div>
         )

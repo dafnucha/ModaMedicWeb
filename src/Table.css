@@ -1,13 +1,31 @@
-#mdd th, #mdd td, #daily th, #daily td{
+#mdd th, #mdd td, #daily th{
     border: 1px solid black;
     border-collapse: collapse;
     float: right;
-    width: 9%;
+    width: 10%;
     font-size: 15px;
     font-weight:normal;
     margin: 0;
     padding: 1%;
     text-align: center;
+}
+
+
+#daily td{
+    border: 1px solid black;
+    border-collapse: collapse;
+    float: right;
+    width: 10%;
+    font-size: 15px;
+    font-weight:normal;
+    margin: 0;
+    padding: 1%;
+    text-align: center;
+    height: 50px;
+}
+
+#mdd tr, #daily tr, #daily tr{
+    width: auto;
 }
 
 #per th, #per td  {
@@ -17,13 +35,16 @@
     width: 12%;
     font-size: 15px;
     font-weight:normal;
-    margin: 0;
     padding: 1%;
     text-align: center;
 }
 
 #mdd th{
     height: 50px;
+}
+
+#mdd td{
+    height: 35px;
 }
 
 #per th{
@@ -45,5 +66,14 @@
 #mdd, #daily, #per{
     border-collapse: collapse;
     border-spacing: 0;
-    width: 100%;
+}
+
+.tabels{
+    width: fit-content;
+    margin-left:auto; 
+    margin-right:auto;
+}
+
+.center{
+    text-align:center;
 }

@@ -144,25 +144,38 @@ class PatientData extends Component {
 		return (
             <div id="data">
                 <div className="line">
-                    <label className="label">שם פרטי: {fName}</label>
-                    <label className="label">שם משפחה: {lName}</label>
-                    <label className="label">מספר טלפון: {pNumber}</label>
+                    <label className="label">שם פרטי:</label>
+                    <label className="labelData">{fName}</label>
+                    <label className="label">שם משפחה:</label>
+                    <label className="labelData">{lName}</label>
+                    <label className="label">מספר טלפון:</label>
+                    <label className="labelData">{pNumber}</label>
                 </div>
                 <div className="line">
-                    <label className="label">מין: {gender}</label>
-                    <label className="label">משקל: {weight}</label>
-                    <label className="label">גובה: {height}</label>
-                    <label className="label">{smoke}</label>
+                    <label className="label">מין:</label>
+                    <label className="labelData">{gender}</label>
+                    <label className="label">משקל:</label>
+                    <label className="labelData">{weight}</label>
+                    <label className="label">גובה:</label>
+                    <label className="labelData">{height}</label>
+                    <label className="labelData">{smoke}</label>
                     
                 </div>
                 <div className="line">
-                    <label className="label" id="sdate">תאריך ניתוח: {sDate} |</label> 
-                    <label className="label" id="changeDate" onClick={() => this.changeDate()}>שינוי התאריך</label>
-                    <label className="label">סוג ניתוח: {sType}</label>
+                    <label className="label">סוג ניתוח:</label>
+                    <label className="labelData">{sType}</label>
+                    <label className="label">תאריך ניתוח:</label>
+                    <label className="labelData" >{sDate}</label>  
+                    <button className="changeDate" onClick={() => this.changeDate()}> 
+                        שינוי התאריך        
+                    </button>
                 </div>
                 <div className="line">
-                    <label className="label" id="quest">שאלונים: {Questionnaires} |</label> 
-                    <label className="label" id="changeDate" onClick={() => this.changeQuest()}>שינוי השאלונים</label>
+                    <label className="label" >שאלונים:</label> 
+                    <label className="labelData" >{Questionnaires} </label> 
+                    <button className="changeDate" onClick={() => this.changeQuest()}> 
+                        שינוי השאלונים  
+                    </button>
                 </div>
                 {this.state.showPopup ? 
                     <Popup

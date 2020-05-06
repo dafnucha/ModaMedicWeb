@@ -1,4 +1,5 @@
 import React, {Component} from "react"
+import {ExportCSV} from "./ExportCSV"
 //import "./TablePer.css"
 
 
@@ -64,7 +65,8 @@ class TablePer extends Component {
             data: table,
             arr: dic,
             table: [],
-            dates: dates
+            dates: dates,
+            exportCSV: []
         }
         if(props.weekly || props.monthly){
             for (let [key,] of Object.entries(this.state.data)) {
@@ -111,6 +113,27 @@ class TablePer extends Component {
                     </tr>
                 )
             }
+            var line = {};
+            line["תאריך"] = dateStr;
+            if(this.state.arr["1"] && (this.state.data[dateStr]["1"] > 0 || this.state.data[dateStr]["1"] <= 0)){
+                line["Oswestry Disability Index"] = this.state.data[dateStr]["1"];
+            }
+            if(this.state.arr["2"] && (this.state.data[dateStr]["2"] > 0 || this.state.data[dateStr]["2"] <= 0)){
+                line["Neck Disability Index"] = this.state.data[dateStr]["2"];
+            }
+            if(this.state.arr["3"] && (this.state.data[dateStr]["3"] > 0 || this.state.data[dateStr]["3"] <= 0)){
+                line["Lower Extremity Functional Scale"] = this.state.data[dateStr]["3"];
+            }
+            if(this.state.arr["4"] && (this.state.data[dateStr]["4"] > 0 || this.state.data[dateStr]["4"] <= 0)){
+                line["Oswestry low back pain"] = this.state.data[dateStr]["4"];
+            }
+            if(this.state.arr["5"] && (this.state.data[dateStr]["5"] > 0 || this.state.data[dateStr]["5"] <= 0)){
+                line["EQ-5D"] = this.state.data[dateStr]["5"];
+            }
+            if(this.state.arr["6"] && (this.state.data[dateStr]["6"] > 0 || this.state.data[dateStr]["6"] <= 0)){
+                line["EQ5D Number"] = this.state.data[dateStr]["6"];
+            }
+            this.state.exportCSV.push(line);
         }
 
 
@@ -149,6 +172,7 @@ class TablePer extends Component {
                         {this.state.table}
                     </tbody>
                 </table>
+                <ExportCSV csvData={this.state.exportCSV} fileName="שאלונים תקופתיים"/>
             </div>
         )
     }
