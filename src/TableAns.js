@@ -55,10 +55,26 @@ class TableAns extends Component {
                     table[dateStr] = {};
                     table[dateStr]["sum"] = 0;
                     table[dateStr]["counter"] = 0;
+                    table[dateStr]["text"] = "";
                     dates.push(data[i].ValidTime);
                 }
                 table[dateStr]["sum"] += data[i]["Answers"][0]["AnswerID"][0];
                 table[dateStr]["counter"]++;
+                for(j = 0 ; j < data[i]["Answers"][1]["AnswerID"].length; j++){
+                    if(!table[dateStr]["text"].includes("לא נטלתי") && data[i]["Answers"][1]["AnswerID"][j] === 0){
+                        table[dateStr]["text"] += "לא נטלתי, "
+                    }
+                    else if(!table[dateStr]["text"].includes("בסיסית") && data[i]["Answers"][1]["AnswerID"][j] === 1){
+                        table[dateStr]["text"] += "בסיסית, "
+                    }
+                    else if(!table[dateStr]["text"].includes("מתקדמת") && data[i]["Answers"][1]["AnswerID"][j] === 2){
+                        table[dateStr]["text"] += "מתקדמת, "
+                    }
+                    else if(!table[dateStr]["text"].includes("נרקוטית") && data[i]["Answers"][1]["AnswerID"][j] === 3){
+                        table[dateStr]["text"] += "נרקוטית, "
+                    }
+                }
+                
             }
             else if(props.monthly){
                 date = new Date(data[i].ValidTime)
@@ -67,10 +83,27 @@ class TableAns extends Component {
                     table[dateStr] = {};
                     table[dateStr]["sum"] = 0;
                     table[dateStr]["counter"] = 0;
+                    table[dateStr]["text"] = "";
                     dates.push(data[i].ValidTime);
                 }
                 table[dateStr]["sum"] += data[i]["Answers"][0]["AnswerID"][0];
                 table[dateStr]["counter"]++;
+                table[dateStr]["sum"] += data[i]["Answers"][0]["AnswerID"][0];
+                table[dateStr]["counter"]++;
+                for(j = 0 ; j < data[i]["Answers"][1]["AnswerID"].length; j++){
+                    if(!table[dateStr]["text"].includes("לא נטלתי") && data[i]["Answers"][1]["AnswerID"][j] === 0){
+                        table[dateStr]["text"] += "לא נטלתי, "
+                    }
+                    else if(!table[dateStr]["text"].includes("בסיסית") && data[i]["Answers"][1]["AnswerID"][j] === 1){
+                        table[dateStr]["text"] += "בסיסית, "
+                    }
+                    else if(!table[dateStr]["text"].includes("מתקדמת") && data[i]["Answers"][1]["AnswerID"][j] === 2){
+                        table[dateStr]["text"] += "מתקדמת, "
+                    }
+                    else if(!table[dateStr]["text"].includes("נרקוטית") && data[i]["Answers"][1]["AnswerID"][j] === 3){
+                        table[dateStr]["text"] += "נרקוטית, "
+                    }
+                }
             }
             
         }
@@ -96,11 +129,12 @@ class TableAns extends Component {
                 else{
                     dateStr = date.toLocaleDateString('en-GB', {month: 'short'});
                 }
+                table[dateStr]["text"] =  table[dateStr]["text"].slice(0, -2);
                 this.state.table.push(
                     <tr key={dateStr}>
                         {(data[i].ValidTime < props.date) ? <td className="before">{dateStr}</td> : <td className="after">{dateStr}</td>}
                         {(data[i].ValidTime < props.date) ? <td className="before">{this.state.data[dateStr]["Data"].toFixed(2)}</td> : <td className="after">{this.state.data[dateStr]["Data"].toFixed(2)}</td>}
-                        {(data[i].ValidTime < props.date) ? <td className="before">{/** */}</td> : <td className="after">{/** */}</td>}
+                        {(data[i].ValidTime < props.date) ? <td className="before">{table[dateStr]["text"]}</td> : <td className="after">{table[dateStr]["text"]}</td>}
                     </tr>
                 )
                 line = {};
@@ -135,12 +169,12 @@ class TableAns extends Component {
                         <tr>
                             <th>תאריך</th>
                             <th>רמת כאב</th>
-                            <th>תרופה</th>
+                            {this.props.showDaily ? <th>תרופה</th> : <th>תרופות שהיו בשימוש</th>}
                         </tr>
                         {this.state.table}
                     </tbody>
                 </table>
-                <ExportCSV csvData={this.state.exportCSV} fileName="שאלון יומי"/>
+                <ExportCSV csvData={this.state.exportCSV} fileName={this.props.name + " שאלון יומי"}/>
             </div>
         )
     }

@@ -5,6 +5,21 @@ import "./PatientData.css"
 class PatientData extends Component {
     constructor(props) {
         super()
+        var q2 = false, q3 = false, q4 = false, q5 = false;
+        for(var i = 0; i < props.user["Questionnaires"].length; i++){
+            if(props.user["Questionnaires"][i]["QuestionnaireID"] === 1){
+                q2= true;
+            }
+            else if(props.user["Questionnaires"][i]["QuestionnaireID"] === 2){
+                q3= true;
+            }
+            else if(props.user["Questionnaires"][i]["QuestionnaireID"] === 3){
+                q4= true;
+            }
+            else if(props.user["Questionnaires"][i]["QuestionnaireID"] === 5){
+                q5= true;
+            }
+        }
         this.state = {
            user: props.user,
            showPopup: false,
@@ -12,10 +27,10 @@ class PatientData extends Component {
            new_date: "",
            Questionnaires: [],
            quest1: false,
-           quest2: false,
-           quest3: false,
-           quest4: false,
-           quest5: false,
+           quest2: q2,
+           quest3: q3,
+           quest4: q4,
+           quest5: q5,
            quest6: false
         }
         this.changeDate = this.changeDate.bind(this);
@@ -76,14 +91,12 @@ class PatientData extends Component {
             Questionnaires.push({
                 "QuestionnaireID": 5,
                 "QuestionnaireText": "איכות חיים"
-            })
-        }
-        if(this.state.quest6){
+            });
             Questionnaires.push({
                 "QuestionnaireID": 6,
                 "QuestionnaireText": "דירוג איכות חיים"
             })
-        }
+        }           
         let id = this.state.user["UserID"];
         axios.post('http://icc.ise.bgu.ac.il/njsw03auth/usersAll/changeUserQuestionnaire', 
         {
@@ -125,8 +138,7 @@ class PatientData extends Component {
     render() {
         let fName = this.state.user["First_Name"];
         let lName = this.state.user["Last_Name"];
-        //let bmi = this.state.user["BMI"];
-        //<label className="label" id="bmi">{bmi} :BMI </label>
+        let bmi = this.state.user["BMI"];
         let sDate = (new Date(this.state.user["DateOfSurgery"])).toLocaleDateString('en-GB', {day: 'numeric', month: 'numeric', year: 'numeric'}).replace(/ /g, '/');
         let gender = this.state.user["Gender"];
         let height = this.state.user["Height"];
@@ -134,6 +146,9 @@ class PatientData extends Component {
         let smoke = this.state.user["Smoke"];
         let sType = this.state.user["SurgeryType"];
         let weight = this.state.user["Weight"];
+        var today = new Date();
+        var birthday = new Date(this.state.user["BirthDate"]);
+        var age = Math.floor((today.getTime() - birthday.getTime())/ 31536000000)
         var Questionnaires = "";
         for(var i = 0; i < this.state.user["Questionnaires"].length; i++){
             if(i !== 0){
@@ -158,6 +173,10 @@ class PatientData extends Component {
                     <label className="labelData">{weight}</label>
                     <label className="label">גובה:</label>
                     <label className="labelData">{height}</label>
+                    <label className="label">גיל:</label>
+                    <label className="labelData">{age}</label>
+                    <label className="label">BMI:</label>
+                    <label className="labelData">{bmi}</label>
                     <label className="labelData">{smoke}</label>
                     
                 </div>
@@ -208,13 +227,13 @@ class Popup extends React.Component {
     render() {
       return (
         <div className='popup'>
-            <div className='popup_inner' >
+            <div className='popup_innerCD' >
                 <button onClick={this.props.closePopup} id="x">x</button>
                 <h4>שינוי תאריך הניתוח</h4>
                 <form  onSubmit={this.props.handleSubmit}>
-                    <label> הכנס תאריך ניתוח חדש</label>
-                    <input type="date" name="new_date"  onChange={this.props.handleChange}/>
-                    <button type="sumbit" >שינוי</button>
+                    <label id="newD"> הכנס תאריך ניתוח חדש</label>
+                    <input id="new_date" type="date" name="new_date"  onChange={this.props.handleChange}/>
+                    <button id="sumbitC" type="sumbit" >שינוי</button>
                 </form>
             </div>
         </div>
@@ -226,7 +245,7 @@ class Popup extends React.Component {
     render() {
       return (
         <div className='popup'>
-            <div className='popup_inner' >
+            <div className='popup_innerCQ' >
                 <button onClick={this.props.closePopup} id="x">x</button>
                 <h4>שינוי שאלונים</h4>
                 <form id="formQ" onSubmit={this.props.handleSubmit}>
@@ -274,7 +293,16 @@ class Popup extends React.Component {
                             איכות חיים  
                         </label>
                     </div>
-                    <div className="line">
+                    <button  id="changeQ" type="sumbit" >שינוי</button>
+                </form>
+            </div>
+        </div>
+      );
+    }
+  }
+
+  /**
+   * <div className="line">
                         <input type="checkbox"
                             className="cInput" 
                             name="quest6"
@@ -285,10 +313,4 @@ class Popup extends React.Component {
                             דירוג איכות חיים  
                         </label>
                     </div>
-                    <button type="sumbit" >שינוי</button>
-                </form>
-            </div>
-        </div>
-      );
-    }
-  }
+   */

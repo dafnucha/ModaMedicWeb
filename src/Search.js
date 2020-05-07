@@ -1,30 +1,31 @@
 import React, {Component} from "react"
 import axios from 'axios';
 import Card from 'react-bootstrap/Card'
-import "./search.css"
 import DisplayButton from './DisplayButton';
 
 class Search extends Component {
     constructor() {
         super()
+        var date = new Date();
+        var x = date.toISOString().split("T")[0];
         this.state = {
             pName: "",
             fName: "",
-            end_date: "",
-            start_date: "",
-            steps: false,
-            distance : false,
-            weather: false,
-            calories: false,
-            sleeping_hours: false,
+            end_date: x,
+            start_date: "2020-01-01",
+            steps: true,
+            distance : true,
+            weather: true,
+            calories: true,
+            sleeping_hours: true,
             dataArr: [],
             periodicAnswers: [],
             showPopup: false,
             textPopup: [],
             dailyA: [],
             numOfUsers: 0,
-            dailyQ: false,
-            perQ: false,
+            dailyQ: true,
+            perQ: true,
             x: [],
             date: 0,
             showDaily: true,
@@ -247,7 +248,7 @@ class Search extends Component {
                     <Card className="card" key={this.state.x[i]}  onClick={() => this.selectUser(x)}>
                         <Card.Body className="cardBody">שם פרטי: {this.state.pName} </Card.Body>
                         <Card.Body className="cardBody">שם משפחה: {this.state.fName} </Card.Body>
-                        <Card.Body className="cardBody">תאריך יום הולדת: {this.state.x[i]}</Card.Body>
+                        <Card.Body className="cardBody">תאריך לידה: {this.state.x[i]}</Card.Body>
                     </Card>
                 );
             }
@@ -259,6 +260,7 @@ class Search extends Component {
     }
 
     render() {
+        require("./search.css");
         return (
             <div>
                 <form onSubmit={this.handleSubmit}>
@@ -427,6 +429,7 @@ class Search extends Component {
                     weekly={this.state.weekly}
                     monthly={this.state.monthly}
                     user={this.state.user}
+                    name={this.state.pName + " " + this.state.fName}
                 />
                 {this.state.showPopup ? 
                     <Popup

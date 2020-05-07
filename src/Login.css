@@ -2,7 +2,7 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
-input[type=text], input[type=password] {
+.inputs {
     width: 100%;
     padding: 5px 5px;
     margin: 8px 0;
@@ -34,10 +34,11 @@ label {
     margin-left: 24.8%;
 }
 
-#lid, #lq, #ldate, #lpass, #lpass2{
+#lid, #lq, #ldate, #lpass, #lpass2, .error{
     margin-right: 25%;
     text-align: right;
 }
+
 
 #remember{
     float: right;
@@ -46,7 +47,7 @@ label {
 }
 
 #con, #send{
-    width: 10%;
+    width: 15%;
     margin-left: 40%;
     margin-right: 45%;
     margin-top: 3%;
@@ -90,15 +91,42 @@ button:hover {
     background-color: rgba(0,0,0, 0.5);
 }
 
-.popup_inner {
-
+.popup_innerWrong {
     position: absolute;
     left: 30%;
     right: 30%;
-    top: 0;
-    bottom: 0;
+    top: 30%;
+    bottom: 40%;
     margin: auto;
     background: white;
+}
+
+.popup_innerEmail {
+    position: absolute;
+    left: 30%;
+    right: 30%;
+    top: 30%;
+    bottom: 35%;
+    margin: auto;
+    background: white;
+}
+
+.popup_innerAdd {
+    position: absolute;
+    left: 30%;
+    right: 30%;
+    top: 10%;
+    bottom: 10%;
+    margin: auto;
+    background: white;
+    height: 600px;
+    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: visible;
+}
+
+#wrongType{
+    margin-top: 5%;
 }
 
 #x {
@@ -117,14 +145,23 @@ button:hover {
     color: black;
 }
 
-#forget:hover{
+#forget{
     color: blue;
     text-decoration: underline;
 }
 
-#register:hover{
+#forget:hover{
+    font-weight: bold;
+}
+
+#register{
     color: blue;
     text-decoration: underline;
+    margin-top: 4%;
+}
+
+#register:hover{
+    font-weight: bold;
 }
 
 #h3{

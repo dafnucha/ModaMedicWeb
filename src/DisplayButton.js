@@ -17,6 +17,7 @@ class DisplayButton extends Component {
             table : false,
             steps: props.steps
         }
+
         this.styleLabel = {
             fontSize: "calc(10px)",
             color: "black",
@@ -73,6 +74,7 @@ class DisplayButton extends Component {
             }
 
         }
+        
         for(i = 0; i < this.props.periodicAnswers.length; i++){
             if(this.props.periodicAnswers[i].QuestionnaireID === 1){
                 arr1 = this.props.periodicAnswers[i].data;
@@ -124,7 +126,9 @@ class DisplayButton extends Component {
                             onChange={this.handleChange}
                         />
                         <span>
-                            הצג מידע גרפי
+                            <div id="text">
+                                הצג מידע גרפי
+                            </div>
                         </span>
                     </label>
                 </div>
@@ -138,7 +142,9 @@ class DisplayButton extends Component {
                             onChange={this.handleChange}
                         />
                         <span>
-                            הצג מידע טבלאי
+                            <div id="text">
+                                הצג מידע טבלאי  
+                            </div>
                         </span>
                     </label>
                 </div> </div> : null }
@@ -157,6 +163,7 @@ class DisplayButton extends Component {
                     showDaily={this.props.showDaily}
                     weekly={this.props.weekly}
                     monthly={this.props.monthly}
+                    name={this.props.name}
                 /> </div>: null }
                 <br />
                 { (this.state.table && this.props.dailyQ) ? <h3>שאלון יומי</h3> : null }
@@ -165,13 +172,15 @@ class DisplayButton extends Component {
                     showDaily={this.props.showDaily}
                     weekly={this.props.weekly}
                     monthly={this.props.monthly}
+                    name={this.props.name}
                     /> : null }
                 { (this.state.table && this.props.perQ) ? <h3>שאלונים תקופתיים</h3> : null }
                 { (this.state.table && this.props.perQ) ? <TablePer data={this.props.periodicAnswers} 
                     date={this.props.date}
                     showDaily={this.props.showDaily}
                     weekly={this.props.weekly}
-                    monthly={this.props.monthly}/> : null }
+                    monthly={this.props.monthly}
+                    name={this.props.name} />: null }
                 { (this.state.graph && this.props.steps) ? <Graph data={arrSteps} date={this.props.date} name="צעדים" showDaily={this.props.showDaily} weekly={this.props.weekly} monthly={this.props.monthly}/> : null }
                 { (this.state.graph && this.props.distance) ? <Graph data={arrDis} date={this.props.date} name="מרחק" showDaily={this.props.showDaily} weekly={this.props.weekly} monthly={this.props.monthly}/> : null }
                 { (this.state.graph && this.props.calories) ? <Graph data={arrCal} date={this.props.date} name="קלוריות" showDaily={this.props.showDaily} weekly={this.props.weekly} monthly={this.props.monthly}/> : null }

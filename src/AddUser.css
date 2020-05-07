@@ -1,33 +1,27 @@
 .labels_in_add_user {
     /* Other styling... */
     text-align: right;
-    clear: both;
     float:right;
-    margin-right:45px;
+    margin-right: 10%;
     font-size: 16px;
-    width: 140px;
     padding-top: 10px;
+    width: 25%;
+    margin-top: 2%;
 }
 
-.inputs_in_add_user {
-    width: 300px;
-    padding: 5px 5px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-    float:right;
+
+.inputs_in_add_user, .select_in_add_user{
+    width: 50%;
+    height: 28px;
+    float: right;
+    margin-top: 2%;
 }
 
-.select_in_add_user {
-    width: 300px;
-    padding: 5px 5px;
-    margin: 8px 0px 0px 15px;
-    display: inline-block;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-    float:right;
+.select_in_add_user{
+    direction: rtl;
 }
+
+
 
 .submit_and_reset_buttons {
     width: 80px;
@@ -36,7 +30,6 @@
     display: inline-block;
     border: 1px solid #ccc;
     box-sizing: border-box;
-    float:right;
 
 }
 
@@ -60,17 +53,6 @@ h2{
     font-size: calc(10px + 2vmin);
 }
 
-.input_for_user_type{
-    float: right;
-}
-
-.label_for_user_type{
-    padding: 5px 20px;
-    margin: 8px 0;
-    font-size: small;
-    color: black;
-    float: right;
-}
 
 /*.input {*/
 /*    height: 20px;*/

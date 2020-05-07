@@ -264,7 +264,8 @@ class Table extends Component {
                         {this.state.table}
                     </tbody>
                 </table>
-                <ExportCSV csvData={this.state.exportCSV} fileName="מדדים"/>
+                { this.props.dataArr.length > 0 ? <ExportCSV csvData={this.state.exportCSV} fileName={this.props.name + " מדדים"}/> : null}
+                
             </div>
         )
     }

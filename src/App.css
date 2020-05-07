@@ -17,9 +17,17 @@ div.App, div.App-header {
 #change{
   font-size: medium;
   margin-top: 10px;
-  width: 10%;
-  float: right;
-  margin-right: 7px;
+  width: fit-content;
+  float: left;
+  margin-left: 0%;
+}
+
+#sep{
+  font-size: medium;
+  margin-top: 10px;
+  width: fit-content;
+  float: left;
+  margin-right: 0.3%;
 }
 
 #change:hover{
@@ -31,13 +39,12 @@ div.App, div.App-header {
   overflow: hidden;/* Makes this div contain its floats */
 }
 
-#labels #logout{
+#logout{
   float: left;
   text-align: left;
   font-size: medium;
   margin-top: 10px;
-  margin-left: 10px;
-  width: 49%;
+  margin-right: 0.3%;
 }
 
 #logout:hover{
@@ -76,30 +83,24 @@ div.App, div.App-header {
 .popup_inner {
 
   position: absolute;
-  left: 30%;
-  right: 30%;
+  left: 35%;
+  right: 35%;
   top: 25%;
   bottom: 45%;
   margin: auto;
   background: white;
 }
 
-#pass{
-  width: 50%;
-  margin-right: 17%;
-}
-#pass2{
-  width: 50%;
-  margin-right: 5px;
+#pass, #pass2{
+  width: 40%;
+  margin-right: 30%;
 }
 
-#lpass{
-  margin-right: 10%;
+#lpass, #lpass2{
+  float: right;
+  margin-right: 30%;
 }
 
-#lpass2{
-  margin-right: 10%;
-}
 
 #send{
   margin-top: 10px;

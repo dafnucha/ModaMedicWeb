@@ -83,16 +83,24 @@ class Login extends Component{
                 UserID: this.state.id
             }
         );
-        var qID = response.data.data;
-        const response1 = await axios.get("http://icc.ise.bgu.ac.il/njsw03users/getVerificationQuestion?QuestionID=" + qID);
-        this.setState({
-            showID: false,
-            showWrongUser: false,
-            showQ: true,
-            showChange: false,
-            register: false,
-            question: response1.data.data["QuestionText"]
-        });
+        if(response.data.data === null){
+            this.setState({
+                wrongA: true
+            })
+        }
+        else{
+            var qID = response.data.data;
+            const response1 = await axios.get("http://icc.ise.bgu.ac.il/njsw03users/getVerificationQuestion?QuestionID=" + qID);
+            this.setState({
+                showID: false,
+                showWrongUser: false,
+                showQ: true,
+                showChange: false,
+                register: false,
+                wrongA: false,
+                question: response1.data.data["QuestionText"]
+            });
+        }
     }
 
     async handle(e){
@@ -211,13 +219,14 @@ class Login extends Component{
     }
 
     render(){
+        require("./Login.css");
         return(
             <div>
                 <form onSubmit={e => this.sumbit(e)}>
                     <label>כתובת דוא"ל:</label>
-                    <input type="text" name="ID" onChange={e => this.change(e)} value={this.state.ID} required/>
+                    <input type="text" className="inputs" name="ID" onChange={e => this.change(e)} value={this.state.ID} required/>
                     <label>סיסמה:</label>
-                    <input type="password" name="password"  onChange={e => this.change(e)} value={this.state.password} required/>
+                    <input type="password"  className="inputs" name="password"  onChange={e => this.change(e)} value={this.state.password} required/>
                     {this.state.wrong ? <label id="wrong">כתובת הדוא"ל או הסיסמה לא נכונים</label> :  <label></label> }
                     <input type="checkbox" id="remember" name="remember" onChange={e => this.change(e)} value={this.state.remember}/>
                     <label>זכור אותי</label>
@@ -257,23 +266,24 @@ class Popup extends React.Component {
           <div>
           { this.props.showWrongUser ?
             <div className='popup'>
-                <div className='popup_inner' >
+                <div className='popup_innerWrong' >
                     <button onClick={this.props.closePopup} id="x">x</button>
                     <h3>,שלום {this.props.text}</h3>
-                    <p> אין לך את ההרשאות המתאימות על מנת להיכנס לאתר</p>
+                    <p id="wrongType"> אין לך את ההרשאות המתאימות על מנת להיכנס לאתר</p>
                 </div>
             </div> : null
           }
           { this.props.showID ?
             <div className='popup'>
-                <div className='popup_inner' >
+                <div className='popup_innerEmail' >
                 <button onClick={this.props.closePopup} id="x">x</button>
                 <h3 id="h3">שכחתי סיסמא</h3>
                 <form onSubmit={this.props.handleSubmit}>
                     <label  id="lid">
                          אנא הזן כתובת דוא"ל:
                     </label>
-                    <input type="text" name="id" id="id" onChange={this.props.change} required/>
+                    <input type="text" className="inputs" name="id" id="id" onChange={this.props.change} required/>
+                    {this.props.wrongA ? <label className="error">כתובת דוא"ל לא קיימת</label> : null}
                     <input type="submit" value="המשך" id="con"/>
                 </form>
                 </div>
@@ -281,19 +291,19 @@ class Popup extends React.Component {
           }
           { this.props.showQ ?
             <div className='popup'>
-                <div className='popup_inner' >
+                <div className='popup_innerEmail' >
                 <button onClick={this.props.closePopup} id="x">x</button>
                 <h3 id="h3">שכחתי סיסמא</h3>
                 <form onSubmit={this.props.handle}>
                     <label  id="lq">
                          {this.props.question}
                     </label>
-                    <input type="text" name="answer" id="answer" onChange={this.props.change} required/>
+                    <input type="text" className="inputs" name="answer" id="answer" onChange={this.props.change} required/>
                     <label  id="ldate">
                          הכנס את תאריך יום הולדת שלך:
                     </label>
                     <input type="date" name="date" id="date" onChange={this.props.change} required/>
-                    {this.props.wrongA ? <label>שאלת אימות לא נכונה או תאריך לידה שגוי</label> : null}
+                    {this.props.wrongA ? <label className="error">שאלת אימות לא נכונה או תאריך לידה שגוי</label> : null}
                     <input type="submit" value="המשך" id="con"/>
                 </form>
                 </div>
@@ -301,19 +311,19 @@ class Popup extends React.Component {
           }
           { this.props.showChange ?
             <div className='popup'>
-                <div className='popup_inner' >
+                <div className='popup_innerEmail' >
                     <button onClick={this.props.closePopup} id="x">x</button>
                     <h3 id="h3">שכחתי סיסמא</h3>
                     <form onSubmit={this.props.changePass}>
                         <label  id="lpass">
                             סיסמא חדשה:
                         </label>
-                        <input type="password" name="pass" id="pass" onChange={this.props.change} required/>
+                        <input type="password" className="inputs" name="pass" id="pass" onChange={this.props.change} required/>
                         <label id="lpass2">
                             הקלד את הסיסמא מחדש:
                         </label>
-                        <input type="password" name="pass2" id="pass2" onChange={this.props.change} required/>
-                        {this.props.diff ? <label>הסיסמאות שונות</label> : null}
+                        <input type="password" className="inputs" name="pass2" id="pass2" onChange={this.props.change} required/>
+                        {this.props.diff ? <label className="error">הסיסמאות שונות</label> : null}
                         <input type="submit" value="שלח" id="send"/>
                     </form>
                 </div>
@@ -321,7 +331,7 @@ class Popup extends React.Component {
           }
           { this.props.register ?
             <div className='popup'>
-                <div className='popup_inner' >
+                <div className='popup_innerAdd' >
                     <button onClick={this.props.closePopup} id="x">x</button>
                     <h3>הרשמה</h3>
                     <Adduser />

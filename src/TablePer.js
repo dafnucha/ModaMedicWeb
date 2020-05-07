@@ -172,7 +172,7 @@ class TablePer extends Component {
                         {this.state.table}
                     </tbody>
                 </table>
-                <ExportCSV csvData={this.state.exportCSV} fileName="שאלונים תקופתיים"/>
+                <ExportCSV csvData={this.state.exportCSV} fileName={this.props.name + " שאלונים תקופתיים"}/>
             </div>
         )
     }

@@ -139,13 +139,12 @@ class AddUser extends Component {
 
     render() {
         require("./AddUser.css");
-
         let quesions = this.state.questionsText;
         let optionItems = quesions.map((question) =>
             <option key={question} >{question}</option>
         );
-
         return (
+            
             <div>
                 <form onSubmit={this.handleSubmit} onReset={this.handleReset} id="new_user_form">
                     <div className="divs_in_add">
@@ -181,6 +180,9 @@ class AddUser extends Component {
                         <select className="select_in_add_user" onChange= {this.onSelect}>
                             {optionItems}
                         </select>
+                    </div>
+                    <div className="divs_in_add">
+                        <label className="labels_in_add_user">תשובה </label>
                         <input className="inputs_in_add_user" name="answerUserQuestion" type="text" value={this.state.answerUserQuestion} onChange={this.handleChange} required/>
                     </div>
                     <div className="divs_in_add">

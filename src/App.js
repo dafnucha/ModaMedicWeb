@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import {Redirect} from "react-router-dom";
-import './App.css';
+//import './App.css';
 import "./Logo";
 import "./Search";
 
@@ -95,12 +95,15 @@ class App extends Component{
   }
 
   render(){
+    require("./App.css");
     return (
       <div>
         <div id="labels">
           <label id="logout" onClick={() => this.logout()}>התנתק</label>
-          <label id="helo">שלום ד"ר {sessionStorage.getItem("name")} |</label>
+          <label id="sep" onClick={() => this.change()}> |</label>
           <label id="change" onClick={() => this.change()}>שנה סיסמא</label>
+          <label id="hello">שלום ד"ר {sessionStorage.getItem("name")} </label>
+          
         </div>
         <div className="App">
           <header className="App-header">
@@ -126,7 +129,9 @@ class App extends Component{
 export default App;
 
 class Popup extends React.Component {
+  
   render() {
+    require("./App.css");
     return (
       <div className='popup'>
           <div className='popup_inner' >
@@ -135,12 +140,14 @@ class Popup extends React.Component {
               <form onSubmit={this.props.handleSubmit}>
                 <label  id="lpass">
                     סיסמא חדשה:
-                  <input type="password" name="pass" id="pass" onChange={this.props.change} required/>
                 </label>
+                <input type="password" name="pass" id="pass" onChange={this.props.change} required/>
+                
                 <label id="lpass2">
                     הקלד את הסיסמא מחדש:
-                  <input type="password" name="pass2" id="pass2" onChange={this.props.change} required/>
                 </label>
+                <input type="password" name="pass2" id="pass2" onChange={this.props.change} required/>
+                
                 {this.props.diff ? <label>הסיסמאות שונות</label> : null}
                 <input type="submit" value="שלח" id="send"/>
               </form>

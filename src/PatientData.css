@@ -32,6 +32,12 @@
     background-color: rgb(255, 255, 255);
 }
 
+#changeQ{
+    width: 15%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .mLabel{
     font-size: small;
     color: black;
@@ -64,14 +70,39 @@
     background-color: rgba(0,0,0, 0.5);
 }
 
-.popup_inner {
+.popup_innerCD {
 
     position: absolute;
-    left: 30%;
-    right: 30%;
+    left: 35%;
+    right: 35%;
     top: 25%;
-    bottom: 10%;
+    bottom: 53%;
     margin: auto;
-    height: auto;
+    background: white;
+}
+
+#newD{
+    margin-right: 2%;
+}
+
+#new_date, #sumbitC{
+    margin-right: 2%;
+}
+
+#sumbitC{
+    width: 15%;
+    padding: 5px;
+    margin-right: 45%;
+}
+
+.popup_innerCQ {
+
+    position: absolute;
+    left: 40%;
+    right: 40%;
+    top: 25%;
+    bottom: 45%;
+    margin: auto;
+    height: fit-content;
     background: white;
 }
