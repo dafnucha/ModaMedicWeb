@@ -31,7 +31,8 @@ class Search extends Component {
             showDaily: true,
             weekly: false,
             monthly: false,
-            user: {}
+            user: {}, 
+            todayDate: x
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -74,6 +75,7 @@ class Search extends Component {
 
     async getRequest(name, url){
         let getUrl = 'http://icc.ise.bgu.ac.il/njsw03auth/doctors/' + url + '?FirstName=' + this.state.pName + '&LastName=' + this.state.fName;
+
         if(this.state.start_date !== ""){
             var date = new Date(this.state.start_date)
             let start_time = date.getTime();
@@ -81,6 +83,7 @@ class Search extends Component {
         }
         if(this.state.end_date !== ""){
             date = new Date(this.state.end_date)
+            date = new Date(date.getTime() + 86400000);
             let end_time = date.getTime();
             getUrl += ("&end_time=" + end_time); 
         }

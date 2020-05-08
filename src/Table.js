@@ -12,15 +12,23 @@ class Table extends Component {
         for(i = 0; i < props.dataArr.length; i++){
             for(j = 0; j < props.dataArr[i].values.length; j++){
                 if(props.showDaily){
-                    var date = new Date(props.dataArr[i].values[j].ValidTime)
+                    var date = new Date(props.dataArr[i].values[j].ValidTime);
                     var dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'}).replace(/ /g, '-');
                     if(table[dateStr] == null){
                         table[dateStr] = {};
                         dates.push(props.dataArr[i].values[j].ValidTime);
                     }
                     if(props.dataArr[i].name === "שעות שינה"){
-                        var deep = 0, light = 0, total = 0;
+                        var dateS = new Date(props.dataArr[i].values[j].ValidTime - 8640000);
+                        var dateStrS = dateS.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'}).replace(/ /g, '-');
+                        var deep = 0, light = 0, total = 0, firstTime = 0;
                         for(var k = 0; k < props.dataArr[i].values[j]["Data"].length; k++){
+                            if(k === 0){
+                                firstTime = props.dataArr[i].values[j]["Data"][k]["StartTime"];
+                            }
+                            else if( firstTime === props.dataArr[i].values[j]["Data"][k]["StartTime"]){
+                                break;
+                            }
                             var time = props.dataArr[i].values[j]["Data"][k]["EndTime"] - props.dataArr[i].values[j]["Data"][k]["StartTime"];
                             time = time / 3600000;
                             if(props.dataArr[i].values[j]["Data"][k]["State"] === "SLEEP_LIGHT"){
@@ -31,9 +39,12 @@ class Table extends Component {
                             }
                             total = total + time;
                         }
-                        table[dateStr]["light"] = light;
-                        table[dateStr]["deep"] = deep;
-                        table[dateStr]["total"] = total;
+                        if(!table[dateStrS]){
+                            table[dateStrS] = {};
+                        }
+                        table[dateStrS]["light"] = light;
+                        table[dateStrS]["deep"] = deep;
+                        table[dateStrS]["total"] = total;
                         continue;
                     }
                     table[dateStr][props.dataArr[i].name] = props.dataArr[i].values[j];
@@ -41,7 +52,7 @@ class Table extends Component {
                 else if(props.weekly){
                     date = new Date(props.dataArr[i].values[j].ValidTime);
                     var dayOfWeek = date.getDay();
-                    var sunday = new Date(props.dataArr[i].values[j].ValidTime - dayOfWeek * 86400000);
+                    var sunday = new Date(props.dataArr[i].values[j].ValidTime - 8640000 - dayOfWeek * 86400000);
                     var saturday = new Date(sunday.getTime() + 518400000);
                     dateStr = sunday.toLocaleDateString('en-GB', {day: 'numeric'}) + "-" + saturday.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'});
                     if(table[dateStr] == null){
@@ -54,8 +65,16 @@ class Table extends Component {
                         table[dateStr][props.dataArr[i].name]["sum"] = 0;
                     }
                     if(props.dataArr[i].name === "שעות שינה"){
-                        let deep = 0, light = 0, total = 0;
+                        dateS = new Date(props.dataArr[i].values[j].ValidTime - 8640000);
+                        dateStrS = dateS.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'}).replace(/ /g, '-');
+                        let deep = 0, light = 0, total = 0, firstTime = 0;
                         for(k = 0; k < props.dataArr[i].values[j]["Data"].length; k++){
+                            if(k === 0){
+                                firstTime = props.dataArr[i].values[j]["Data"][k]["StartTime"];
+                            }
+                            else if( firstTime === props.dataArr[i].values[j]["Data"][k]["StartTime"]){
+                                break;
+                            }
                             time = props.dataArr[i].values[j]["Data"][k]["EndTime"] - props.dataArr[i].values[j]["Data"][k]["StartTime"];
                             time = time / 3600000;
                             if(props.dataArr[i].values[j]["Data"][k]["State"] === "SLEEP_LIGHT"){
@@ -66,23 +85,26 @@ class Table extends Component {
                             }
                             total = total + time;
                         }
-                        if(!table[dateStr]["total"]){
-                            table[dateStr]["light"] = {};
-                            table[dateStr]["deep"] = {};
-                            table[dateStr]["total"] = {};
-                            table[dateStr]["light"]["counter"] = 0;
-                            table[dateStr]["deep"]["counter"] = 0;
-                            table[dateStr]["total"]["counter"] = 0;
-                            table[dateStr]["light"]["sum"] = 0;
-                            table[dateStr]["deep"]["sum"] = 0;
-                            table[dateStr]["total"]["sum"] = 0;
+                        if(!table[dateStrS]){
+                            table[dateStrS] = {};
                         }
-                        table[dateStr]["light"]["sum"] += light;
-                        table[dateStr]["deep"]["sum"] += deep;
-                        table[dateStr]["total"]["sum"] += total;
-                        table[dateStr]["light"]["counter"]++;
-                        table[dateStr]["deep"]["counter"]++;
-                        table[dateStr]["total"]["counter"]++;
+                        if(!table[dateStrS]["total"]){
+                            table[dateStrS]["light"] = {};
+                            table[dateStrS]["deep"] = {};
+                            table[dateStrS]["total"] = {};
+                            table[dateStrS]["light"]["counter"] = 0;
+                            table[dateStrS]["deep"]["counter"] = 0;
+                            table[dateStrS]["total"]["counter"] = 0;
+                            table[dateStrS]["light"]["sum"] = 0;
+                            table[dateStrS]["deep"]["sum"] = 0;
+                            table[dateStrS]["total"]["sum"] = 0;
+                        }
+                        table[dateStrS]["light"]["sum"] += light;
+                        table[dateStrS]["deep"]["sum"] += deep;
+                        table[dateStrS]["total"]["sum"] += total;
+                        table[dateStrS]["light"]["counter"]++;
+                        table[dateStrS]["deep"]["counter"]++;
+                        table[dateStrS]["total"]["counter"]++;
                         continue;
                     }
                     table[dateStr][props.dataArr[i].name]["sum"] += props.dataArr[i].values[j]["Data"];
@@ -93,7 +115,7 @@ class Table extends Component {
                     dateStr = date.toLocaleDateString('en-GB', {month: 'short'});
                     if(table[dateStr] == null){
                         table[dateStr] = {};
-                        dates.push(props.dataArr[i].values[j].ValidTime);
+                        dates.push(props.dataArr[i].values[j].ValidTime );
                     }
                     if(table[dateStr][props.dataArr[i].name] == null){
                         table[dateStr][props.dataArr[i].name] = {};
@@ -101,8 +123,16 @@ class Table extends Component {
                         table[dateStr][props.dataArr[i].name]["sum"] = 0;
                     }
                     if(props.dataArr[i].name === "שעות שינה"){
-                        let deep = 0, light = 0, total = 0;
+                        dateS = new Date(props.dataArr[i].values[j].ValidTime - 8640000);
+                        dateStrS = dateS.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'}).replace(/ /g, '-');
+                        let deep = 0, light = 0, total = 0, firstTime = 0;
                         for(k = 0; k < props.dataArr[i].values[j]["Data"].length; k++){
+                            if(k === 0){
+                                firstTime = props.dataArr[i].values[j]["Data"][k]["StartTime"];
+                            }
+                            else if( firstTime === props.dataArr[i].values[j]["Data"][k]["StartTime"]){
+                                break;
+                            }
                             time = props.dataArr[i].values[j]["Data"][k]["EndTime"] - props.dataArr[i].values[j]["Data"][k]["StartTime"];
                             time = time / 3600000;
                             if(props.dataArr[i].values[j]["Data"][k]["State"] === "SLEEP_LIGHT"){
@@ -113,23 +143,26 @@ class Table extends Component {
                             }
                             total = total + time;
                         }
-                        if(!table[dateStr]["total"]){
-                            table[dateStr]["light"] = {};
-                            table[dateStr]["deep"] = {};
-                            table[dateStr]["total"] = {};
-                            table[dateStr]["light"]["counter"] = 0;
-                            table[dateStr]["deep"]["counter"] = 0;
-                            table[dateStr]["total"]["counter"] = 0;
-                            table[dateStr]["light"]["sum"] = 0;
-                            table[dateStr]["deep"]["sum"] = 0;
-                            table[dateStr]["total"]["sum"] = 0;
+                        if(!table[dateStrS]){
+                            table[dateStrS] = {};
                         }
-                        table[dateStr]["light"]["sum"] += light;
-                        table[dateStr]["deep"]["sum"] += deep;
-                        table[dateStr]["total"]["sum"] += total;
-                        table[dateStr]["light"]["counter"]++;
-                        table[dateStr]["deep"]["counter"]++;
-                        table[dateStr]["total"]["counter"]++;
+                        if(!table[dateStrS]["total"]){
+                            table[dateStrS]["light"] = {};
+                            table[dateStrS]["deep"] = {};
+                            table[dateStrS]["total"] = {};
+                            table[dateStrS]["light"]["counter"] = 0;
+                            table[dateStrS]["deep"]["counter"] = 0;
+                            table[dateStrS]["total"]["counter"] = 0;
+                            table[dateStrS]["light"]["sum"] = 0;
+                            table[dateStrS]["deep"]["sum"] = 0;
+                            table[dateStrS]["total"]["sum"] = 0;
+                        }
+                        table[dateStrS]["light"]["sum"] += light;
+                        table[dateStrS]["deep"]["sum"] += deep;
+                        table[dateStrS]["total"]["sum"] += total;
+                        table[dateStrS]["light"]["counter"]++;
+                        table[dateStrS]["deep"]["counter"]++;
+                        table[dateStrS]["total"]["counter"]++;
                         continue;
                     }
                     table[dateStr][props.dataArr[i].name]["sum"] += props.dataArr[i].values[j]["Data"];
