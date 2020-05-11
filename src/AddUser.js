@@ -32,7 +32,8 @@ class AddUser extends Component {
             questions :[],
             answerUserQuestion: "",
             selectedUserType: "patient",
-            code: ""
+            code: "",
+            quesionChosen: 0
         };
 
         this.handleChange = this.handleChange.bind(this);

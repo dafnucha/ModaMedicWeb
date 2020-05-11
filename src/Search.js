@@ -31,7 +31,8 @@ class Search extends Component {
             showDaily: true,
             weekly: false,
             monthly: false,
-            user: {}, 
+            user: {},
+            ready: false, 
             todayDate: x
         }
         this.handleChange = this.handleChange.bind(this);
@@ -75,7 +76,7 @@ class Search extends Component {
 
     async getRequest(name, url){
         let getUrl = 'http://icc.ise.bgu.ac.il/njsw03auth/doctors/' + url + '?FirstName=' + this.state.pName + '&LastName=' + this.state.fName;
-
+        
         if(this.state.start_date !== ""){
             var date = new Date(this.state.start_date)
             let start_time = date.getTime();
@@ -139,22 +140,12 @@ class Search extends Component {
                 arr[i].values = values;
             }
         }
-        /*
-        const response = await axios.get(
-            "http://icc.ise.bgu.ac.il/njsw03auth/usersAll/getDateOfSurgery?UserID=" + id,
-            { 
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'x-auth-token': sessionStorage.getItem("token")
-                } 
-            }
-        );
-        */
         this.setState({
             dataArr: arr,
             dailyA: da,
             date: sDate,
-            user: user
+            user: user,
+            ready: true
         })
         if(this.state.showPopup){
             this.togglePopup();
@@ -165,6 +156,9 @@ class Search extends Component {
         if(event){
             event.preventDefault()
         }
+        this.setState({
+            ready: false
+        })
         var numOfUsers = 0;
         var arr = []
         var  i = 0;
@@ -433,6 +427,7 @@ class Search extends Component {
                     monthly={this.state.monthly}
                     user={this.state.user}
                     name={this.state.pName + " " + this.state.fName}
+                    ready={this.state.ready}
                 />
                 {this.state.showPopup ? 
                     <Popup

@@ -6,9 +6,6 @@ import 'chart.js'
 class GraphAns extends Component {
     constructor(props) {
         super()
-        this.state = {
-           
-        }
         this.handleChange = this.handleChange.bind(this)
         this.sort_by_key = function(array, key)
         {
@@ -30,94 +27,97 @@ class GraphAns extends Component {
 
 
     render() {
-        var data = this.sort_by_key(this.props.data, "ValidTime")
-        var points = {};
-        var oDay = new Date(this.props.date);
-        var line = {};
-        var table = {};
-        var last, lData;
-        var dates = [];
-        for(var i = 0; i < data.length; i++){
-            if(this.props.showDaily){
-                var date = new Date(data[i].ValidTime)
-                var dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year:"numeric"}).replace(/ /g, '-')
-                if(date <= oDay){
-                    points[dateStr] = data[i]["Answers"][0]["AnswerID"][0].toFixed(2);
-                    last = dateStr;
-                    lData = data[i]["Answers"][0]["AnswerID"][0].toFixed(2);
-                }
-                if(date >= oDay){
-                    line[dateStr] = data[i]["Answers"][0]["AnswerID"][0].toFixed(2);
-                    if(lData){
-                        line[last] = lData;
+        if(this.props.ready){
+            var data = this.sort_by_key(this.props.data, "ValidTime")
+            var points = {};
+            var oDay = new Date(this.props.date);
+            var line = {};
+            var table = {};
+            var last, lData;
+            var dates = [];
+            for(var i = 0; i < data.length; i++){
+                if(this.props.showDaily){
+                    var date = new Date(data[i].ValidTime)
+                    var dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year:"numeric"}).replace(/ /g, '-')
+                    if(date <= oDay){
+                        points[dateStr] = data[i]["Answers"][0]["AnswerID"][0].toFixed(2);
+                        last = dateStr;
+                        lData = data[i]["Answers"][0]["AnswerID"][0].toFixed(2);
+                    }
+                    if(date >= oDay){
+                        line[dateStr] = data[i]["Answers"][0]["AnswerID"][0].toFixed(2);
+                        if(lData){
+                            line[last] = lData;
+                        }
                     }
                 }
-            }
-            else if(this.props.weekly){
-                date = new Date(data[i].ValidTime);
-                var dayOfWeek = date.getDay();
-                var sunday = new Date(data[i].ValidTime - dayOfWeek * 86400000);
-                var saturday = new Date(sunday.getTime() + 518400000);
-                dateStr = sunday.toLocaleDateString('en-GB', {day: 'numeric'}) + " - " + saturday.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'});
-                if(table[dateStr] == null){
-                    table[dateStr] = {};
-                    table[dateStr]["counter"] = 0;
-                    table[dateStr]["sum"] = 0;
-                    dates.push(data[i].ValidTime);
-                }
-                table[dateStr]["sum"] += data[i]["Answers"][0]["AnswerID"][0];
-                table[dateStr]["counter"]++;
-            }
-            else if(this.props.monthly){
-                date = new Date(data[i].ValidTime);;
-                dateStr = date.toLocaleDateString('en-GB', {month: 'short'});
-                if(table[dateStr] == null){
-                    table[dateStr] = {};
-                    table[dateStr]["counter"] = 0;
-                    table[dateStr]["sum"] = 0;
-                    dates.push(data[i].ValidTime);
-                }
-                table[dateStr]["sum"] += data[i]["Answers"][0]["AnswerID"][0];
-                table[dateStr]["counter"]++;
-            }
-        }
-        dates = dates.sort();
-        if(this.props.weekly || this.props.monthly){
-            for (i = 0; i < dates.length; i++) {
-                date = new Date(dates[i]);
-                if(this.props.weekly){
-                    dayOfWeek = date.getDay();
-                    sunday = new Date(date.getTime() - dayOfWeek * 86400000);
-                    saturday = new Date(sunday.getTime() + 518400000);
+                else if(this.props.weekly){
+                    date = new Date(data[i].ValidTime);
+                    var dayOfWeek = date.getDay();
+                    var sunday = new Date(data[i].ValidTime - dayOfWeek * 86400000);
+                    var saturday = new Date(sunday.getTime() + 518400000);
                     dateStr = sunday.toLocaleDateString('en-GB', {day: 'numeric'}) + " - " + saturday.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'});
+                    if(table[dateStr] == null){
+                        table[dateStr] = {};
+                        table[dateStr]["counter"] = 0;
+                        table[dateStr]["sum"] = 0;
+                        dates.push(data[i].ValidTime);
+                    }
+                    table[dateStr]["sum"] += data[i]["Answers"][0]["AnswerID"][0];
+                    table[dateStr]["counter"]++;
                 }
-                else{
+                else if(this.props.monthly){
+                    date = new Date(data[i].ValidTime);;
                     dateStr = date.toLocaleDateString('en-GB', {month: 'short'});
+                    if(table[dateStr] == null){
+                        table[dateStr] = {};
+                        table[dateStr]["counter"] = 0;
+                        table[dateStr]["sum"] = 0;
+                        dates.push(data[i].ValidTime);
+                    }
+                    table[dateStr]["sum"] += data[i]["Answers"][0]["AnswerID"][0];
+                    table[dateStr]["counter"]++;
                 }
-                if(date <= oDay){
-                    points[dateStr] = (table[dateStr]["sum"] / table[dateStr]["counter"]).toFixed(2);
-                    last = dateStr;
-                    lData = (table[dateStr]["sum"] / table[dateStr]["counter"]).toFixed(2);
-                }
-                if(date >= oDay){
-                    line[dateStr] = (table[dateStr]["sum"] / table[dateStr]["counter"]).toFixed(2);
-                    if(last){
-                        line[last] = lData
+            }
+            dates = dates.sort();
+            if(this.props.weekly || this.props.monthly){
+                for (i = 0; i < dates.length; i++) {
+                    date = new Date(dates[i]);
+                    if(this.props.weekly){
+                        dayOfWeek = date.getDay();
+                        sunday = new Date(date.getTime() - dayOfWeek * 86400000);
+                        saturday = new Date(sunday.getTime() + 518400000);
+                        dateStr = sunday.toLocaleDateString('en-GB', {day: 'numeric'}) + " - " + saturday.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'});
+                    }
+                    else{
+                        dateStr = date.toLocaleDateString('en-GB', {month: 'short'});
+                    }
+                    if(date <= oDay){
+                        points[dateStr] = (table[dateStr]["sum"] / table[dateStr]["counter"]).toFixed(2);
+                        last = dateStr;
+                        lData = (table[dateStr]["sum"] / table[dateStr]["counter"]).toFixed(2);
+                    }
+                    if(date >= oDay){
+                        line[dateStr] = (table[dateStr]["sum"] / table[dateStr]["counter"]).toFixed(2);
+                        if(last){
+                            line[last] = lData
+                        }
                     }
                 }
             }
+            var dataX = [
+                {"name": "לפני הניתוח", "data": points},
+                {"name": "אחרי הניתוח", "data": line}
+            ];
         }
-        var dataX = [
-            {"name": "לפני הניתוח", "data": points},
-            {"name": "אחרי הניתוח", "data": line}
-        ];
-        
 		return (
             <div>
-                <div className="App">
-                    <h1>{this.props.name}</h1>
-                    <LineChart download={true} data={dataX} min={0} />
-                </div>	
+                {this.props.ready ? <div>
+                    <div className="App">
+                        <h1>{this.props.name}</h1>
+                        <LineChart download={true} data={dataX} min={0} />
+                    </div>	
+                </div> : null}
             </div>
         )
     }

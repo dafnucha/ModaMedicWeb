@@ -44,7 +44,7 @@ class PatientData extends Component {
     handleSubmit(e){
         e.preventDefault();
         let date = (new Date(this.state.new_date)).getTime();
-        let id = this.state.user["UserID"];
+        let id = this.props.user["UserID"];
         axios.post('http://icc.ise.bgu.ac.il/njsw03auth/usersAll/changeDateOfSurgery', 
         {
             UserID: id,
@@ -97,7 +97,7 @@ class PatientData extends Component {
                 "QuestionnaireText": "דירוג איכות חיים"
             })
         }           
-        let id = this.state.user["UserID"];
+        let id = this.props.user["UserID"];
         axios.post('http://icc.ise.bgu.ac.il/njsw03auth/usersAll/changeUserQuestionnaire', 
         {
             UserID: id,
@@ -136,25 +136,25 @@ class PatientData extends Component {
     }
 
     render() {
-        let fName = this.state.user["First_Name"];
-        let lName = this.state.user["Last_Name"];
-        let bmi = this.state.user["BMI"];
-        let sDate = (new Date(this.state.user["DateOfSurgery"])).toLocaleDateString('en-GB', {day: 'numeric', month: 'numeric', year: 'numeric'}).replace(/ /g, '/');
-        let gender = this.state.user["Gender"];
-        let height = this.state.user["Height"];
-        let pNumber = this.state.user["Phone_Number"];
-        let smoke = this.state.user["Smoke"];
-        let sType = this.state.user["SurgeryType"];
-        let weight = this.state.user["Weight"];
+        let fName = this.props.user["First_Name"];
+        let lName = this.props.user["Last_Name"];
+        let bmi = this.props.user["BMI"];
+        let sDate = (new Date(this.props.user["DateOfSurgery"])).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        let gender = this.props.user["Gender"];
+        let height = this.props.user["Height"];
+        let pNumber = this.props.user["Phone_Number"];
+        let smoke = this.props.user["Smoke"];
+        let sType = this.props.user["SurgeryType"];
+        let weight = this.props.user["Weight"];
         var today = new Date();
-        var birthday = new Date(this.state.user["BirthDate"]);
+        var birthday = new Date(this.props.user["BirthDate"]);
         var age = Math.floor((today.getTime() - birthday.getTime())/ 31536000000)
         var Questionnaires = "";
-        for(var i = 0; i < this.state.user["Questionnaires"].length; i++){
+        for(var i = 0; i < this.props.user["Questionnaires"].length; i++){
             if(i !== 0){
                 Questionnaires +=", "
             }
-            Questionnaires += this.state.user["Questionnaires"][i]["QuestionnaireText"];
+            Questionnaires += this.props.user["Questionnaires"][i]["QuestionnaireText"];
         }
 		return (
             <div id="data">

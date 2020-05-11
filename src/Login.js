@@ -106,7 +106,7 @@ class Login extends Component{
     async handle(e){
         e.preventDefault();
         var date = new Date(this.state.date);
-        var dateLong = date.getTime() - 7200000;
+        var dateLong = date.getTime();
         let url = 'http://icc.ise.bgu.ac.il/njsw03users/checkVerification';
         const response = await axios.post(
             url,
