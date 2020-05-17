@@ -307,7 +307,6 @@ class Search extends Component {
                                 onChange={this.handleChange}
                             />
                     </div>
-                    <br />
                     <div className="mdd">
                         <label className="mLabel">
                                 בחר מדדים:

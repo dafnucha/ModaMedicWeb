@@ -30,96 +30,78 @@ h4{
     margin-top: 2vmin;
     display:inline-block
 }
-.search {
-    overflow: hidden;/* Makes this div contain its floats */
+.search, .dates, .mdd, .mddShow {
+    direction: rtl;
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center
 }
+
+.dates{
+    margin-top: 7px;
+}
+
+.mdd {
+    margin-top: 15px;
+}
+
+.mddShow {
+    margin-top: 10px;
+}
+
+
 .bSearch{
-    width: 10%;
-    float: right;
+    width: 65px;
     margin-right: 10px;
 }
 
 .iSearch{
     text-align: right;
-    float: right;
-    margin-top: 1.5%;
     border: 1px solid initial;
     height: 18px;
+    direction: rtl;
 }
 
 #pname{
-    
-    width: 25%;
+    width: 160px;
 }
+
 #fname{
-    width: 25%;
+    width: 160px;
     margin-right: 10px;
 }
 
 .lSearch{
-    width: 20%;
-    margin-top: 15px;
-    float: right;
+    clear: both;
     font-size: small;
-    text-align: left;
+    width: fit-content;
     margin-left: 10px;
 }
 
 .cSearch{
-    width: 20%;
-    margin-top: 15px;
-    float: right;
     font-size: small;
-    text-align: left;
 }
 
 .dSearch{
-    width: 30%;
-    float: right;
-    margin-top: 10px;
+    width: 190px;
     margin-left: 10px;
     margin-right: 10px;
 }
 
 .aSearch{
-    width: 5%;
-    margin-top: 15px;
     font-size: small;
-    float: right;
     text-align: center;
 }
 
-.dates{
-    width: 100%;
-    align-items: middle;
-    display: inline-block;
-    overflow: hidden;
-}
+
 
 .mLabel{
     font-size: small;
     color: black;
-    float: right;
-    margin-left: 9px;
-}
-
-.cInput{
-    float: right;
 }
 
 
-.mdd{
-    width: 100%;
-    margin: 0;
-    margin-top: 15px;
-    overflow: hidden
-}
-
-.mddShow{
-    margin-right: 30%;
-    margin-top: 15px;
-    overflow: hidden
-}
 
 .popup {
 

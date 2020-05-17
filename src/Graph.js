@@ -34,7 +34,6 @@ class Graph extends Component {
             var oDay = new Date(this.props.date);
             var line = {};
             var table = {};
-            var last, lData;
             var dates = [];
             for(var i = 0; i < data.length; i++){
                 if(this.props.showDaily){
@@ -45,14 +44,9 @@ class Graph extends Component {
                     }
                     if(date <= oDay){
                         points[dateStr] = data[i].Data.toFixed(2);
-                        last = dateStr;
-                        lData = data[i].Data.toFixed(2);
                     }
                     if(date >= oDay){
                         line[dateStr] = data[i].Data.toFixed(2)
-                        if(last){
-                            line[last] = lData
-                        }
                     }
                 }
                 else if(this.props.weekly){
@@ -101,14 +95,9 @@ class Graph extends Component {
                     }
                     if(date <= oDay){
                         points[dateStr] = (table[dateStr]["sum"] /  table[dateStr]["counter"]).toFixed(2);
-                        last = dateStr;
-                        lData = (table[dateStr]["sum"] /  table[dateStr]["counter"]).toFixed(2);
                     }
                     if(date >= oDay){
                         line[dateStr] = (table[dateStr]["sum"] /  table[dateStr]["counter"]).toFixed(2);
-                        if(last){
-                            line[last] = lData
-                        }
                     }
                 }
             }

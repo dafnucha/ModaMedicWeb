@@ -2,7 +2,7 @@
     background-color:rgb(255, 255, 255);
     border:1px solid rgb(148, 148, 148);
     overflow:auto;
-    width: 35%;
+    width: 220px;
     display:inline-block;
     height: 40px;
 }
@@ -38,7 +38,7 @@ div.ex1 {
     margin: 0%;
     padding: 0%;
     overflow-y: hidden;
-    width: 100%;
+    width: 220px;
 }
 
 #cbRight input:checked + span{
@@ -46,7 +46,7 @@ div.ex1 {
     margin: 0%;
     padding: 0%;
     overflow-y: hidden;
-    width: 100%;
+    width: 220px;
 }
 
 #text{

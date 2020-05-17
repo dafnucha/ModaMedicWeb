@@ -36,8 +36,14 @@ class SleepGraph extends Component {
             var dates = [];
             for(var i = 0; i < data.length; i++){
                 var date = new Date(data[i].ValidTime);
-                var deep = 0, light = 0, total = 0, last, lDeep, lLight, lTotal;
+                var deep = 0, light = 0, total = 0, firstTime;
                 for(var k = 0; k < data[i]["Data"].length; k++){
+                    if(k === 0){
+                        firstTime = data[i]["Data"][k]["StartTime"];
+                    }
+                    else if( firstTime === data[i]["Data"][k]["StartTime"]){
+                        break;
+                    }
                     var time = data[i]["Data"][k]["EndTime"] - data[i]["Data"][k]["StartTime"];
                     time = time / 3600000;
                     if(data[i]["Data"][k]["State"] === "SLEEP_LIGHT"){
@@ -54,20 +60,11 @@ class SleepGraph extends Component {
                         pointsD[dateStr] = deep.toFixed(2);
                         pointsL[dateStr] = light.toFixed(2);
                         pointsT[dateStr] = total.toFixed(2);
-                        last = dateStr;
-                        lDeep = deep.toFixed(2);
-                        lLight = light.toFixed(2);
-                        lTotal = total.toFixed(2);
                     }
                     if(date >= oDay){
                         lineD[dateStr] = deep.toFixed(2);
                         lineL[dateStr] = light.toFixed(2);
                         lineT[dateStr] = total.toFixed(2);
-                        if(last){
-                            lineD[last] = lDeep;
-                            lineL[last] = lLight;
-                            lineT[last] = lTotal;
-                        }
                     }
                 }
                 else if(this.props.weekly){
@@ -137,20 +134,11 @@ class SleepGraph extends Component {
                         pointsD[dateStr] = (table[dateStr]["deep"]["sum"] /  table[dateStr]["deep"]["counter"]).toFixed(2);
                         pointsL[dateStr] = (table[dateStr]["light"]["sum"] /  table[dateStr]["light"]["counter"]).toFixed(2);
                         pointsT[dateStr] = (table[dateStr]["total"]["sum"] /  table[dateStr]["total"]["counter"]).toFixed(2);
-                        last = dateStr;
-                        lDeep = (table[dateStr]["deep"]["sum"] /  table[dateStr]["deep"]["counter"]).toFixed(2);
-                        lLight = (table[dateStr]["light"]["sum"] /  table[dateStr]["light"]["counter"]).toFixed(2);
-                        lTotal = (table[dateStr]["total"]["sum"] /  table[dateStr]["total"]["counter"]).toFixed(2);
                     }
                     if(date >= oDay){
                         lineD[dateStr] = (table[dateStr]["deep"]["sum"] /  table[dateStr]["deep"]["counter"]).toFixed(2);
                         lineL[dateStr] = (table[dateStr]["light"]["sum"] /  table[dateStr]["light"]["counter"]).toFixed(2);
                         lineT[dateStr] =(table[dateStr]["total"]["sum"] /  table[dateStr]["total"]["counter"]).toFixed(2);
-                        if(last){
-                            lineD[last] = lDeep;
-                            lineL[last] = lLight;
-                            lineT[last] = lTotal;
-                        }
                     }
                 }
             }

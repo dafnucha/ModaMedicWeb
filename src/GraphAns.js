@@ -33,7 +33,6 @@ class GraphAns extends Component {
             var oDay = new Date(this.props.date);
             var line = {};
             var table = {};
-            var last, lData;
             var dates = [];
             for(var i = 0; i < data.length; i++){
                 if(this.props.showDaily){
@@ -41,14 +40,9 @@ class GraphAns extends Component {
                     var dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year:"numeric"}).replace(/ /g, '-')
                     if(date <= oDay){
                         points[dateStr] = data[i]["Answers"][0]["AnswerID"][0].toFixed(2);
-                        last = dateStr;
-                        lData = data[i]["Answers"][0]["AnswerID"][0].toFixed(2);
                     }
                     if(date >= oDay){
                         line[dateStr] = data[i]["Answers"][0]["AnswerID"][0].toFixed(2);
-                        if(lData){
-                            line[last] = lData;
-                        }
                     }
                 }
                 else if(this.props.weekly){
@@ -94,14 +88,9 @@ class GraphAns extends Component {
                     }
                     if(date <= oDay){
                         points[dateStr] = (table[dateStr]["sum"] / table[dateStr]["counter"]).toFixed(2);
-                        last = dateStr;
-                        lData = (table[dateStr]["sum"] / table[dateStr]["counter"]).toFixed(2);
                     }
                     if(date >= oDay){
                         line[dateStr] = (table[dateStr]["sum"] / table[dateStr]["counter"]).toFixed(2);
-                        if(last){
-                            line[last] = lData
-                        }
                     }
                 }
             }
