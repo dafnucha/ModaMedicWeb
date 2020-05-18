@@ -34,6 +34,22 @@ class GraphAns extends Component {
             var line = {};
             var table = {};
             var dates = [];
+            var week = false;
+            var dateO, dateOStr;
+            if(this.props.weekly){
+                dateO = new Date(this.props.date);
+                var day = dateO.getDay();
+                var sun = new Date(this.props.date - day * 86400000);
+                var sat = new Date(sun.getTime() + 518400000);
+                dateOStr = sun.toLocaleDateString('en-GB', {day: 'numeric'}) + " - " + sat.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'});
+            }
+            if(this.props.monthly){
+                dateO = new Date(this.props.date);
+                dateOStr = dateO.toLocaleDateString('en-GB', {month: 'short'});
+            }
+            var avgO = {};
+            avgO["before"] = {sum: 0, counter: 0};
+            avgO["after"]= {sum: 0, counter: 0};
             for(var i = 0; i < data.length; i++){
                 if(this.props.showDaily){
                     var date = new Date(data[i].ValidTime)
@@ -51,26 +67,58 @@ class GraphAns extends Component {
                     var sunday = new Date(data[i].ValidTime - dayOfWeek * 86400000);
                     var saturday = new Date(sunday.getTime() + 518400000);
                     dateStr = sunday.toLocaleDateString('en-GB', {day: 'numeric'}) + " - " + saturday.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'});
-                    if(table[dateStr] == null){
-                        table[dateStr] = {};
-                        table[dateStr]["counter"] = 0;
-                        table[dateStr]["sum"] = 0;
-                        dates.push(data[i].ValidTime);
+                    if(dateOStr === dateStr){
+                        if(data[i].ValidTime < this.props.date){
+                            avgO["before"]["counter"]++;
+                            avgO["before"]["sum"] += data[i]["Answers"][0]["AnswerID"][0];
+                        }
+                        else{
+                            avgO["after"]["counter"]++;
+                            avgO["after"]["sum"] += data[i]["Answers"][0]["AnswerID"][0]; 
+                        }
+                        if(!week){
+                            week = true;
+                            dates.push(data[i].ValidTime);
+                        }
                     }
-                    table[dateStr]["sum"] += data[i]["Answers"][0]["AnswerID"][0];
-                    table[dateStr]["counter"]++;
+                    else{
+                        if(table[dateStr] == null){
+                            table[dateStr] = {};
+                            table[dateStr]["counter"] = 0;
+                            table[dateStr]["sum"] = 0;
+                            dates.push(data[i].ValidTime);
+                        }
+                        table[dateStr]["sum"] += data[i]["Answers"][0]["AnswerID"][0];
+                        table[dateStr]["counter"]++;
+                    }
                 }
                 else if(this.props.monthly){
                     date = new Date(data[i].ValidTime);;
                     dateStr = date.toLocaleDateString('en-GB', {month: 'short'});
-                    if(table[dateStr] == null){
-                        table[dateStr] = {};
-                        table[dateStr]["counter"] = 0;
-                        table[dateStr]["sum"] = 0;
-                        dates.push(data[i].ValidTime);
+                    if(dateOStr === dateStr){
+                        if(data[i].ValidTime < this.props.date){
+                            avgO["before"]["counter"]++;
+                            avgO["before"]["sum"] += data[i]["Answers"][0]["AnswerID"][0];
+                        }
+                        else{
+                            avgO["after"]["counter"]++;
+                            avgO["after"]["sum"] += data[i]["Answers"][0]["AnswerID"][0]; 
+                        }
+                        if(!week){
+                            week = true;
+                            dates.push(data[i].ValidTime);
+                        }
                     }
-                    table[dateStr]["sum"] += data[i]["Answers"][0]["AnswerID"][0];
-                    table[dateStr]["counter"]++;
+                    else{
+                        if(table[dateStr] == null){
+                            table[dateStr] = {};
+                            table[dateStr]["counter"] = 0;
+                            table[dateStr]["sum"] = 0;
+                            dates.push(data[i].ValidTime);
+                        }
+                        table[dateStr]["sum"] += data[i]["Answers"][0]["AnswerID"][0];
+                        table[dateStr]["counter"]++;
+                    }
                 }
             }
             dates = dates.sort();
@@ -85,6 +133,11 @@ class GraphAns extends Component {
                     }
                     else{
                         dateStr = date.toLocaleDateString('en-GB', {month: 'short'});
+                    }
+                    if(dateStr === dateOStr){
+                        points[dateStr] = (avgO["before"]["sum"] /  avgO["before"]["counter"]).toFixed(2);
+                        line[dateStr] = (avgO["after"]["sum"] /  avgO["after"]["counter"]).toFixed(2);
+                        continue;
                     }
                     if(date <= oDay){
                         points[dateStr] = (table[dateStr]["sum"] / table[dateStr]["counter"]).toFixed(2);

@@ -34,6 +34,27 @@ class SleepGraph extends Component {
             var lineD = {}, lineL = {}, lineT = {};
             var table = {};
             var dates = [];
+            var dateO, dateOStr, week = false;
+            if(this.props.weekly){
+                dateO = new Date(this.props.date);
+                var day = dateO.getDay();
+                var sun = new Date(this.props.date - day * 86400000);
+                var sat = new Date(sun.getTime() + 518400000);
+                dateOStr = sun.toLocaleDateString('en-GB', {day: 'numeric'}) + " - " + sat.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'});
+            }
+            if(this.props.monthly){
+                dateO = new Date(this.props.date);
+                dateOStr = dateO.toLocaleDateString('en-GB', {month: 'short'});
+            }
+            var avgO = {};
+            avgO["before"] = {light: {}, deep: {}, total: {}};
+            avgO["after"] = {light: {}, deep: {}, total: {}};
+            avgO["before"]["light"] = {sum: 0, counter: 0};
+            avgO["before"]["deep"] = {sum: 0, counter: 0};
+            avgO["before"]["total"] = {sum: 0, counter: 0};
+            avgO["after"]["total"] = {sum: 0, counter: 0};
+            avgO["after"]["deep"] = {sum: 0, counter: 0};
+            avgO["after"]["light"] = {sum: 0, counter: 0};
             for(var i = 0; i < data.length; i++){
                 var date = new Date(data[i].ValidTime);
                 var deep = 0, light = 0, total = 0, firstTime;
@@ -73,48 +94,96 @@ class SleepGraph extends Component {
                     var sunday = new Date(data[i].ValidTime - dayOfWeek * 86400000);
                     var saturday = new Date(sunday.getTime() + 518400000);
                     dateStr = sunday.toLocaleDateString('en-GB', {day: 'numeric'}) + " - " + saturday.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'});
-                    if(table[dateStr] == null){
-                        table[dateStr] = {};
-                        table[dateStr]["light"] = {};
-                        table[dateStr]["deep"] = {};
-                        table[dateStr]["total"] = {};
-                        table[dateStr]["light"]["counter"] = 0;
-                        table[dateStr]["light"]["sum"] = 0;
-                        table[dateStr]["deep"]["counter"] = 0;
-                        table[dateStr]["deep"]["sum"] = 0;
-                        table[dateStr]["total"]["counter"] = 0;
-                        table[dateStr]["total"]["sum"] = 0;
-                        dates.push(data[i].ValidTime);
+                    if(dateOStr === dateStr){
+                        if(data[i].ValidTime < this.props.date){
+                            avgO["before"]["light"]["counter"]++;
+                            avgO["before"]["light"]["sum"] += light;
+                            avgO["before"]["deep"]["counter"]++;
+                            avgO["before"]["deep"]["sum"] += deep;
+                            avgO["before"]["total"]["counter"]++;
+                            avgO["before"]["total"]["sum"] += total;
+                        }
+                        else{
+                            avgO["after"]["light"]["counter"]++;
+                            avgO["after"]["light"]["sum"] += light;
+                            avgO["after"]["deep"]["counter"]++;
+                            avgO["after"]["deep"]["sum"] += deep;
+                            avgO["after"]["total"]["counter"]++;
+                            avgO["after"]["total"]["sum"] += total;
+                        }
+                        if(!week){
+                            week = true;
+                            dates.push(data[i].ValidTime);
+                        }
                     }
-                    table[dateStr]["light"]["counter"]++;
-                    table[dateStr]["light"]["sum"] += light;
-                    table[dateStr]["deep"]["counter"]++;
-                    table[dateStr]["deep"]["sum"] += deep;
-                    table[dateStr]["total"]["counter"]++;
-                    table[dateStr]["total"]["sum"] += total;
+                    else{
+                        if(table[dateStr] == null){
+                            table[dateStr] = {};
+                            table[dateStr]["light"] = {};
+                            table[dateStr]["deep"] = {};
+                            table[dateStr]["total"] = {};
+                            table[dateStr]["light"]["counter"] = 0;
+                            table[dateStr]["light"]["sum"] = 0;
+                            table[dateStr]["deep"]["counter"] = 0;
+                            table[dateStr]["deep"]["sum"] = 0;
+                            table[dateStr]["total"]["counter"] = 0;
+                            table[dateStr]["total"]["sum"] = 0;
+                            dates.push(data[i].ValidTime);
+                        }
+                        table[dateStr]["light"]["counter"]++;
+                        table[dateStr]["light"]["sum"] += light;
+                        table[dateStr]["deep"]["counter"]++;
+                        table[dateStr]["deep"]["sum"] += deep;
+                        table[dateStr]["total"]["counter"]++;
+                        table[dateStr]["total"]["sum"] += total;
+                    }
                 }
                 else if(this.props.monthly){
                     date = new Date(data[i].ValidTime);;
                     dateStr = date.toLocaleDateString('en-GB', {month: 'short'});
-                    if(table[dateStr] == null){
-                        table[dateStr] = {};
-                        table[dateStr]["light"] = {};
-                        table[dateStr]["deep"] = {};
-                        table[dateStr]["total"] = {};
-                        table[dateStr]["light"]["counter"] = 0;
-                        table[dateStr]["light"]["sum"] = 0;
-                        table[dateStr]["deep"]["counter"] = 0;
-                        table[dateStr]["deep"]["sum"] = 0;
-                        table[dateStr]["total"]["counter"] = 0;
-                        table[dateStr]["total"]["sum"] = 0;
-                        dates.push(data[i].ValidTime);
+                    if(dateOStr === dateStr){
+                        if(data[i].ValidTime < this.props.date){
+                            avgO["before"]["light"]["counter"]++;
+                            avgO["before"]["light"]["sum"] += light;
+                            avgO["before"]["deep"]["counter"]++;
+                            avgO["before"]["deep"]["sum"] += deep;
+                            avgO["before"]["total"]["counter"]++;
+                            avgO["before"]["total"]["sum"] += total;
+                        }
+                        else{
+                            avgO["after"]["light"]["counter"]++;
+                            avgO["after"]["light"]["sum"] += light;
+                            avgO["after"]["deep"]["counter"]++;
+                            avgO["after"]["deep"]["sum"] += deep;
+                            avgO["after"]["total"]["counter"]++;
+                            avgO["after"]["total"]["sum"] += total;
+                        }
+                        if(!week){
+                            week = true;
+                            dates.push(data[i].ValidTime);
+                        }
                     }
-                    table[dateStr]["light"]["counter"]++;
-                    table[dateStr]["light"]["sum"] += light;
-                    table[dateStr]["deep"]["counter"]++;
-                    table[dateStr]["deep"]["sum"] += deep;
-                    table[dateStr]["total"]["counter"]++;
-                    table[dateStr]["total"]["sum"] += total;
+                    else{
+                        if(table[dateStr] == null){
+                            table[dateStr] = {};
+                            table[dateStr]["light"] = {};
+                            table[dateStr]["deep"] = {};
+                            table[dateStr]["total"] = {};
+                            table[dateStr]["light"]["counter"] = 0;
+                            table[dateStr]["light"]["sum"] = 0;
+                            table[dateStr]["deep"]["counter"] = 0;
+                            table[dateStr]["deep"]["sum"] = 0;
+                            table[dateStr]["total"]["counter"] = 0;
+                            table[dateStr]["total"]["sum"] = 0;
+                            dates.push(data[i].ValidTime);
+                        }
+                        table[dateStr]["light"]["counter"]++;
+                        table[dateStr]["light"]["sum"] += light;
+                        table[dateStr]["deep"]["counter"]++;
+                        table[dateStr]["deep"]["sum"] += deep;
+                        table[dateStr]["total"]["counter"]++;
+                        table[dateStr]["total"]["sum"] += total;
+                    }
                 }
             }
             dates = dates.sort();
@@ -129,6 +198,15 @@ class SleepGraph extends Component {
                     }
                     else{
                         dateStr = date.toLocaleDateString('en-GB', {month: 'short'});
+                    }
+                    if(dateStr === dateOStr){
+                        pointsD[dateStr] = (avgO["before"]["deep"]["sum"] /  avgO["before"]["deep"]["counter"]).toFixed(2);
+                        pointsL[dateStr] = (avgO["before"]["light"]["sum"] /  avgO["before"]["light"]["counter"]).toFixed(2);
+                        pointsT[dateStr] = (avgO["before"]["total"]["sum"] /  avgO["before"]["total"]["counter"]).toFixed(2);
+                        lineD[dateStr] = (avgO["after"]["deep"]["sum"] /  avgO["after"]["deep"]["counter"]).toFixed(2);
+                        lineL[dateStr] = (avgO["after"]["light"]["sum"] /  avgO["after"]["light"]["counter"]).toFixed(2);
+                        lineT[dateStr] = (avgO["after"]["total"]["sum"] /  avgO["after"]["total"]["counter"]).toFixed(2);
+                        continue;
                     }
                     if(date <= oDay){
                         pointsD[dateStr] = (table[dateStr]["deep"]["sum"] /  table[dateStr]["deep"]["counter"]).toFixed(2);
