@@ -8,6 +8,41 @@ class Search extends Component {
         super()
         var date = new Date();
         var x = date.toISOString().split("T")[0];
+        var list = [], list1 = [];
+        axios.get(
+            "http://icc.ise.bgu.ac.il/njsw03auth/usersAll/getFirsts",
+            { 
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'x-auth-token': sessionStorage.getItem("token")
+                } 
+            }
+        ).then(function (response){
+            var names = response.data.data.map(function(item, i){
+                return item.trim();
+            })
+            var uniqueNames = Array.from(new Set(names));
+            for(var  i = 0; i < uniqueNames.length; i++){
+               list.push(<option key={uniqueNames[i]}>{uniqueNames[i]}</option>);
+            }
+        });
+        axios.get(
+            "http://icc.ise.bgu.ac.il/njsw03auth/usersAll/getLasts",
+            { 
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'x-auth-token': sessionStorage.getItem("token")
+                } 
+            }
+        ).then(function (response){
+            var names = response.data.data.map(function(item, i){
+                return item.trim();
+            })
+            var uniqueNames = Array.from(new Set(names));
+            for(var  i = 0; i < uniqueNames.length; i++){
+                list1.push(<option key={uniqueNames[i]}>{uniqueNames[i]}</option>);
+            }
+        });
         this.state = {
             pName: "",
             fName: "",
@@ -33,7 +68,9 @@ class Search extends Component {
             monthly: false,
             user: {},
             ready: false, 
-            todayDate: x
+            todayDate: x,
+            optionsPName: list,
+            optionsLName: list1
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -76,7 +113,6 @@ class Search extends Component {
 
     async getRequest(name, url){
         let getUrl = 'http://icc.ise.bgu.ac.il/njsw03auth/doctors/' + url + '?FirstName=' + this.state.pName + '&LastName=' + this.state.fName;
-        
         if(this.state.start_date !== ""){
             var date = new Date(this.state.start_date)
             let start_time = date.getTime();
@@ -260,6 +296,12 @@ class Search extends Component {
         require("./search.css");
         return (
             <div>
+                <datalist id="first-list">
+                    {this.state.optionsPName}
+                </datalist>
+                <datalist id="last-list">
+                    {this.state.optionsLName}
+                </datalist>
                 <form onSubmit={this.handleSubmit}>
                     <div className="search">
                         <label className="lSearch" >
@@ -272,6 +314,7 @@ class Search extends Component {
                             value={this.state.pName} 
                             placeholder="שם פרטי" 
                             onChange={this.handleChange} 
+                            list="first-list"
                             required
                         />
                         <input className="iSearch"
@@ -281,6 +324,7 @@ class Search extends Component {
                             value={this.state.fName} 
                             placeholder="שם משפחה" 
                             onChange={this.handleChange} 
+                            list="last-list"
                             required
                         />
                         <button className="bSearch"> 

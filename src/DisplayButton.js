@@ -13,8 +13,8 @@ class DisplayButton extends Component {
     constructor(props) {
         super()
         this.state = {
-            graph: false,
-            table : true
+            graph: true,
+            table : false
         }
 
         this.styleLabel = {
@@ -61,7 +61,7 @@ class DisplayButton extends Component {
                 arrCal = this.props.dataArr[i].values;
             }
             else if(this.props.dataArr[i].name === "מזג האוויר"){
-                if(this.props.dataArr[i].values[0].Data && this.props.dataArr[i].values[0].Data.High){
+                if(this.props.dataArr[i].values.length && this.props.dataArr[i].values[0].Data && this.props.dataArr[i].values[0].Data.High){
                     for(var j = 0; j < this.props.dataArr[i].values.length; j++){
                         this.props.dataArr[i].values[j].Data = this.props.dataArr[i].values[j].Data.High;
                     }
