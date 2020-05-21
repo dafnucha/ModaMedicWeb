@@ -193,7 +193,8 @@ class Search extends Component {
             event.preventDefault()
         }
         this.setState({
-            ready: false
+            ready: false,
+            periodicAnswers: []
         })
         var numOfUsers = 0;
         var arr = []
@@ -294,6 +295,7 @@ class Search extends Component {
 
     render() {
         require("./search.css");
+        
         return (
             <div>
                 <datalist id="first-list">

@@ -288,13 +288,13 @@ class TableAns extends Component {
                     }
                 }
             }
-        }
-        else{
-            noData = true;
+            else{
+                noData = true;
+            }
         }
         return(
             <div>
-                {this.props.ready ? <div>{{noData} ? <h4>לא קיים מידע על המשתמש</h4> :
+                {this.props.ready ? <div>{noData ? <h4>לא קיים מידע על המשתמש</h4> :
                     <div className="center">
                     <table style={{width: "100%"}} id="daily" className="tabels">
                         <tbody>

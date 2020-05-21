@@ -154,16 +154,17 @@ class GraphAns extends Component {
                     {"name": "אחרי הניתוח", "data": line}
                 ];
             }
+            else{
+                noData = true;
+            }
         }
-        else{
-            noData = true;
-        }
+        
 		return (
             <div>
                 {this.props.ready ? <div>
                     <div className="App">
                         <h1>{this.props.name}</h1>
-                        {{noData} ? <h4>לא קיים מידע על המשתמש</h4> : <LineChart download={true} data={dataX} min={0} />}
+                        {noData ? <h4>לא קיים מידע על המשתמש</h4> : <LineChart download={true} data={dataX} min={0} />}
                     </div>	
                 </div> : null}
             </div>

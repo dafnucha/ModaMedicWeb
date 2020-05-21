@@ -21,11 +21,16 @@ class TablePer extends Component {
     render() {
         require("./Table.css");
         if(this.props.ready){
-            var noData = false;
-            if(this.props.data.length > 0){
+            var noData = true;
+            for(var  i = 0; i < this.props.data.length; i++){
+                if( this.props.data[i].data.length > 0 ){
+                    noData = false;
+                }
+            }
+            if(!noData){
                 var table = {};
                 var data = this.props.data;
-                var i, j, week = false;
+                var j, week = false;
                 var dates = [];
                 var dic = {};
                 var dateO, dateOStr;
@@ -297,13 +302,13 @@ class TablePer extends Component {
 
                 }
             }
-        }
-        else{
-            noData = true;
+            else{
+                noData = true;
+            }
         }
         return(
             <div>
-                {this.props.ready ?  <div>{{noData} ? <h4>לא קיים מידע על המשתמש</h4> :
+                {this.props.ready ?  <div>{noData ? <h4>לא קיים מידע על המשתמש</h4> :
                     <div>
                         <table style={{width: "100%"}} id="per">
                             <tbody>

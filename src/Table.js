@@ -29,7 +29,7 @@ class Table extends Component {
             var noData = true;
             var i
             for(i = 0; i < this.props.dataArr.length; i++){
-                if(this.props.dataArr[i].length > 0){
+                if(this.props.dataArr[i].values.length > 0){
                     noData = false
                 }
             }
@@ -500,15 +500,15 @@ class Table extends Component {
                     exportCSV.push(line);
                 }
                 
+            } 
+            else{
+                noData = true;
             }
-        }
-        else{
-            noData = true;
         }
         return(
             <div>
                 {this.props.ready ? <div className="center">
-                    {{noData} ? <h4>לא קיים מידע על המשתמש</h4> :
+                    {noData ? <h4>לא קיים מידע על המשתמש</h4> :
                         <table style={{width: "100%"}} id="mdd" className="tabels" align="center">
                             <tbody>
                                 <tr>

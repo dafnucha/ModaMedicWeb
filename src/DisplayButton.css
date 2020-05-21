@@ -49,6 +49,14 @@ div.ex1 {
     width: 220px;
 }
 
+#cbRight input:hover + span{
+    cursor: pointer;
+}
+
+#cbLeft input:hover + span{
+    cursor: pointer;
+}
+
 #text{
     margin: 4%;
 }
