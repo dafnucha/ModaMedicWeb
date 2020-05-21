@@ -27,12 +27,14 @@ div.App, div.App-header {
   margin-top: 10px;
   width: fit-content;
   float: left;
-  margin-right: 0.3%;
+  margin-right: 8px;
+  margin-left: 8px;
 }
 
 #change:hover{
   color: blue;
   text-decoration: underline;
+  cursor: pointer;
 }
 
 #labels {
@@ -44,12 +46,12 @@ div.App, div.App-header {
   text-align: left;
   font-size: medium;
   margin-top: 10px;
-  margin-right: 0.3%;
 }
 
 #logout:hover{
   color: blue;
   text-decoration: underline;
+  cursor: pointer;
 }
 .App-header {
   background-color: white;

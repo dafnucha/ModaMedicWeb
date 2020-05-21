@@ -275,7 +275,7 @@ class TablePer extends Component {
                             line["EQ-5D"] = table[dateStr]["5"];
                         }
                         if(dic["6"] && (table[dateStr]["6"] > 0 || table[dateStr]["6"] <= 0)){
-                            line["EQ5D Number"] = table[dateStr]["6"];
+                            line["EQ-5D scale"] = table[dateStr]["6"];
                         }
                     }
                     else{
@@ -295,7 +295,7 @@ class TablePer extends Component {
                             line["EQ-5D"] = table[dateStr]["5"]["Data"].toFixed(2);
                         }
                         if(dic["6"] && table[dateStr]["6"] && table[dateStr]["6"]["counter"]){
-                            line["EQ5D Number"] = table[dateStr]["6"]["Data"].toFixed(2);
+                            line["EQ-5D scale"] = table[dateStr]["6"]["Data"].toFixed(2);
                         }
                     }
                     exportCSV.push(line);
@@ -319,7 +319,7 @@ class TablePer extends Component {
                                     { dic["3"] ? <th>Lower Extremity Functional Scale</th> : null }
                                     { dic["4"] ? <th>Oswestry low back pain</th> : null }
                                     { dic["5"] ? <th>EQ-5D</th> : null }
-                                    { dic["6"] ? <th>EQ5D Number</th> : null }
+                                    { dic["6"] ? <th>EQ-5D scale</th> : null }
                                 </tr>
                                 {arr}
                             </tbody>

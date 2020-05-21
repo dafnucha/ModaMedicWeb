@@ -26,7 +26,7 @@ class Graph extends Component {
     render() {
         if(this.props.ready){
             var noData = false;
-            if(this.props.data.length > 0){
+            if(this.props.data && this.props.data.length > 0){
                 var data = this.sort_by_key(this.props.data, "Timestamp")
                 var points = {};
                 var min  = 0, week = false;

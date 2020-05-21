@@ -92,10 +92,6 @@ class PatientData extends Component {
                 "QuestionnaireID": 5,
                 "QuestionnaireText": "איכות חיים"
             });
-            Questionnaires.push({
-                "QuestionnaireID": 6,
-                "QuestionnaireText": "דירוג איכות חיים"
-            })
         }           
         let id = this.props.user["UserID"];
         axios.post('http://icc.ise.bgu.ac.il/njsw03auth/usersAll/changeUserQuestionnaire', 
@@ -136,9 +132,8 @@ class PatientData extends Component {
     }
 
     render() {
-        let fName = this.props.user["First_Name"];
-        let lName = this.props.user["Last_Name"];
-        let bmi = this.props.user["BMI"];
+        let name = this.props.user["First_Name"] + " " + this.props.user["Last_Name"];
+        let bmi = parseFloat(this.props.user["BMI"]).toFixed(1);
         let sDate = (new Date(this.props.user["DateOfSurgery"])).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
         let gender = this.props.user["Gender"];
         let height = this.props.user["Height"];
@@ -159,10 +154,8 @@ class PatientData extends Component {
 		return (
             <div id="data">
                 <div className="line">
-                    <label className="label">שם פרטי:</label>
-                    <label className="labelData">{fName}</label>
-                    <label className="label">שם משפחה:</label>
-                    <label className="labelData">{lName}</label>
+                    <label className="label">שם:</label>
+                    <label className="labelData">{name}</label>
                     <label className="label">מספר טלפון:</label>
                     <label className="labelData">{pNumber}</label>
                 </div>

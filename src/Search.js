@@ -18,12 +18,14 @@ class Search extends Component {
                 } 
             }
         ).then(function (response){
-            var names = response.data.data.map(function(item, i){
-                return item.trim();
-            })
-            var uniqueNames = Array.from(new Set(names));
-            for(var  i = 0; i < uniqueNames.length; i++){
-               list.push(<option key={uniqueNames[i]}>{uniqueNames[i]}</option>);
+            if(response.data.data){
+                var names = response.data.data.map(function(item, i){
+                    return item.trim();
+                })
+                var uniqueNames = Array.from(new Set(names));
+                for(var  i = 0; i < uniqueNames.length; i++){
+                list.push(<option key={uniqueNames[i]}>{uniqueNames[i]}</option>);
+                }
             }
         });
         axios.get(
@@ -35,12 +37,14 @@ class Search extends Component {
                 } 
             }
         ).then(function (response){
-            var names = response.data.data.map(function(item, i){
-                return item.trim();
-            })
-            var uniqueNames = Array.from(new Set(names));
-            for(var  i = 0; i < uniqueNames.length; i++){
-                list1.push(<option key={uniqueNames[i]}>{uniqueNames[i]}</option>);
+            if(response.data.data){
+                var names = response.data.data.map(function(item, i){
+                    return item.trim();
+                })
+                var uniqueNames = Array.from(new Set(names));
+                for(var  i = 0; i < uniqueNames.length; i++){
+                    list1.push(<option key={uniqueNames[i]}>{uniqueNames[i]}</option>);
+                }
             }
         });
         this.state = {

@@ -44,6 +44,7 @@ label {
     float: right;
     margin-top: 2%;
     margin-right: 0;
+    cursor: pointer;
 }
 
 #con, #send{
@@ -148,6 +149,7 @@ button:hover {
 #forget{
     color: blue;
     text-decoration: underline;
+    cursor: pointer;
 }
 
 #forget:hover{
@@ -158,6 +160,7 @@ button:hover {
     color: blue;
     text-decoration: underline;
     margin-top: 4%;
+    cursor: pointer;
 }
 
 #register:hover{
