@@ -150,36 +150,73 @@ class TablePer extends Component {
                         }
                     }
                 }
+                var last = Math.min();
                 for(i = 0; i < dates.length; i++){
                     var line = {};
                     date = new Date(dates[i]);
                     dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'}).replace(/ /g, '-');
                     if(this.props.showDaily){
+                        var d = new Date(dates[i]);
+                        d.setHours(0,0,0,0);
+                        var num = Math.floor((d.getTime() - this.props.date) / 86400000);
+                        if(num < 0){
+                            num++;
+                        }
+                        if(last === num){
+                            num++;
+                        }
+                        last = num;
+                        if(!this.props.date){
+                            num = "-"
+                        }
+                        table[dateStr]["num"] = num;
                         arr.push(
                             <tr key={dateStr}>
-                                {(dates[i] < this.props.date) ? <td className="before">{dateStr}</td> : <td className="after">{dateStr}</td>}
-                                { dic["1"] ? ((table[dateStr]["1"] >= 0 || table[dateStr]["1"] < 0) ? ((dates[i] < this.props.date) ? <td className="before">{ table[dateStr]["1"]}</td> : <td className="after">{ table[dateStr]["1"]}</td>) : ((dates[i] < this.props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
-                                { dic["2"] ? ((table[dateStr]["2"] >= 0 || table[dateStr]["2"] < 0) ? ((dates[i] < this.props.date) ? <td className="before">{ table[dateStr]["2"]}</td> : <td className="after">{ table[dateStr]["2"]}</td>) : ((dates[i] < this.props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
-                                { dic["3"] ? ((table[dateStr]["3"] >= 0 || table[dateStr]["3"] < 0) ? ((dates[i] < this.props.date) ? <td className="before">{ table[dateStr]["3"]}</td> : <td className="after">{ table[dateStr]["3"]}</td>) : ((dates[i] < this.props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
-                                { dic["4"] ? ((table[dateStr]["4"] >= 0 || table[dateStr]["4"] < 0) ? ((dates[i] < this.props.date) ? <td className="before">{ table[dateStr]["4"]}</td> : <td className="after">{ table[dateStr]["4"]}</td>) : ((dates[i] < this.props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
-                                { dic["5"] ? ((table[dateStr]["5"] >= 0 || table[dateStr]["5"] < 0) ? ((dates[i] < this.props.date) ? <td className="before">{ table[dateStr]["5"]}</td> : <td className="after">{ table[dateStr]["5"]}</td>) : ((dates[i] < this.props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
-                                { dic["6"] ? ((table[dateStr]["6"] >= 0 || table[dateStr]["6"] < 0) ? ((dates[i] < this.props.date) ? <td className="before">{ table[dateStr]["6"]}</td> : <td className="after">{ table[dateStr]["6"]}</td>) : ((dates[i] < this.props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
+                                {(dates[i] < this.props.date || !this.props.date) ? <td className="before">{num}</td> : <td className="after">{num}</td>}
+                                {(dates[i] < this.props.date || !this.props.date) ? <td className="before">{dateStr}</td> : <td className="after">{dateStr}</td>}
+                                { dic["1"] ? ((table[dateStr]["1"] >= 0 || table[dateStr]["1"] < 0) ? ((dates[i] < this.props.date || !this.props.date) ? <td className="before">{ table[dateStr]["1"]}</td> : <td className="after">{ table[dateStr]["1"]}</td>) : ((dates[i] < this.props.date || !this.props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
+                                { dic["2"] ? ((table[dateStr]["2"] >= 0 || table[dateStr]["2"] < 0) ? ((dates[i] < this.props.date || !this.props.date) ? <td className="before">{ table[dateStr]["2"]}</td> : <td className="after">{ table[dateStr]["2"]}</td>) : ((dates[i] < this.props.date || !this.props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
+                                { dic["3"] ? ((table[dateStr]["3"] >= 0 || table[dateStr]["3"] < 0) ? ((dates[i] < this.props.date || !this.props.date) ? <td className="before">{ table[dateStr]["3"]}</td> : <td className="after">{ table[dateStr]["3"]}</td>) : ((dates[i] < this.props.date || !this.props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
+                                { dic["4"] ? ((table[dateStr]["4"] >= 0 || table[dateStr]["4"] < 0) ? ((dates[i] < this.props.date || !this.props.date) ? <td className="before">{ table[dateStr]["4"]}</td> : <td className="after">{ table[dateStr]["4"]}</td>) : ((dates[i] < this.props.date || !this.props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
+                                { dic["5"] ? ((table[dateStr]["5"] >= 0 || table[dateStr]["5"] < 0) ? ((dates[i] < this.props.date || !this.props.date) ? <td className="before">{ table[dateStr]["5"]}</td> : <td className="after">{ table[dateStr]["5"]}</td>) : ((dates[i] < this.props.date || !this.props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
+                                { dic["6"] ? ((table[dateStr]["6"] >= 0 || table[dateStr]["6"] < 0) ? ((dates[i] < this.props.date || !this.props.date) ? <td className="before">{ table[dateStr]["6"]}</td> : <td className="after">{ table[dateStr]["6"]}</td>) : ((dates[i] < this.props.date || !this.props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
                             </tr>
                         );
                     }
                     else if(this.props.weekly || this.props.monthly){
+                        var o = new Date(this.props.date);
+                        d = new Date(dates[i]);
+                        d.setHours(0,0,0,0);
                         if(this.props.weekly){
+                            var sundayO = new Date(o.getTime() - o.getDay() * 86400000);
+                            sundayO.setHours(0,0,0,0);
                             dayOfWeek = date.getDay();
                             sunday = new Date(date.getTime() - dayOfWeek * 86400000);
+                            sunday.setHours(0,0,0,0);
                             saturday = new Date(sunday.getTime() + 518400000);
                             dateStr = sunday.toLocaleDateString('en-GB', {day: 'numeric'}) + "-" + saturday.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'});
+                            num = Math.floor((sunday.getTime() - sundayO.getTime()) / 604800000);
                         }
                         else{
+                            var firstDay = new Date(d.getFullYear(), d.getMonth(), 1);
+                            var firstDayO = new Date(o.getFullYear(), o.getMonth(), 1);
+                            num = Math.floor((firstDay.getTime() - firstDayO.getTime()) / 2419200000);
+                            if(num < 0){
+                                num++;
+                            }
                             dateStr = date.toLocaleDateString('en-GB', {month: 'short'});
+                        }
+                        if(last === num){
+                            num++;
+                        }
+                        last = num;
+                        if(!this.props.date){
+                            num = "-"
                         }
                         if(dateStr === dateOStr){
                             arr.push(
                                 <tr key={dateStr + "before"}>
+                                    <td className="before">{0}</td>
                                     <td className="before">{dateStr}</td>
                                     { dic["1"] ? (avgO["before"]["1"]["counter"] ? <td className="before"> {(avgO["before"]["1"]["sum"] / avgO["before"]["1"]["counter"]).toFixed(2)} </td>  : <td className="before"> - </td>) : null}
                                     { dic["2"] ? (avgO["before"]["2"]["counter"] ? <td className="before"> {(avgO["before"]["2"]["sum"] / avgO["before"]["2"]["counter"]).toFixed(2)} </td>  : <td className="before"> - </td>) : null}
@@ -191,6 +228,7 @@ class TablePer extends Component {
                             )
                             arr.push(
                                 <tr key={dateStr + "after"}>
+                                    <td className="after">{0}</td>
                                     <td className="after">{dateStr}</td>
                                     { dic["1"] ? (avgO["after"]["1"]["counter"] ? <td className="after"> {(avgO["after"]["1"]["sum"] / avgO["after"]["1"]["counter"]).toFixed(2)} </td>  : <td className="after"> - </td>) : null}
                                     { dic["2"] ? (avgO["after"]["2"]["counter"] ? <td className="after"> {(avgO["after"]["2"]["sum"] / avgO["after"]["2"]["counter"]).toFixed(2)} </td>  : <td className="after"> - </td>) : null}
@@ -201,6 +239,15 @@ class TablePer extends Component {
                                     </tr>
                             )
                             line = {};
+                            var z  = 0;
+                            if(this.props.date){
+                                if(this.props.weekly){
+                                    line["מספר שבוע"] = z;
+                                }
+                                else{
+                                    line["מספר חודש"] = z;
+                                }
+                            }
                             line["תאריך"] = dateStr;
                             if(dic["1"] && avgO["before"]["1"]["counter"]){
                                 line["Oswestry Disability Index"] = (avgO["before"]["1"]["sum"] / avgO["before"]["1"]["counter"]).toFixed(2);
@@ -222,6 +269,14 @@ class TablePer extends Component {
                             }
                             exportCSV.push(line);
                             line = {};
+                            if(this.props.date){
+                                if(this.props.weekly){
+                                    line["מספר שבוע"] = z;
+                                }
+                                else{
+                                    line["מספר חודש"] = z;
+                                }
+                            }
                             line["תאריך"] = dateStr;
                             if(dic["1"] && avgO["after"]["1"]["counter"]){
                                 line["Oswestry Disability Index"] = (avgO["after"]["1"]["sum"] / avgO["after"]["1"]["counter"]).toFixed(2);
@@ -246,17 +301,29 @@ class TablePer extends Component {
                         }
                         arr.push(
                             <tr key={dateStr}>
-                                {(dates[i] < this.props.date) ? <td className="before">{dateStr}</td> : <td className="after">{dateStr}</td>}
-                                { dic["1"] ? ((table[dateStr]["1"] && (table[dateStr]["1"]["Data"] >= 0 || table[dateStr]["1"]["Data"] < 0)) ? ((dates[i] < this.props.date) ? <td className="before">{ table[dateStr]["1"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["1"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
-                                { dic["2"] ? ((table[dateStr]["2"] && (table[dateStr]["2"]["Data"] >= 0 || table[dateStr]["2"]["Data"] < 0)) ? ((dates[i] < this.props.date) ? <td className="before">{ table[dateStr]["2"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["2"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
-                                { dic["3"] ? ((table[dateStr]["3"] && (table[dateStr]["3"]["Data"] >= 0 || table[dateStr]["3"]["Data"] < 0)) ? ((dates[i] < this.props.date) ? <td className="before">{ table[dateStr]["3"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["3"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
-                                { dic["4"] ? ((table[dateStr]["4"] && (table[dateStr]["4"]["Data"] >= 0 || table[dateStr]["4"]["Data"] < 0)) ? ((dates[i] < this.props.date) ? <td className="before">{ table[dateStr]["4"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["4"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
-                                { dic["5"] ? ((table[dateStr]["5"] && (table[dateStr]["5"]["Data"] >= 0 || table[dateStr]["5"]["Data"] < 0)) ? ((dates[i] < this.props.date) ? <td className="before">{ table[dateStr]["5"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["5"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
-                                { dic["6"] ? ((table[dateStr]["6"] && (table[dateStr]["6"]["Data"] >= 0 || table[dateStr]["6"]["Data"] < 0)) ? ((dates[i] < this.props.date) ? <td className="before">{ table[dateStr]["6"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["6"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
+                                {(dates[i] < this.props.date || !this.props.date) ? <td className="before">{num}</td> : <td className="after">{num}</td>}
+                                {(dates[i] < this.props.date || !this.props.date) ? <td className="before">{dateStr}</td> : <td className="after">{dateStr}</td>}
+                                { dic["1"] ? ((table[dateStr]["1"] && (table[dateStr]["1"]["Data"] >= 0 || table[dateStr]["1"]["Data"] < 0)) ? ((dates[i] < this.props.date || !this.props.date) ? <td className="before">{ table[dateStr]["1"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["1"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date || !this.props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
+                                { dic["2"] ? ((table[dateStr]["2"] && (table[dateStr]["2"]["Data"] >= 0 || table[dateStr]["2"]["Data"] < 0)) ? ((dates[i] < this.props.date || !this.props.date) ? <td className="before">{ table[dateStr]["2"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["2"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date || !this.props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
+                                { dic["3"] ? ((table[dateStr]["3"] && (table[dateStr]["3"]["Data"] >= 0 || table[dateStr]["3"]["Data"] < 0)) ? ((dates[i] < this.props.date || !this.props.date) ? <td className="before">{ table[dateStr]["3"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["3"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date || !this.props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
+                                { dic["4"] ? ((table[dateStr]["4"] && (table[dateStr]["4"]["Data"] >= 0 || table[dateStr]["4"]["Data"] < 0)) ? ((dates[i] < this.props.date || !this.props.date) ? <td className="before">{ table[dateStr]["4"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["4"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date || !this.props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
+                                { dic["5"] ? ((table[dateStr]["5"] && (table[dateStr]["5"]["Data"] >= 0 || table[dateStr]["5"]["Data"] < 0)) ? ((dates[i] < this.props.date || !this.props.date) ? <td className="before">{ table[dateStr]["5"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["5"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date || !this.props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
+                                { dic["6"] ? ((table[dateStr]["6"] && (table[dateStr]["6"]["Data"] >= 0 || table[dateStr]["6"]["Data"] < 0)) ? ((dates[i] < this.props.date || !this.props.date) ? <td className="before">{ table[dateStr]["6"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["6"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date || !this.props.date) ? <td className="before">-</td> : <td className="after">-</td>)) : null }
                             </tr>
                         )
                     }
                     line = {};
+                    if(this.props.date){
+                        if(this.props.showDaily){
+                            line["מספר יום"] = num;
+                        }
+                        else if(this.props.weekly){
+                            line["מספר שבוע"] = num;
+                        }
+                        else{
+                            line["מספר חודש"] = num;
+                        }
+                    }
                     line["תאריך"] = dateStr;
                     if(this.props.showDaily){
                         if(dic["1"] && (table[dateStr]["1"] > 0 || table[dateStr]["1"] <= 0)){
@@ -313,6 +380,9 @@ class TablePer extends Component {
                         <table style={{width: "100%"}} id="per">
                             <tbody>
                                 <tr>
+                                    { this.props.showDaily ? <th>מספר יום</th> : null}
+                                    { this.props.weekly ? <th>מספר שבוע</th> : null} 
+                                    { this.props.monthly ? <th>מספר חודש</th> : null}  
                                     { this.props.data.length > 0 ? <th>תאריך</th> : null}
                                     { dic["1"] ? <th>Oswestry Disability Index</th> : null }
                                     { dic["2"] ? <th>Neck Disability Index</th> : null }

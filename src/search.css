@@ -122,7 +122,7 @@ option{
     right: 0;
     bottom: 0;
     margin: auto;
-    background-color: rgba(0,0,0, 0.5);
+    background-color: rgba(0,0,0,0.8);
 }
 
 .popup_inner {
@@ -136,4 +136,12 @@ option{
     height: auto;
     height: fit-content;
     background: white;
+}
+
+.waiting{
+    cursor: progress;
+}
+
+.normal{
+    cursor: auto;
 }

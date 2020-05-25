@@ -144,6 +144,7 @@ class AddUser extends Component {
         let optionItems = quesions.map((question) =>
             <option key={question} >{question}</option>
         );
+        var today = (new Date()).toISOString().split("T")[0];
         return (
             
             <div>
@@ -170,7 +171,7 @@ class AddUser extends Component {
                     </div>
                     <div className="divs_in_add">
                         <label className="labels_in_add_user">תאריך לידה</label>
-                        <input className="inputs_in_add_user" name="bday" type="date" value={this.state.bday} onChange={this.handleChange} required/>
+                        <input className="inputs_in_add_user" name="bday" type="date" max={today} value={this.state.bday} onChange={this.handleChange} required/>
                     </div>
                     <div className="divs_in_add">
                         <label className="labels_in_add_user">קוד אימות </label>

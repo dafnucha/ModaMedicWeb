@@ -150,7 +150,7 @@ class DisplayButton extends Component {
                 </div>
                 <br />
                 <br />
-                { ((this.state.graph || this.state.table) && this.props.ready) ? <PatientData user={this.props.user}/> : null}
+                { ((this.state.graph || this.state.table) && this.props.ready) ? <PatientData user={this.props.user} table={this.state.table}/> : null}
                 { (this.state.table && this.props.dataArr.length > 0 && this.props.ready) ? <h3>מדדים</h3> : null }
                 { this.state.table ? <div className="ex1"><Table dataArr={this.props.dataArr}
                     steps={this.props.steps}

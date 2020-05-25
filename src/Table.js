@@ -355,36 +355,73 @@ class Table extends Component {
                     }
                 }
                 var exportCSV = [];
+                var last = Math.min();
                 for(i = 0; i < dates.length; i++){
-                    date = new Date(dates[i])
+                    date = new Date(dates[i]);
                     dateStr = date.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'}).replace(/ /g, '-')
                     if(this.props.showDaily){
+                        var d = new Date(dates[i]);
+                        d.setHours(0,0,0,0);
+                        var num = Math.floor((d.getTime() - this.props.date) / 86400000);
+                        if(num < 0){
+                            num++;
+                        }
+                        if(last === num){
+                            num++;
+                        }
+                        last = num;
+                        if(!this.props.date){
+                            num = "-"
+                        }
+                        table[dateStr]["num"] = num;
                         arr.push(
                             <tr key={dateStr}>
-                                {(dates[i] < this.props.date) ? <td className="before">{dateStr}</td> : <td className="after">{dateStr}</td>}
-                                { this.props.steps ? (table[dateStr]["צעדים"] ? ((dates[i] < this.props.date) ? <td className="before">{ table[dateStr]["צעדים"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["צעדים"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
-                                { this.props.distance ? (table[dateStr]["מרחק"] ? ((dates[i] < this.props.date) ? <td className="before">{ table[dateStr]["מרחק"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["מרחק"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
-                                { this.props.calories ? (table[dateStr]["קלוריות"] ? ((dates[i] < this.props.date) ? <td className="before">{ table[dateStr]["קלוריות"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["קלוריות"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
-                                { this.props.weather ? (table[dateStr]["מזג האוויר"] ? ((dates[i] < this.props.date) ? <td className="before">{ table[dateStr]["מזג האוויר"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["מזג האוויר"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
-                                { this.props.sleep ? (table[dateStr]["light"] >= 0 ? ((dates[i] < this.props.date) ? <td className="before">{ table[dateStr]["light"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["light"].toFixed(2)}</td>) : ((dates[i] < this.props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
-                                { this.props.sleep ? (table[dateStr]["deep"] >= 0 ? ((dates[i] < this.props.date) ? <td className="before">{ table[dateStr]["deep"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["deep"].toFixed(2)}</td>) : ((dates[i] < this.props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
-                                { this.props.sleep ? (table[dateStr]["total"] >= 0 ? ((dates[i] < this.props.date) ? <td className="before">{ table[dateStr]["total"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["total"].toFixed(2)}</td>) : ((dates[i] < this.props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                                {(dates[i] < this.props.date || !this.props.date) ? <td className="before">{num}</td> : <td className="after">{num}</td>}
+                                {(dates[i] < this.props.date || !this.props.date) ? <td className="before">{dateStr}</td> : <td className="after">{dateStr}</td>}
+                                { this.props.steps ? (table[dateStr]["צעדים"] ? ((dates[i] < this.props.date || !this.props.date) ? <td className="before">{ table[dateStr]["צעדים"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["צעדים"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                                { this.props.distance ? (table[dateStr]["מרחק"] ? ((dates[i] < this.props.date || !this.props.date) ? <td className="before">{ table[dateStr]["מרחק"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["מרחק"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                                { this.props.calories ? (table[dateStr]["קלוריות"] ? ((dates[i] < this.props.date || !this.props.date) ? <td className="before">{ table[dateStr]["קלוריות"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["קלוריות"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date || !this.props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                                { this.props.weather ? (table[dateStr]["מזג האוויר"] ? ((dates[i] < this.props.date || !this.props.date) ? <td className="before">{ table[dateStr]["מזג האוויר"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["מזג האוויר"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date || !this.props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                                { this.props.sleep ? (table[dateStr]["light"] >= 0 ? ((dates[i] < this.props.date || !this.props.date) ? <td className="before">{ table[dateStr]["light"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["light"].toFixed(2)}</td>) : ((dates[i] < this.props.date || !this.props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                                { this.props.sleep ? (table[dateStr]["deep"] >= 0 ? ((dates[i] < this.props.date || !this.props.date) ? <td className="before">{ table[dateStr]["deep"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["deep"].toFixed(2)}</td>) : ((dates[i] < this.props.date || !this.props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                                { this.props.sleep ? (table[dateStr]["total"] >= 0 ? ((dates[i] < this.props.date || !this.props.date) ? <td className="before">{ table[dateStr]["total"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["total"].toFixed(2)}</td>) : ((dates[i] < this.props.date || !this.props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
                             </tr>
                         )
                     }
                     else if(this.props.weekly || this.props.monthly){
+                        var o = new Date(this.props.date);
+                        d = new Date(dates[i]);
+                        d.setHours(0,0,0,0);
                         if(this.props.weekly){
+                            var sundayO = new Date(o.getTime() - o.getDay() * 86400000);
+                            sundayO.setHours(0,0,0,0);
                             dayOfWeek = date.getDay();
                             sunday = new Date(date.getTime() - dayOfWeek * 86400000);
+                            sunday.setHours(0,0,0,0);
                             saturday = new Date(sunday.getTime() + 518400000);
                             dateStr = sunday.toLocaleDateString('en-GB', {day: 'numeric'}) + "-" + saturday.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'});
+                            num = Math.floor((sunday.getTime() - sundayO.getTime()) / 604800000);
                         }
                         else{
+                            var firstDay = new Date(d.getFullYear(), d.getMonth(), 1);
+                            var firstDayO = new Date(o.getFullYear(), o.getMonth(), 1);
+                            num = Math.floor((firstDay.getTime() - firstDayO.getTime()) / 2419200000);
+                            if(num < 0){
+                                num++;
+                            }
                             dateStr = date.toLocaleDateString('en-GB', {month: 'short'});
+                        }
+                        if(last === num){
+                            num++;
+                        }
+                        last = num;
+                        if(!this.props.date){
+                            num = "-"
                         }
                         if(dateStr === dateOStr){
                             arr.push(
                                 <tr key={dateStr + "before"}>
+                                    <td className="before">{0}</td>
                                     <td className="before">{dateStr}</td>
                                     { this.props.steps ? (avgO["before"]["צעדים"]["counter"] ? (<td className="before">{ (avgO["before"]["צעדים"]["sum"] / avgO["before"]["צעדים"]["counter"]).toFixed(2)}</td> ) : <td className="before">-</td>) : null}
                                     { this.props.distance ? (avgO["before"]["מרחק"]["counter"] ? (<td className="before">{ (avgO["before"]["מרחק"]["sum"] / avgO["before"]["מרחק"]["counter"]).toFixed(2)}</td> ) : <td className="before">-</td>) : null}
@@ -397,6 +434,7 @@ class Table extends Component {
                             )
                             arr.push(
                                 <tr key={dateStr + "after"}>
+                                    <td className="after">{0}</td>
                                     <td className="after">{dateStr}</td>
                                     { this.props.steps ? (avgO["after"]["צעדים"]["counter"] ? (<td className="after">{ (avgO["after"]["צעדים"]["sum"] / avgO["after"]["צעדים"]["counter"]).toFixed(2)}</td> ) : <td className="after">-</td>) : null}
                                     { this.props.distance ? (avgO["after"]["מרחק"]["counter"] ? (<td className="after">{ (avgO["after"]["מרחק"]["sum"] / avgO["after"]["מרחק"]["counter"]).toFixed(2)}</td> ) : <td className="after">-</td>) : null}
@@ -409,23 +447,34 @@ class Table extends Component {
                             )
                         }
                         else{
+                            table[dateStr]["num"] = num;
                             arr.push(
                                 <tr key={dateStr}>
-                                    {(dates[i] < this.props.date) ? <td className="before">{dateStr}</td> : <td className="after">{dateStr}</td>}
-                                    { this.props.steps ? (table[dateStr]["צעדים"] ? ((dates[i] < this.props.date) ? <td className="before">{ table[dateStr]["צעדים"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["צעדים"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
-                                    { this.props.distance ? (table[dateStr]["מרחק"] ? ((dates[i] < this.props.date) ? <td className="before">{ table[dateStr]["מרחק"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["מרחק"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
-                                    { this.props.calories ? (table[dateStr]["קלוריות"] ? ((dates[i] < this.props.date) ? <td className="before">{ table[dateStr]["קלוריות"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["קלוריות"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
-                                    { this.props.weather ? (table[dateStr]["מזג האוויר"] ? ((dates[i] < this.props.date) ? <td className="before">{ table[dateStr]["מזג האוויר"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["מזג האוויר"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
-                                    { this.props.sleep ? (table[dateStr]["light"] ? ((dates[i] < this.props.date) ? <td className="before">{ table[dateStr]["light"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["light"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
-                                    { this.props.sleep ? (table[dateStr]["deep"] ? ((dates[i] < this.props.date) ? <td className="before">{ table[dateStr]["deep"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["deep"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
-                                    { this.props.sleep ? (table[dateStr]["total"] ? ((dates[i] < this.props.date) ? <td className="before">{ table[dateStr]["total"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["total"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                                     {(dates[i] < this.props.date || !this.props.date) ? <td className="before">{num}</td> : <td className="after">{num}</td>}
+                                    {(dates[i] < this.props.date || !this.props.date) ? <td className="before">{dateStr}</td> : <td className="after">{dateStr}</td>}
+                                    { this.props.steps ? (table[dateStr]["צעדים"] ? ((dates[i] < this.props.date || !this.props.date) ? <td className="before">{ table[dateStr]["צעדים"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["צעדים"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date || !this.props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                                    { this.props.distance ? (table[dateStr]["מרחק"] ? ((dates[i] < this.props.date || !this.props.date) ? <td className="before">{ table[dateStr]["מרחק"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["מרחק"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date || !this.props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                                    { this.props.calories ? (table[dateStr]["קלוריות"] ? ((dates[i] < this.props.date || !this.props.date) ? <td className="before">{ table[dateStr]["קלוריות"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["קלוריות"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date || !this.props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                                    { this.props.weather ? (table[dateStr]["מזג האוויר"] ? ((dates[i] < this.props.date || !this.props.date) ? <td className="before">{ table[dateStr]["מזג האוויר"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["מזג האוויר"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date || !this.props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                                    { this.props.sleep ? (table[dateStr]["light"] ? ((dates[i] < this.props.date || !this.props.date) ? <td className="before">{ table[dateStr]["light"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["light"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date || !this.props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                                    { this.props.sleep ? (table[dateStr]["deep"] ? ((dates[i] < this.props.date || !this.props.date) ? <td className="before">{ table[dateStr]["deep"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["deep"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date || !this.props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
+                                    { this.props.sleep ? (table[dateStr]["total"] ? ((dates[i] < this.props.date || !this.props.date) ? <td className="before">{ table[dateStr]["total"]["Data"].toFixed(2)}</td> : <td className="after">{ table[dateStr]["total"]["Data"].toFixed(2)}</td>) : ((dates[i] < this.props.date || !this.props.date) ? <td className="before">-</td> : <td className="after">-</td>) ) : null}
                                 </tr>
                             )
                         }
                     }
                     var line = {};
                     line["תאריך"] = dateStr;
+                    var z = 0;
                     if(dateStr === dateOStr){
+                        if(this.props.date){
+                            if(this.props.weekly){
+                                line["מספר שבוע"] = z;
+                            }
+                            else{
+                                line["מספר חודש"] = z;
+                            }
+                        }
                         if(this.props.steps && avgO["before"]["צעדים"]["counter"]){
                             line["צעדים"] = (avgO["before"]["צעדים"]["sum"] / avgO["before"]["צעדים"]["counter"]).toFixed(2);
                         }
@@ -449,6 +498,14 @@ class Table extends Component {
                         }
                         exportCSV.push(line);
                         line = {};
+                        if(this.props.date){
+                            if(this.props.weekly){
+                                line["מספר שבוע"] = z;
+                            }
+                            else{
+                                line["מספר חודש"] = z;
+                            }
+                        }
                         line["תאריך"] = dateStr;
                         if(this.props.steps && avgO["after"]["צעדים"]["counter"]){
                             line["צעדים"] = (avgO["after"]["צעדים"]["sum"] / avgO["after"]["צעדים"]["counter"]).toFixed(2);
@@ -473,6 +530,17 @@ class Table extends Component {
                         }
                         exportCSV.push(line);
                         continue;
+                    }
+                    if(this.props.date){
+                        if(this.props.showDaily){
+                            line["מספר יום"] = table[dateStr]["num"]
+                        }
+                        else if(this.props.weekly){
+                            line["מספר שבוע"] = table[dateStr]["num"]
+                        }
+                        else{
+                            line["מספר חודש"] = table[dateStr]["num"]
+                        }
                     }
                     if(this.props.steps && table[dateStr]["צעדים"]){
                         line["צעדים"] = table[dateStr]["צעדים"]["Data"];
@@ -512,6 +580,9 @@ class Table extends Component {
                         <table style={{width: "100%"}} id="mdd" className="tabels" align="center">
                             <tbody>
                                 <tr>
+                                    { this.props.dataArr.length > 0 && this.props.showDaily ? <th>מספר יום</th> : null}
+                                    { this.props.dataArr.length > 0 && this.props.weekly ? <th>מספר שבוע</th> : null} 
+                                    { this.props.dataArr.length > 0 && this.props.monthly ? <th>מספר חודש</th> : null}     
                                     { this.props.dataArr.length > 0 ? <th>תאריך</th> : null}
                                     { this.props.steps ? <th>צעדים</th> : null }
                                     { this.props.distance ? <th>מרחק</th> : null }

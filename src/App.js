@@ -137,18 +137,28 @@ class Popup extends React.Component {
               <button onClick={this.props.closePopup} id="x">x</button>
               <h3 id="h3">החלפת סיסמא</h3>
               <form onSubmit={this.props.handleSubmit}>
-                <label  id="lpass">
-                    סיסמא חדשה:
-                </label>
-                <input type="password" name="pass" id="pass" onChange={this.props.change} required/>
-                
-                <label id="lpass2">
-                    הקלד את הסיסמא מחדש:
-                </label>
-                <input type="password" name="pass2" id="pass2" onChange={this.props.change} required/>
-                
-                {this.props.diff ? <label>הסיסמאות שונות</label> : null}
-                <input type="submit" value="שלח" id="send"/>
+                <div className="lineC">
+                  <label>
+                      סיסמא חדשה:
+                  </label>
+                </div>
+                <div className="lineC">
+                  <input type="password" name="pass" id="pass" onChange={this.props.change} required/>
+                </div>
+                <div className="lineC">
+                  <label>
+                      הקלד את הסיסמא מחדש:
+                  </label>
+                </div>
+                <div className="lineC">
+                  <input type="password" name="pass2" id="pass2" onChange={this.props.change} required/>
+                </div>
+                <div className="lineC">
+                  {this.props.diff ? <label id="diffPass">הסיסמאות שונות</label> : null}
+                </div>
+                <div className="lineC">
+                  <input type="submit" value="שלח" />
+                </div>
               </form>
           </div>
       </div>

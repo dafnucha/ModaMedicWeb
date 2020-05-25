@@ -28,21 +28,20 @@ class TableAns extends Component {
                 let data = this.props.data;
                 var table = {};
                 var exportCSV = [];
-                var dateO, dateOStr;
+                var dateO = new Date(this.props.date), dateOStr;
                 var avgO = {};
                 avgO["before"] = {sum: 0, counter: 0, text: ""};
                 avgO["after"] = {sum: 0, counter: 0, text: ""};
                 if(this.props.weekly){
-                    dateO = new Date(this.props.date);
                     var day = dateO.getDay();
                     var sun = new Date(this.props.date - day * 86400000);
                     var sat = new Date(sun.getTime() + 518400000);
                     dateOStr = sun.toLocaleDateString('en-GB', {day: 'numeric'}) + "-" + sat.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'});
                 }
                 if(this.props.monthly){
-                    dateO = new Date(this.props.date);
                     dateOStr = dateO.toLocaleDateString('en-GB', {month: 'short'});
                 }
+                var last = Math.min();
                 for(i = 0; i < data.length; i++){
                     if(this.props.showDaily){
                         var date = new Date(data[i].ValidTime);
@@ -63,14 +62,30 @@ class TableAns extends Component {
                             }
                         }
                         text = text.slice(0, -2);
+                        var d = new Date(data[i].ValidTime);
+                        d.setHours(0,0,0,0);
+                        dateO.setHours(0,0,0,0);
+                        var num = Math.floor((d.getTime() - this.props.date) / 86400000);
+                        if(num < 0){
+                            num++;
+                        }
+                        if(last === num){
+                            num++;
+                        }
+                        last = num;
+                        if(!this.props.date){
+                            num = "-"
+                        }
                         arr.push(
                             <tr key={i}>
-                                {(data[i].ValidTime < this.props.date) ? <td className="before">{dateStr}</td> : <td className="after">{dateStr}</td>}
-                                {(data[i].ValidTime < this.props.date) ? <td className="before">{data[i]["Answers"][0]["AnswerID"][0]}</td> : <td className="after">{data[i]["Answers"][0]["AnswerID"][0]}</td>}
-                                {(data[i].ValidTime < this.props.date) ? <td className="before">{text}</td> : <td className="after">{text}</td>}
+                                {(data[i].ValidTime < this.props.date || !this.props.date) ? <td className="before">{num}</td> : <td className="after">{num}</td>}
+                                {(data[i].ValidTime < this.props.date || !this.props.date) ? <td className="before">{dateStr}</td> : <td className="after">{dateStr}</td>}
+                                {(data[i].ValidTime < this.props.date || !this.props.date) ? <td className="before">{data[i]["Answers"][0]["AnswerID"][0]}</td> : <td className="after">{data[i]["Answers"][0]["AnswerID"][0]}</td>}
+                                {(data[i].ValidTime < this.props.date || !this.props.date) ? <td className="before">{text}</td> : <td className="after">{text}</td>}
                             </tr>
                         )
                         var line = {};
+                        line["מספר יום"] = num;
                         line["תאריך"] = dateStr;
                         line["רמת כאב"] = data[i]["Answers"][0]["AnswerID"][0];
                         line["תרופה"] = text;
@@ -227,22 +242,43 @@ class TableAns extends Component {
                     for (let [key,] of Object.entries(table)) {
                         table[key]["Data"] = table[key]["sum"] / table[key]["counter"];
                     }
+                    var o = new Date(this.props.date);
                     for(i = 0; i < dates.length; i++){
                         date = new Date(dates[i]);
+                        d = new Date(dates[i]);
+                        d.setHours(0,0,0,0);
                         if(this.props.weekly){
+                            var sundayO = new Date(o.getTime() - o.getDay() * 86400000);
+                            sundayO.setHours(0,0,0,0);
                             dayOfWeek = date.getDay();
                             sunday = new Date(date.getTime() - dayOfWeek * 86400000);
+                            sunday.setHours(0,0,0,0);
                             saturday = new Date(sunday.getTime() + 518400000);
                             dateStr = sunday.toLocaleDateString('en-GB', {day: 'numeric'}) + "-" + saturday.toLocaleDateString('en-GB', {day: 'numeric', month: 'short'});
+                            num = Math.floor((sunday.getTime() - sundayO.getTime()) / 604800000);
                         }
                         else{
+                            var firstDay = new Date(d.getFullYear(), d.getMonth(), 1);
+                            var firstDayO = new Date(o.getFullYear(), o.getMonth(), 1);
+                            num = Math.floor((firstDay.getTime() - firstDayO.getTime()) / 2419200000);
+                            if(num < 0){
+                                num++;
+                            }
                             dateStr = date.toLocaleDateString('en-GB', {month: 'short'});
+                        }
+                        if(last === num){
+                            num++;
+                        }
+                        last = num;
+                        if(!this.props.date){
+                            num = "-"
                         }
                         if(dateStr === dateOStr){
                             avgO["before"]["text"] =  avgO["before"]["text"].slice(0, -2);
                             avgO["after"]["text"] =  avgO["after"]["text"].slice(0, -2);
                             arr.push(
                                 <tr key={dateStr + "before"}>
+                                    <td className="before">{num}</td>
                                     <td className="before">{dateStr}</td>
                                     {avgO["before"]["counter"] ? <td className="before">{(avgO["before"]["sum"] / avgO["before"]["counter"]).toFixed(2)}</td> : <td className="before">-</td>}
                                     {avgO["before"]["counter"] ? <td className="before">{avgO["before"]["text"]}</td> : <td className="before">-</td>}
@@ -250,17 +286,35 @@ class TableAns extends Component {
                             )
                             arr.push(
                                 <tr key={dateStr + "after"}>
+                                    <td className="after">{num}</td>
                                     <td className="after">{dateStr}</td>
                                     {avgO["after"]["counter"] ? <td className="after">{(avgO["after"]["sum"] / avgO["after"]["counter"]).toFixed(2)}</td> : <td className="after">-</td>}
                                     {avgO["after"]["counter"] ? <td className="after">{avgO["after"]["text"]}</td> : <td className="after">-</td>}
                                 </tr>
                             )
+                            var z = 0;
                             line = {};
+                            if(this.props.date){
+                                if(this.props.weekly){
+                                    line["מספר שבוע"] = z;
+                                }
+                                else{
+                                    line["מספר חודש"] = z;
+                                }
+                            }
                             line["תאריך"] = dateStr;
                             line["רמת כאב"] = (avgO["before"]["sum"] / avgO["before"]["counter"]).toFixed(2);
                             line["תרופות שהיו בשימוש"] = avgO["before"]["text"];
                             exportCSV.push(line);
                             line = {};
+                            if(this.props.date){
+                                if(this.props.weekly){
+                                    line["מספר שבוע"] = z;
+                                }
+                                else{
+                                    line["מספר חודש"] = z;
+                                }
+                            }
                             line["תאריך"] = dateStr;
                             line["רמת כאב"] = (avgO["after"]["sum"] / avgO["after"]["counter"]).toFixed(2);
                             line["תרופות שהיו בשימוש"] = avgO["after"]["text"];
@@ -270,12 +324,21 @@ class TableAns extends Component {
                         table[dateStr]["text"] =  table[dateStr]["text"].slice(0, -2);
                         arr.push(
                             <tr key={dateStr}>
-                                {(dates[i] < this.props.date) ? <td className="before">{dateStr}</td> : <td className="after">{dateStr}</td>}
-                                {(dates[i] < this.props.date) ? <td className="before">{table[dateStr]["Data"].toFixed(2)}</td> : <td className="after">{table[dateStr]["Data"].toFixed(2)}</td>}
-                                {(dates[i] < this.props.date) ? <td className="before">{table[dateStr]["text"]}</td> : <td className="after">{table[dateStr]["text"]}</td>}
+                                 {(dates[i] < this.props.date || !this.props.date) ? <td className="before">{num}</td> : <td className="after">{num}</td>}
+                                {(dates[i] < this.props.date || !this.props.date) ? <td className="before">{dateStr}</td> : <td className="after">{dateStr}</td>}
+                                {(dates[i] < this.props.date || !this.props.date) ? <td className="before">{table[dateStr]["Data"].toFixed(2)}</td> : <td className="after">{table[dateStr]["Data"].toFixed(2)}</td>}
+                                {(dates[i] < this.props.date || !this.props.date) ? <td className="before">{table[dateStr]["text"]}</td> : <td className="after">{table[dateStr]["text"]}</td>}
                             </tr>
                         )
                         line = {};
+                        if(this.props.date){
+                            if(this.props.weekly){
+                                line["מספר שבוע"] = num;
+                            }
+                            else{
+                                line["מספר חודש"] = num;
+                            }
+                        }
                         line["תאריך"] = dateStr;
                         line["רמת כאב"] = table[dateStr];
                         if(this.props.showDaily){
@@ -299,6 +362,9 @@ class TableAns extends Component {
                     <table style={{width: "100%"}} id="daily" className="tabels">
                         <tbody>
                             <tr>
+                                { this.props.showDaily ? <th>מספר יום</th> : null}
+                                { this.props.weekly ? <th>מספר שבוע</th> : null} 
+                                { this.props.monthly ? <th>מספר חודש</th> : null}
                                 <th>תאריך</th>
                                 <th>רמת כאב</th>
                                 {this.props.showDaily ? <th>תרופה</th> : <th>תרופות שהיו בשימוש</th>}

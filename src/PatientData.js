@@ -1,6 +1,5 @@
 import React, {Component} from "react"
 import axios from 'axios';
-import "./PatientData.css"
 
 class PatientData extends Component {
     constructor(props) {
@@ -132,9 +131,16 @@ class PatientData extends Component {
     }
 
     render() {
+        require("./PatientData.css");
         let name = this.props.user["First_Name"] + " " + this.props.user["Last_Name"];
         let bmi = parseFloat(this.props.user["BMI"]).toFixed(1);
-        let sDate = (new Date(this.props.user["DateOfSurgery"])).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        var sDate = "";
+        if(this.props.user["DateOfSurgery"]){
+            sDate = (new Date(this.props.user["DateOfSurgery"])).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        }
+        else{
+            sDate = "לא נקבע יום ניתוח";
+        }
         let gender = this.props.user["Gender"];
         let height = this.props.user["Height"];
         let pNumber = this.props.user["Phone_Number"];
@@ -145,14 +151,29 @@ class PatientData extends Component {
         var birthday = new Date(this.props.user["BirthDate"]);
         var age = Math.floor((today.getTime() - birthday.getTime())/ 31536000000)
         var Questionnaires = "";
+        var first = true;
         for(var i = 0; i < this.props.user["Questionnaires"].length; i++){
-            if(i !== 0){
-                Questionnaires +=", "
+            if(this.props.user["Questionnaires"][i]["QuestionnaireID"] !== 0 && this.props.user["Questionnaires"][i]["QuestionnaireID"] !== 6){
+                if(!first){
+                    Questionnaires +=", "
+                }
+                else{
+                    first = false;
+                }
+                if(!Questionnaires.includes(this.props.user["Questionnaires"][i]["QuestionnaireText"])){
+                    Questionnaires += this.props.user["Questionnaires"][i]["QuestionnaireText"];
+                }
             }
-            Questionnaires += this.props.user["Questionnaires"][i]["QuestionnaireText"];
+        }
+        if(Questionnaires.charAt(Questionnaires.length - 1) === " "){
+            Questionnaires = Questionnaires.substring(0, Questionnaires.length - 2);
+        }
+        var className = "g";
+        if(this.props.table){
+            className = "t"
         }
 		return (
-            <div id="data">
+            <div id="data" className={className}>
                 <div className="line">
                     <label className="label">שם:</label>
                     <label className="labelData">{name}</label>
@@ -223,10 +244,16 @@ class Popup extends React.Component {
             <div className='popup_innerCD' >
                 <button onClick={this.props.closePopup} id="x">x</button>
                 <h4>שינוי תאריך הניתוח</h4>
-                <form  onSubmit={this.props.handleSubmit}>
-                    <label id="newD"> הכנס תאריך ניתוח חדש</label>
+                <form  onSubmit={this.props.handleSubmit} id="newDate_form">
+                    <div className="line_newData">
+                        <label id="newD"> הכנס תאריך ניתוח חדש:</label>
+                    </div>
+                    <div className="line_newData">
                     <input id="new_date" type="date" name="new_date"  onChange={this.props.handleChange}/>
-                    <button id="sumbitC" type="sumbit" >שינוי</button>
+                    </div>
+                    <div className="line_newData">
+                        <button id="sumbitC" type="sumbit" >שינוי</button>
+                    </div>
                 </form>
             </div>
         </div>

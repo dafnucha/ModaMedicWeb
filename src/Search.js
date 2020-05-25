@@ -22,9 +22,10 @@ class Search extends Component {
                 var names = response.data.data.map(function(item, i){
                     return item.trim();
                 })
+                names = names.sort();
                 var uniqueNames = Array.from(new Set(names));
                 for(var  i = 0; i < uniqueNames.length; i++){
-                list.push(<option key={uniqueNames[i]}>{uniqueNames[i]}</option>);
+                    list.push(<option key={uniqueNames[i]}>{uniqueNames[i]}</option>);
                 }
             }
         });
@@ -41,6 +42,7 @@ class Search extends Component {
                 var names = response.data.data.map(function(item, i){
                     return item.trim();
                 })
+                names = names.sort();
                 var uniqueNames = Array.from(new Set(names));
                 for(var  i = 0; i < uniqueNames.length; i++){
                     list1.push(<option key={uniqueNames[i]}>{uniqueNames[i]}</option>);
@@ -74,7 +76,8 @@ class Search extends Component {
             ready: false, 
             todayDate: x,
             optionsPName: list,
-            optionsLName: list1
+            optionsLName: list1,
+            className: "normal"
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -116,7 +119,7 @@ class Search extends Component {
     }
 
     async getRequest(name, url){
-        let getUrl = 'http://icc.ise.bgu.ac.il/njsw03auth/doctors/' + url + '?FirstName=' + this.state.pName + '&LastName=' + this.state.fName;
+        let getUrl = 'http://icc.ise.bgu.ac.il/njsw03auth/doctors/' + url + '?FirstName=' + this.state.pName.trim() + '&LastName=' + this.state.fName.trim();
         if(this.state.start_date !== ""){
             var date = new Date(this.state.start_date)
             let start_time = date.getTime();
@@ -185,7 +188,8 @@ class Search extends Component {
             dailyA: da,
             date: sDate,
             user: user,
-            ready: true
+            ready: true,
+            className: "normal"
         })
         if(this.state.showPopup){
             this.togglePopup();
@@ -198,6 +202,7 @@ class Search extends Component {
         }
         this.setState({
             ready: false,
+            className: "waiting",
             periodicAnswers: []
         })
         var numOfUsers = 0;
@@ -284,8 +289,8 @@ class Search extends Component {
                 this.state.x.push(dateC.toLocaleDateString('en-GB', {day: 'numeric', month: 'numeric', year:"numeric"}))
                 cards.push(
                     <Card className="card" key={this.state.x[i]}  onClick={() => this.selectUser(x)}>
-                        <Card.Body className="cardBody">שם פרטי: {this.state.pName} </Card.Body>
-                        <Card.Body className="cardBody">שם משפחה: {this.state.fName} </Card.Body>
+                        <Card.Body className="cardBody">שם פרטי: {this.state.pName.trim()} </Card.Body>
+                        <Card.Body className="cardBody">שם משפחה: {this.state.fName.trim()} </Card.Body>
                         <Card.Body className="cardBody">תאריך לידה: {this.state.x[i]}</Card.Body>
                     </Card>
                 );
@@ -299,7 +304,7 @@ class Search extends Component {
 
     render() {
         require("./search.css");
-        
+        var today = (new Date()).toISOString().split("T")[0];
         return (
             <div>
                 <datalist id="first-list">
@@ -346,6 +351,7 @@ class Search extends Component {
                                 name="start_date"
                                 value={this.state.start_date} 
                                 onChange={this.handleChange}
+                                max={this.state.end_date}
                             />
                             <label className="aSearch">
                                 עד
@@ -355,6 +361,7 @@ class Search extends Component {
                                 name="end_date"
                                 value={this.state.end_date} 
                                 onChange={this.handleChange}
+                                max={today}
                             />
                     </div>
                     <div className="mdd">
@@ -475,7 +482,7 @@ class Search extends Component {
                     weekly={this.state.weekly}
                     monthly={this.state.monthly}
                     user={this.state.user}
-                    name={this.state.pName + " " + this.state.fName}
+                    name={this.state.pName.trim() + " " + this.state.fName.trim()}
                     ready={this.state.ready}
                 />
                 {this.state.showPopup ? 

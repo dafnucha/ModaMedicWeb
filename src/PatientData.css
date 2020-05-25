@@ -21,6 +21,13 @@
 #formQ{
     overflow: hidden;
 }
+.line_newData{
+    direction: rtl;
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center
+}
 
 #sdate, #quest{
     margin-left: 0.5%;
@@ -33,10 +40,13 @@
     background-color: rgb(255, 255, 255);
 }
 
+#x{
+    margin-top: 0;
+}
+
 #changeQ{
-    width: 15%;
-    margin-left: auto;
-    margin-right: auto;
+    width: 25%;
+    margin-right: 35%;
 }
 
 .mLabel{
@@ -54,10 +64,17 @@
     margin-bottom: 6%;
     background-color: rgba(175, 175, 175, 0.315);
     border: 1px solid rgb(151, 151, 151);
-    width: 98%;
+    
     float: right;
 }
 
+.t{
+    width: 99.5%;
+}
+
+.g{
+    width: 94%;
+}
 .popup {
 
     float: right;
@@ -76,33 +93,33 @@
 .popup_innerCD {
 
     position: absolute;
-    left: 35%;
-    right: 35%;
+    left: 30%;
+    right: 30%;
     top: 25%;
     bottom: 53%;
     margin: auto;
     background: white;
+    background-color: rgb(255, 255, 255);
 }
 
-#newD{
-    margin-right: 2%;
+
+
+#new_date{
+    margin-top: 8px;
 }
 
-#new_date, #sumbitC{
-    margin-right: 2%;
-}
 
 #sumbitC{
     width: 15%;
     padding: 5px;
-    margin-right: 45%;
+    float: right;
 }
 
 .popup_innerCQ {
 
     position: absolute;
-    left: 40%;
-    right: 40%;
+    left: 35%;
+    right: 35%;
     top: 25%;
     bottom: 45%;
     margin: auto;

@@ -48,6 +48,16 @@ div.App, div.App-header {
   margin-top: 10px;
 }
 
+.lineC{
+  direction: rtl;
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+
 #logout:hover{
   color: blue;
   text-decoration: underline;
@@ -88,33 +98,19 @@ div.App, div.App-header {
   left: 35%;
   right: 35%;
   top: 25%;
-  bottom: 45%;
+  bottom: 35%;
   margin: auto;
   background: white;
 }
 
 #pass, #pass2{
   width: 40%;
-  margin-right: 30%;
-}
-
-#lpass, #lpass2{
-  float: right;
-  margin-right: 30%;
-}
-
-
-#send{
-  margin-top: 10px;
-  width: 10%;
-  text-align: center;
-  margin-left: 45%;
-  margin-right: 40%;
 }
 
 #h3{
   text-align: center;
 }
+
 #x {
   color: rgb(180, 180, 180);
   font-size: large;
@@ -124,4 +120,9 @@ div.App, div.App-header {
   background-color: white;
   font-weight: bolder; 
   width: fit-content;
+  margin-top: 0;
+}
+
+#diffPass{
+  font-weight: bold;
 }
