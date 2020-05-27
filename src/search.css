@@ -6,6 +6,7 @@
     margin-left: 2%;
     margin-right: 2%;
     margin-top: 0;
+    cursor: pointer;
 }
 
 .card:hover{
@@ -106,6 +107,7 @@ option{
 .mLabel{
     font-size: small;
     color: black;
+    margin-left: 8px;
 }
 
 

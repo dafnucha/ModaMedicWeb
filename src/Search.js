@@ -10,7 +10,7 @@ class Search extends Component {
         var x = date.toISOString().split("T")[0];
         var list = [], list1 = [];
         axios.get(
-            "http://icc.ise.bgu.ac.il/njsw03auth/usersAll/getFirsts",
+            "https://icc.ise.bgu.ac.il/njsw03auth/usersAll/getFirsts",
             { 
                 headers: { 
                     'Content-Type': 'application/json',
@@ -30,7 +30,7 @@ class Search extends Component {
             }
         });
         axios.get(
-            "http://icc.ise.bgu.ac.il/njsw03auth/usersAll/getLasts",
+            "https://icc.ise.bgu.ac.il/njsw03auth/usersAll/getLasts",
             { 
                 headers: { 
                     'Content-Type': 'application/json',
@@ -119,7 +119,7 @@ class Search extends Component {
     }
 
     async getRequest(name, url){
-        let getUrl = 'http://icc.ise.bgu.ac.il/njsw03auth/doctors/' + url + '?FirstName=' + this.state.pName.trim() + '&LastName=' + this.state.fName.trim();
+        let getUrl = 'https://icc.ise.bgu.ac.il/njsw03auth/doctors/' + url + '?FirstName=' + this.state.pName.trim() + '&LastName=' + this.state.fName.trim();
         if(this.state.start_date !== ""){
             var date = new Date(this.state.start_date)
             let start_time = date.getTime();

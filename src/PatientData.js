@@ -44,7 +44,7 @@ class PatientData extends Component {
         e.preventDefault();
         let date = (new Date(this.state.new_date)).getTime();
         let id = this.props.user["UserID"];
-        axios.post('http://icc.ise.bgu.ac.il/njsw03auth/usersAll/changeDateOfSurgery', 
+        axios.post('https://icc.ise.bgu.ac.il/njsw03auth/usersAll/changeDateOfSurgery', 
         {
             UserID: id,
             DateOfSurgery: date
@@ -93,7 +93,7 @@ class PatientData extends Component {
             });
         }           
         let id = this.props.user["UserID"];
-        axios.post('http://icc.ise.bgu.ac.il/njsw03auth/usersAll/changeUserQuestionnaire', 
+        axios.post('https://icc.ise.bgu.ac.il/njsw03auth/usersAll/changeUserQuestionnaire', 
         {
             UserID: id,
             Questionnaires: Questionnaires
@@ -242,8 +242,10 @@ class Popup extends React.Component {
       return (
         <div className='popup'>
             <div className='popup_innerCD' >
-                <button onClick={this.props.closePopup} id="x">x</button>
-                <h4>שינוי תאריך הניתוח</h4>
+                <div className="line_x">
+                    <button onClick={this.props.closePopup} id="x">x</button>
+                </div>
+                <h4 id="h4C">שינוי תאריך הניתוח</h4>
                 <form  onSubmit={this.props.handleSubmit} id="newDate_form">
                     <div className="line_newData">
                         <label id="newD"> הכנס תאריך ניתוח חדש:</label>
@@ -253,6 +255,9 @@ class Popup extends React.Component {
                     </div>
                     <div className="line_newData">
                         <button id="sumbitC" type="sumbit" >שינוי</button>
+                    </div>
+                    <div className="line_newData">
+                        <label id="noDate">*לביטול תאריך ניתוח יש ללחוץ על שינוי בלי קביעת תאריך חדש</label>
                     </div>
                 </form>
             </div>
@@ -266,8 +271,10 @@ class Popup extends React.Component {
       return (
         <div className='popup'>
             <div className='popup_innerCQ' >
-                <button onClick={this.props.closePopup} id="x">x</button>
-                <h4>שינוי שאלונים</h4>
+                <div className="line_x">
+                    <button onClick={this.props.closePopup} id="x">x</button>
+                </div>
+                <h4 id="h4C">שינוי שאלונים</h4>
                 <form id="formQ" onSubmit={this.props.handleSubmit}>
                     <div className="line">
                         <input type="checkbox"
@@ -320,17 +327,3 @@ class Popup extends React.Component {
       );
     }
   }
-
-  /**
-   * <div className="line">
-                        <input type="checkbox"
-                            className="cInput" 
-                            name="quest6"
-                            checked={this.props.quest6}
-                            onChange={this.props.handleChange}
-                        />
-                        <label className="mLabel">
-                            דירוג איכות חיים  
-                        </label>
-                    </div>
-   */
