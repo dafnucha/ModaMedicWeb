@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/ModaMedicWeb/static/css/main.662d22e7.chunk.css",
-    "main.js": "/ModaMedicWeb/static/js/main.5115146c.chunk.js",
-    "main.js.map": "/ModaMedicWeb/static/js/main.5115146c.chunk.js.map",
+    "main.js": "/ModaMedicWeb/static/js/main.7d1f223b.chunk.js",
+    "main.js.map": "/ModaMedicWeb/static/js/main.7d1f223b.chunk.js.map",
     "runtime-main.js": "/ModaMedicWeb/static/js/runtime-main.52239163.js",
     "runtime-main.js.map": "/ModaMedicWeb/static/js/runtime-main.52239163.js.map",
     "static/js/2.b6a2de78.chunk.js": "/ModaMedicWeb/static/js/2.b6a2de78.chunk.js",
     "static/js/2.b6a2de78.chunk.js.map": "/ModaMedicWeb/static/js/2.b6a2de78.chunk.js.map",
     "index.html": "/ModaMedicWeb/index.html",
-    "precache-manifest.6a01a44a73a93f969d2c1b476d69b410.js": "/ModaMedicWeb/precache-manifest.6a01a44a73a93f969d2c1b476d69b410.js",
+    "precache-manifest.80dcf0844419f81dcbed6c5e69505e57.js": "/ModaMedicWeb/precache-manifest.80dcf0844419f81dcbed6c5e69505e57.js",
     "service-worker.js": "/ModaMedicWeb/service-worker.js",
     "static/css/main.662d22e7.chunk.css.map": "/ModaMedicWeb/static/css/main.662d22e7.chunk.css.map",
     "static/js/2.b6a2de78.chunk.js.LICENSE.txt": "/ModaMedicWeb/static/js/2.b6a2de78.chunk.js.LICENSE.txt",
@@ -18,6 +18,6 @@
     "static/js/runtime-main.52239163.js",
     "static/js/2.b6a2de78.chunk.js",
     "static/css/main.662d22e7.chunk.css",
-    "static/js/main.5115146c.chunk.js"
+    "static/js/main.7d1f223b.chunk.js"
   ]
 }
