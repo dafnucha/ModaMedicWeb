@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "5f613e053c839da9f91eb1f6743e808d",
+    "revision": "a412246d694f8837a8445eb016f86daf",
     "url": "/ModaMedicWeb/index.html"
   },
   {
-    "revision": "30ca8d3275f0e31bb04c",
+    "revision": "531b57ea859b9aa5342c",
     "url": "/ModaMedicWeb/static/css/main.662d22e7.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/ModaMedicWeb/static/js/2.b6a2de78.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "30ca8d3275f0e31bb04c",
-    "url": "/ModaMedicWeb/static/js/main.1161e3c4.chunk.js"
+    "revision": "531b57ea859b9aa5342c",
+    "url": "/ModaMedicWeb/static/js/main.5115146c.chunk.js"
   },
   {
     "revision": "02806107325aa359c1b3",
