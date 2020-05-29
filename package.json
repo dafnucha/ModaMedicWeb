@@ -2,7 +2,7 @@
   "name": "my-app",
   "version": "0.1.0",
   "private": true,
-  "homepage":"https://dafnucha.github.io/ModaMedicWeb/",
+  "homepage": "https://dafnucha.github.io/ModaMedicWeb/",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
@@ -24,7 +24,7 @@
     "react-dom": "^16.12.0",
     "react-linechart": "^1.1.12",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.3.0",
+    "react-scripts": "^3.4.0",
     "xlsx": "^0.16.0"
   },
   "scripts": {
