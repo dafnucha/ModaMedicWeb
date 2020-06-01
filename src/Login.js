@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
-import {
-    Redirect
-} from "react-router-dom";
+
 import './Login.css';
 import axios from 'axios';
 import Adduser from'./AddUser';
@@ -234,8 +232,8 @@ class Login extends Component{
                     <label id="forget"  onClick={(e) => this.forget(e)}>שכחת סיסמה?</label>
                     <label id="register"  onClick={(e) => this.register(e)}>הירשם</label>
                 </form>
-                {sessionStorage.doctor ?  <Redirect to="/search" /> : null  }
-                {this.state.showPopup ? 
+                
+               {this.state.showPopup ? 
                     <Popup
                         text={this.state.name}
                         closePopup={this.togglePopup.bind(this)}

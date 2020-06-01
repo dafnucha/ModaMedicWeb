@@ -15,7 +15,8 @@ class App extends Component{
         showPopup: false,
         pass: "",
         pass2: "",
-        diff: false
+        diff: false,
+        redirect: false
     };
       this.logout = this.logout.bind(this);
       this.change = this.change.bind(this);
@@ -86,7 +87,9 @@ class App extends Component{
     localStorage.removeItem("type");
     localStorage.removeItem("name");
     localStorage.removeItem("doctor");
-    window.location.reload(false);
+    this.setState({
+        redirect: true
+    })
   }
 
   change(){
@@ -109,7 +112,7 @@ class App extends Component{
             <Logo />
             <Search />
             <br />
-            {sessionStorage.getItem("doctor") !== "true"?  <Redirect to="/" /> : null  }
+            {sessionStorage.getItem("doctor") !== "true" ?  <Redirect from="/search" to="/" /> : null  }
           </header>
         </div>
         {this.state.showPopup ? 
