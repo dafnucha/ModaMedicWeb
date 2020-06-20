@@ -158,7 +158,6 @@ class GraphAns extends Component {
                 noData = true;
             }
         }
-        
 		return (
             <div>
                 {this.props.ready ? <div>

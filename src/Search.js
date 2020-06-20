@@ -9,8 +9,9 @@ class Search extends Component {
         var date = new Date();
         var x = date.toISOString().split("T")[0];
         var list = [], list1 = [];
+        var namesDiv = [];
         axios.get(
-            "https://icc.ise.bgu.ac.il/njsw03auth/usersAll/getFirsts",
+            "https://icc.ise.bgu.ac.il/njsw03auth/usersAll/getNames",
             { 
                 headers: { 
                     'Content-Type': 'application/json',
@@ -19,16 +20,20 @@ class Search extends Component {
             }
         ).then(function (response){
             if(response.data.data){
+                for(var i = 0; i < response.data.data.length; i++){
+                    namesDiv.push(response.data.data[i]);
+                }
                 var names = response.data.data.map(function(item, i){
-                    return item.trim();
+                    return item.first.trim() + " " + item.last.trim();
                 })
                 names = names.sort();
                 var uniqueNames = Array.from(new Set(names));
-                for(var  i = 0; i < uniqueNames.length; i++){
+                for(i = 0; i < uniqueNames.length; i++){
                     list.push(<option key={uniqueNames[i]}>{uniqueNames[i]}</option>);
                 }
             }
         });
+        /*
         axios.get(
             "https://icc.ise.bgu.ac.il/njsw03auth/usersAll/getLasts",
             { 
@@ -49,6 +54,7 @@ class Search extends Component {
                 }
             }
         });
+        */
         this.state = {
             pName: "",
             fName: "",
@@ -77,19 +83,31 @@ class Search extends Component {
             todayDate: x,
             optionsPName: list,
             optionsLName: list1,
-            className: "normal"
+            className: "normal",
+            namesDiv: namesDiv
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.getRequest = this.getRequest.bind(this);
         this.togglePopup = this.togglePopup.bind(this);
         this.selectUser = this.selectUser.bind(this);
+        this.findUser = this.findUser.bind(this);
     }
 
     togglePopup() {
         this.setState({
           showPopup: !this.state.showPopup
         });
+    }
+
+    findUser(user){
+        for(var i = 0; i < this.state.namesDiv.length; i++){
+            var name = this.state.namesDiv[i].first.trim() + " " + this.state.namesDiv[i].last.trim();
+            if(name.toLocaleLowerCase() === user.toLocaleLowerCase()){
+                return ([this.state.namesDiv[i].first.trim(), this.state.namesDiv[i].last.trim()])
+            }
+        }
+        return["," , ","];
     }
 
     handleChange(event) {
@@ -119,7 +137,8 @@ class Search extends Component {
     }
 
     async getRequest(name, url){
-        let getUrl = 'https://icc.ise.bgu.ac.il/njsw03auth/doctors/' + url + '?FirstName=' + this.state.pName.trim() + '&LastName=' + this.state.fName.trim();
+        var nameSplit = this.findUser(this.state.pName);
+        let getUrl = 'https://icc.ise.bgu.ac.il/njsw03auth/doctors/' + url + '?FirstName=' + nameSplit[0] + '&LastName=' + nameSplit[1];
         if(this.state.start_date !== ""){
             var date = new Date(this.state.start_date)
             let start_time = date.getTime();
@@ -323,19 +342,9 @@ class Search extends Component {
                             type="text" 
                             name="pName"
                             value={this.state.pName} 
-                            placeholder="שם פרטי" 
+                            placeholder="שם פרטי ומשפחה" 
                             onChange={this.handleChange} 
                             list="first-list"
-                            required
-                        />
-                        <input className="iSearch"
-                            id="fname"
-                            type="text" 
-                            name="fName"
-                            value={this.state.fName} 
-                            placeholder="שם משפחה" 
-                            onChange={this.handleChange} 
-                            list="last-list"
                             required
                         />
                         <button className="bSearch"> 
@@ -511,3 +520,16 @@ class Popup extends React.Component {
       );
     }
   }
+/*
+
+                        <input className="iSearch"
+                            id="fname"
+                            type="text" 
+                            name="fName"
+                            value={this.state.fName} 
+                            placeholder="שם משפחה" 
+                            onChange={this.handleChange} 
+                            list="last-list"
+                            required
+                        />
+                        */
